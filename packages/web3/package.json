@@ -1,6 +1,6 @@
 {
 	"name": "@theqrl/web3",
-	"version": "0.3.3",
+	"version": "0.4.0",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -60,8 +60,8 @@
 		"test:blackbox:gqrl:ws": "./scripts/black_box_test.sh gqrl ws"
 	},
 	"devDependencies": {
-		"@theqrl/eslint-config-base-web3": "^0.3.0",
-		"@theqrl/web3-providers-ipc": "^0.3.3",
+		"@theqrl/eslint-config-base-web3": "^0.4.0",
+		"@theqrl/web3-providers-ipc": "^0.4.0",
 		"@truffle/hdwallet-provider": "^2.0.12",
 		"@types/jest": "^29.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
@@ -78,21 +78,21 @@
 		"typescript": "^5.2.0"
 	},
 	"dependencies": {
-		"@theqrl/web3-core": "^0.3.3",
-		"@theqrl/web3-errors": "^0.3.3",
-		"@theqrl/web3-net": "^0.3.3",
-		"@theqrl/web3-providers-http": "^0.3.3",
-		"@theqrl/web3-providers-ws": "^0.3.3",
-		"@theqrl/web3-rpc-methods": "^0.3.3",
-		"@theqrl/web3-types": "^0.3.3",
-		"@theqrl/web3-utils": "^0.3.3",
-		"@theqrl/web3-validator": "^0.3.3",
-		"@theqrl/web3-qrl": "^0.3.3",
-		"@theqrl/web3-qrl-abi": "^0.3.3",
-		"@theqrl/web3-qrl-accounts": "^0.3.3",
-		"@theqrl/web3-qrl-contract": "^0.3.3",
-		"@theqrl/web3-qrl-qrns": "^0.3.3",
-		"@theqrl/web3-qrl-iban": "^0.3.3"
+		"@theqrl/web3-core": "^0.4.0",
+		"@theqrl/web3-errors": "^0.4.0",
+		"@theqrl/web3-net": "^0.4.0",
+		"@theqrl/web3-providers-http": "^0.4.0",
+		"@theqrl/web3-providers-ws": "^0.4.0",
+		"@theqrl/web3-qrl": "^0.4.0",
+		"@theqrl/web3-qrl-abi": "^0.4.0",
+		"@theqrl/web3-qrl-accounts": "^0.4.0",
+		"@theqrl/web3-qrl-contract": "^0.4.0",
+		"@theqrl/web3-qrl-iban": "^0.4.0",
+		"@theqrl/web3-qrl-qrns": "^0.4.0",
+		"@theqrl/web3-rpc-methods": "^0.4.0",
+		"@theqrl/web3-types": "^0.4.0",
+		"@theqrl/web3-utils": "^0.4.0",
+		"@theqrl/web3-validator": "^0.4.0"
 	},
 	"gitHead": "d4f3246946fec86d908a215b27568aa8faea88d7"
 }

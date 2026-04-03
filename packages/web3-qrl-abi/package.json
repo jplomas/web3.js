@@ -1,6 +1,6 @@
 {
 	"name": "@theqrl/web3-qrl-abi",
-	"version": "0.3.3",
+	"version": "0.4.0",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -45,21 +45,21 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"@ethersproject/bignumber": "^5.7.0",
-		"@theqrl/abi": "^0.3.3",
-		"@theqrl/web3-errors": "^0.3.3",
-		"@theqrl/web3-types": "^0.3.3",
-		"@theqrl/web3-utils": "^0.3.3",
 		"@ethereumjs/rlp": "^4.0.1",
+		"@ethersproject/bignumber": "^5.7.0",
+		"@theqrl/abi": "^0.4.0",
 		"@theqrl/wallet.js": "^2.0.2",
-		"@theqrl/web3-validator": "^0.3.3",
+		"@theqrl/web3-errors": "^0.4.0",
+		"@theqrl/web3-types": "^0.4.0",
+		"@theqrl/web3-utils": "^0.4.0",
+		"@theqrl/web3-validator": "^0.4.0",
 		"crc-32": "^1.2.2",
 		"ethereum-cryptography": "^2.0.0",
 		"sha3": "^2.1.4"
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
-		"@theqrl/eslint-config-base-web3": "^0.3.0",
+		"@theqrl/eslint-config-base-web3": "^0.4.0",
 		"@types/jest": "^29.5.0",
 		"@types/jest-when": "^3.5.2",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
