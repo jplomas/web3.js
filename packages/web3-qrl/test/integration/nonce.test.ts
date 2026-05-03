@@ -69,7 +69,7 @@ describe('defaults', () => {
 				});
 				expect(true).toBe(false); // the test should fail if there is no exception
 			} catch (error) {
-				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
+				// Some providers do not respond to the RPC request when sending a transaction.
 				if (error instanceof TransactionSendTimeoutError) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(

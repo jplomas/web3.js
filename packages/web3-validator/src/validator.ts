@@ -101,8 +101,10 @@ export class Validator {
 	public validate(schema: JsonSchema, data: Json, options?: { silent?: boolean }) {
 		const zod = convertToZod(schema);
 		const result = zod.safeParse(data);
-		if (!result.success) {
-			const errors = this.convertErrors(result.error?.issues ?? []);
+		// Zod's SafeParseReturnType narrows to SafeParseError only on the explicit false check.
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+		if (result.success === false) {
+			const errors = this.convertErrors(result.error.issues);
 			if (errors) {
 				if (options?.silent) {
 					return errors;

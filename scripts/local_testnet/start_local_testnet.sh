@@ -67,6 +67,6 @@ echo "Started!"
 echo "Running clef setup..."
 (
   cd "$SCRIPT_DIR/../.."
-  yarn pos:clef:setup -- -e "$ENCLAVE_NAME"
+  pnpm run pos:clef:setup -- -e "$ENCLAVE_NAME"
 )
 echo "Clef setup completed."

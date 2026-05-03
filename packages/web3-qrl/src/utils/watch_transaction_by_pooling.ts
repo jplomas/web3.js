@@ -14,12 +14,17 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Bytes, QRLExecutionAPI, TransactionReceipt } from '@theqrl/web3-types';
+import {
+	Bytes,
+	DataFormat,
+	Numbers,
+	QRLExecutionAPI,
+	TransactionReceipt,
+} from '@theqrl/web3-types';
 import { Web3Context, Web3PromiEvent } from '@theqrl/web3-core';
 import { format, numberToHex } from '@theqrl/web3-utils';
 import { qrlRpcMethods } from '@theqrl/web3-rpc-methods';
 
-import { DataFormat } from '@theqrl/web3-types';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types.js';
 import { transactionReceiptSchema } from '../schemas.js';
 
@@ -64,9 +69,10 @@ export const watchTransactionByPolling = <
 
 			if (nextBlock?.hash) {
 				confirmations += 1;
+				const formattedConfirmations: Numbers = confirmations;
 
 				transactionPromiEvent.emit('confirmation', {
-					confirmations: format({ format: 'uint' }, confirmations, returnFormat),
+					confirmations: format({ format: 'uint' }, formattedConfirmations, returnFormat),
 					receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 					latestBlockHash: format(
 						{ format: 'bytes32' },

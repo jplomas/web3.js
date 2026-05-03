@@ -17,15 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 module.exports = {
 	moduleNameMapper: {
 		'^(\\.{1,2}/.*)\\.js$': '$1',
+		'^@theqrl/web3-qrl$': '<rootDir>/src/index.ts',
+		'^@theqrl/(web3(?:-[^/]+)*|abi)$': '<rootDir>/../$1/lib/commonjs/index.js',
 	},
 	rootDir: '../..',
 	testMatch: ['<rootDir>/test/**/?(*.)+(spec|test).+(ts|tsx|js)'],
 	setupFilesAfterEnv: ['<rootDir>/test/config/setup.js'],
 	transform: {
 		'^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: './test/tsconfig.json' }],
-	},
-	moduleNameMapper: {
-		'^(\\.{1,2}/.*)\\.js$': '$1',
 	},
 	verbose: false,
 	collectCoverage: false,

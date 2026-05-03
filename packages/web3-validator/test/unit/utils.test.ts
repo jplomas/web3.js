@@ -107,17 +107,17 @@ describe('utils', () => {
 		});
 	});
 	describe('numberToHex', () => {
-		it.each(validHexStrictDataWithNumber.map(tuple => [tuple[1], tuple[0]]))(
+		it.each(validHexStrictDataWithNumber.map((tuple): [number | bigint, string] => [tuple[1], tuple[0]]))(
 			'valid numbers and bigints',
 			(input, res) => {
-				expect(numberToHex(input)).toEqual((res as string).toLowerCase());
+				expect(numberToHex(input)).toEqual(res.toLowerCase());
 			},
 		);
 
-		it.each(validHexStrictData)('valid hex strings', input => {
+		it.each(validHexStrictData as string[])('valid hex strings', input => {
 			expect(numberToHex(input)).toEqual(
 				// if input is '' then numberToHex would return "0x0"
-				(input === '' ? '0x0' : (input as string)).toLowerCase(),
+				(input === '' ? '0x0' : input).toLowerCase(),
 			);
 		});
 

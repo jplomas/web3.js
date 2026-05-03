@@ -1,1 +1,16 @@
-../../../config/test/tsconfig.json
+{
+	"extends": "../tsconfig.cjs.json",
+	"compilerOptions": {
+		"declaration": false,
+		"declarationMap": false,
+		"noImplicitAny": false,
+		"strictNullChecks": true,
+		"types": ["node", "jest"],
+		"baseUrl": "../..",
+		"paths": {
+			"@theqrl/web3-qrl": ["web3-qrl/src/index.ts"],
+			"@theqrl/*": ["*/lib/commonjs/index.d.ts"]
+		}
+	},
+	"include": ["./**/*", "../node_modules/jest-extended/types/**/*.ts", "../index.d.ts"]
+}

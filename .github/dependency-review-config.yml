@@ -1,0 +1,10 @@
+fail-on-severity: high
+fail-on-scopes:
+  - runtime
+  - development
+  - unknown
+vulnerability-check: true
+license-check: true
+show-patched-versions: true
+retry-on-snapshot-warnings: true
+retry-on-snapshot-warnings-timeout: 300

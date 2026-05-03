@@ -5,27 +5,25 @@ sidebar_label: 'For Plugin Users'
 
 # Plugin User Guide
 
-This guide intends to provide the necessary context for registering plugins with web3.js packages.
-
-To help you get started, take a look at a list of useful plugins at <https://web3js.org/plugins>
+This guide provides the necessary context for registering plugins with QRL Web3.js packages.
 
 ## Installing the Plugin
 
-Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add @theqrl/web3-plugin-example`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
+Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `pnpm add @theqrl/web3-plugin-example`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
 
 ```json
 # package.json
 {
 	...
 	"dependencies": {
-		"web3-plugin-example": "0.1.0"
+		"@theqrl/web3-plugin-example": "0.4.0"
 	}
 }
 ```
 
 ## Registering the Plugin
 
-To add a plugin to an instance of a class sourced from web3.js' modules (such as `Web3` or `Web3QRL`), you will use the `.registerPlugin` method. It's important to note that this method is only available on classes that extend `Web3Context`, so it may not be available on every class you import from a Web3.js package.
+To add a plugin to an instance of a class sourced from QRL Web3.js modules (such as `Web3` or `Web3QRL`), use the `.registerPlugin` method. This method is only available on classes that extend `Web3Context`, so it may not be available on every class you import from a QRL Web3.js package.
 
 For illustration purposes, let's assume a plugin developer has the following code for their plugin. Please note that this code should not be touched by the plugin user:
 

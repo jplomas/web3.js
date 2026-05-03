@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { keccak256 } from '@theqrl/qrl-cryptography/keccak.js';
 import { utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
+// eslint-disable-next-line import/no-cycle
 import { uint8ArrayToHexString } from '../utils.js';
 
 /**

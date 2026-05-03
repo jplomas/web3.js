@@ -23,9 +23,50 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * running these E2E tests that use Testnet and Mainnet, this util exists here for now.
  */
 
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
 import { getSystemTestBackend } from '../shared_fixtures/system_tests_utils';
-// eslint-disable-next-line import/no-relative-packages
-import secrets from '../../../../.secrets.json';
+
+type NetworkSecrets = {
+	HTTP: string;
+	WS: string;
+	ACCOUNT: {
+		address: string;
+		seed: string;
+	};
+	DEPLOYED_TEST_CONTRACT_ADDRESS: string;
+	ALLOWED_SEND_TRANSACTION: boolean;
+};
+
+type Secrets = {
+	TESTNET: NetworkSecrets;
+	MAINNET: NetworkSecrets;
+};
+
+const emptyNetworkSecrets: NetworkSecrets = {
+	HTTP: '',
+	WS: '',
+	ACCOUNT: {
+		address: '',
+		seed: '',
+	},
+	DEPLOYED_TEST_CONTRACT_ADDRESS: '',
+	ALLOWED_SEND_TRANSACTION: false,
+};
+
+const loadSecrets = (): Secrets => {
+	const secretsPath = path.resolve(__dirname, '../../../../.secrets.json');
+	if (!existsSync(secretsPath)) {
+		return {
+			TESTNET: emptyNetworkSecrets,
+			MAINNET: emptyNetworkSecrets,
+		};
+	}
+
+	return JSON.parse(readFileSync(secretsPath, 'utf8')) as Secrets;
+};
+
+const secrets = loadSecrets();
 
 export const getSystemE2ETestProvider = (): string => {
 	if (process.env.WEB3_SYTEM_TEST_MODE === 'http') {

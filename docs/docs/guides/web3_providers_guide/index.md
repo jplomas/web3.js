@@ -30,16 +30,16 @@ The created Web3 instance will use the passed provider to interact with the bloc
 
 Actually, the provider could be any of the following:
 
--   An instance of [HttpProvider](/api/web3-providers-http/class/HttpProvider)
--   An instance of [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider)
--   An instance of [IpcProvider](/api/web3-providers-ipc/class/IpcProvider)
+-   An instance of [HttpProvider](/api/@theqrl/web3-providers-http/classes/HttpProvider)
+-   An instance of [WebSocketProvider](/api/@theqrl/web3-providers-ws/classes/WebSocketProvider)
+-   An instance of [IpcProvider](/api/@theqrl/web3-providers-ipc/classes/IpcProvider)
 -   A string containing string url for `http`/`https` or `ws`/`wss` protocol. And when a string is passed, an instance of the compatible class above will be created accordingly. ex. WebSocketProvider instance will be created for string containing `ws` or `wss`. And you access this instance by calling `web3.provider` to read the provider and possibly register an event listener.
--   Any provider object that adhere to [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193). And it has been tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
+-   Any provider object that adheres to [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) and speaks QRL-compatible JSON-RPC.
 
-For both [WebSocketProvider](/api/web3-providers-ws/class/WebSocketProvider) and [IpcProvider](/api/web3-providers-ipc/class/IpcProvider) the user can listen to emitted events. More on this is at [Providers Events Listening](events_listening).
+For both [WebSocketProvider](/api/@theqrl/web3-providers-ws/classes/WebSocketProvider) and [IpcProvider](/api/@theqrl/web3-providers-ipc/classes/IpcProvider) the user can listen to emitted events. More on this is at [Providers Events Listening](events_listening).
 
 :::tip
-The passed provider can be either type `string` or one of the [`SupportedProviders`](/api/web3-core#SupportedProviders). And if it is passed as a string, then internally the compatible provider object will be created and used.
+The passed provider can be either type `string` or one of the [`SupportedProviders`](/api/@theqrl/web3-types/type-aliases/SupportedProviders). And if it is passed as a string, then internally the compatible provider object will be created and used.
 :::
 
 ## Providers Priorities
@@ -94,32 +94,32 @@ const { Web3 } = require('@theqrl/web3');
 const web3 = new Web3('https://url-to-remote-node');
 ```
 
-### Injected providers
+### Injected Providers
 
-As stated above, the injected provider should be in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). And it is tested with Ganache provider, Hardhat provider, and Incubed (IN3) as a provider.
+As stated above, the injected provider should comply with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) and expose QRL-compatible JSON-RPC methods.
 
 The web3.js Provider specifications are defined in [web3 base provider](https://github.com/theqrl/web3.js/blob/main/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@theqrl/web3@0.3.0/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@theqrl/web3/dist/web3.min.js"></script>
 <script>
 	window.addEventListener('load', function () {
 		// Check if web3 is available
 		if (typeof window.qrl !== 'undefined') {
 			// Use the browser injected QRL provider
 			web3 = new Web3(window.qrl);
-			// Request access to the user's MetaMask account
+			// Request access to the user's QRL account
 			window.qrl.enable();
 			// Get the user's accounts
 			web3.qrl.getAccounts().then(function (accounts) {
 				// Show the first account
 				document.getElementById('log').innerHTML =
-					'Connected with MetaMask account: ' + accounts[0];
+					'Connected with QRL account: ' + accounts[0];
 			});
 		} else {
-			// If web3 is not available, give instructions to install MetaMask
+			// If the provider is not available, give instructions to install a QRL-compatible wallet
 			document.getElementById('log').innerHTML =
-				'Please install MetaMask to connect with the QRL network';
+				'Please install a QRL-compatible browser wallet to connect with the QRL network';
 		}
 	});
 </script>

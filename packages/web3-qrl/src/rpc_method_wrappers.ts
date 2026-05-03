@@ -127,9 +127,11 @@ export async function getMaxPriorityFeePerGas<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<QRLExecutionAPI>,
 	returnFormat: ReturnFormat,
 ) {
-	const response = await qrlRpcMethods.getMaxPriorityFeePerGas(web3Context.requestManager);
+	const response = (await qrlRpcMethods.getMaxPriorityFeePerGas(
+		web3Context.requestManager,
+	)) as unknown as Numbers;
 
-	return format({ format: 'uint' }, response as Numbers, returnFormat);
+	return format({ format: 'uint' }, response, returnFormat);
 }
 /**
  * View additional documentations here: {@link Web3QRL.getBlockNumber}
@@ -566,7 +568,6 @@ export function sendTransaction<
 						if (promiEvent.listenerCount('confirmation') > 0) {
 							watchTransactionForConfirmations<
 								ReturnFormat,
-								SendTransactionEvents<ReturnFormat>,
 								ResolveType
 							>(
 								web3Context,
@@ -744,7 +745,6 @@ export function sendSignedTransaction<
 						if (promiEvent.listenerCount('confirmation') > 0) {
 							watchTransactionForConfirmations<
 								ReturnFormat,
-								SendSignedTransactionEvents<ReturnFormat>,
 								ResolveType
 							>(
 								web3Context,
@@ -834,8 +834,8 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 		web3Context.requestManager,
 		formatTransaction(transaction, QRL_DATA_FORMAT),
 	);
-	// Some clients only return the encoded signed transaction (e.g. Ganache)
-	// while clients such as Gqrl return the desired SignedTransactionInfoAPI object
+	// Some EVM-compatible test clients only return the encoded signed transaction,
+	// while Gqrl returns the desired SignedTransactionInfoAPI object.
 	return isString(response as HexStringBytes)
 		? decodeSignedTransaction(response as HexStringBytes, returnFormat, {
 				fillInputAndData: true,
@@ -987,7 +987,7 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	return format(accountSchema, response as unknown as AccountObject, returnFormat);
 }
 
-// TODO Throwing an error with Gqrl, but not Infura
+// TODO Verify provider-specific fee history behavior against Gqrl.
 // TODO gasUsedRatio and reward not formatting
 /**
  * View additional documentations here: {@link Web3QRL.getFeeHistory}

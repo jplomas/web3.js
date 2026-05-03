@@ -40,4 +40,4 @@ If you only need a few functions from `@theqrl/web3-utils`:
 import { numberToHex, hexToNumber } from '@theqrl/web3-utils';
 ```
 
-You can find an example app with tree shaking [here](https://github.com/ChainSafe/web3js-example-react-app).
+The same pattern applies to QRL Web3.js packages: import only the `@theqrl/*` packages and named exports that your application needs.

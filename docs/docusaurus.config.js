@@ -15,42 +15,45 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
-const { join } = require('path');
+const { themes } = require('prism-react-renderer');
 
 const packages = [
-	'@theqrl/web3',
-	'@theqrl/web3-qrl',
-	'@theqrl/web3-qrl-contract',
-	'@theqrl/web3-utils',
-	'@theqrl/web3-validator',
-	'@theqrl/web3-types',
-	'@theqrl/web3-core',
-	'@theqrl/web3-errors',
-	'@theqrl/web3-net',
-	'@theqrl/web3-qrl-abi',
-	'@theqrl/web3-qrl-accounts',
-	'@theqrl/web3-qrl-qrns',
-	'@theqrl/web3-qrl-iban',
-	'@theqrl/web3-providers-http',
-	'@theqrl/web3-providers-ws',
-	'@theqrl/web3-providers-ipc',
+	'../packages/abi',
+	'../packages/web3',
+	'../packages/web3-qrl',
+	'../packages/web3-qrl-contract',
+	'../packages/web3-utils',
+	'../packages/web3-validator',
+	'../packages/web3-types',
+	'../packages/web3-core',
+	'../packages/web3-errors',
+	'../packages/web3-net',
+	'../packages/web3-qrl-abi',
+	'../packages/web3-qrl-accounts',
+	'../packages/web3-qrl-qrns',
+	'../packages/web3-qrl-iban',
+	'../packages/web3-providers-http',
+	'../packages/web3-providers-ws',
+	'../packages/web3-providers-ipc',
 ];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-	title: 'web3.js',
+	title: 'QRL Web3.js',
 	tagline: 'The ultimate JavaScript library for QRL',
-	url: 'https://docs.web3js.org',
+	url: 'https://docs.theqrl.org',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
-	onBrokenMarkdownLinks: 'throw',
+	markdown: {
+		hooks: {
+			onBrokenMarkdownLinks: 'throw',
+		},
+	},
 	favicon: 'img/favicon.ico',
 
 	// GitHub pages deployment config.
 	// If you aren't using GitHub pages, you don't need these.
-	organizationName: 'ChainSafe', // Usually your GitHub org/user name.
+	organizationName: 'theQRL', // Usually your GitHub org/user name.
 	projectName: 'web3.js', // Usually your repo name.
 
 	// Even if you don't use internalization, you can use this field to set useful
@@ -64,22 +67,24 @@ const config = {
 	plugins: [
 		'@docusaurus/theme-live-codeblock',
 		[
-			'@mpetrunic/docusaurus-plugin-typedoc-api',
+			'docusaurus-plugin-typedoc',
 			{
-				projectRoot: join(__dirname, '..'),
-				// Monorepo
-				packages: packages.map(p => `packages/${p}`),
-				minimal: false,
-				debug: true,
-				changelogs: true,
-				readmes: false,
-				tsconfigName: 'docs/tsconfig.docs.json',
-				typedocOptions: {
-					plugin: [
-						'typedoc-monorepo-link-types',
-						'typedoc-plugin-extras',
-						'typedoc-plugin-mdn-links',
-					],
+				id: 'api',
+				entryPoints: packages,
+				entryPointStrategy: 'packages',
+				out: './docs/api',
+				tsconfig: '../docs/tsconfig.docs.json',
+				plugin: ['typedoc-plugin-markdown', 'typedoc-plugin-extras', 'typedoc-plugin-mdn-links'],
+				readme: 'none',
+				sanitizeComments: true,
+				packageOptions: {
+					entryPoints: ['src/index.ts'],
+					tsconfig: '../../docs/tsconfig.docs.json',
+					readme: 'none',
+					skipErrorChecking: true,
+				},
+				sidebar: {
+					autoConfiguration: false,
 				},
 			},
 		],
@@ -108,7 +113,7 @@ const config = {
 		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
 		({
 			navbar: {
-				title: 'Web3.js Docs',
+				title: 'QRL Web3.js Docs',
 				logo: {
 					src: 'img/web3js.svg',
 				},
@@ -131,13 +136,13 @@ const config = {
 						position: 'left',
 					},
 					{
-						href: 'https://github.com/theqrl/web3.js/tree/main/',
+						href: 'https://github.com/theQRL/web3.js/tree/main/',
 						label: 'GitHub',
 						position: 'right',
 					},
 					{
-						href: 'https://web3js.org/#/',
-						label: 'Web3js.org',
+						href: 'https://theqrl.org/',
+						label: 'QRL',
 						position: 'right',
 					},
 				],
@@ -149,21 +154,21 @@ const config = {
 						title: 'Community',
 						items: [
 							{
-								label: 'Stack Overflow',
-								href: 'https://stackoverflow.com/questions/tagged/web3js',
+								label: 'QRL website',
+								href: 'https://theqrl.org/',
 							},
 							{
 								label: 'Discord',
-								href: 'https://discord.com/invite/pb3U4zE8ca',
+								href: 'https://theqrl.org/discord',
 							},
 						],
 					},
 				],
-				copyright: `Copyright © ${new Date().getFullYear()} Web3.js . Built with Docusaurus.`,
+				copyright: `Copyright © ${new Date().getFullYear()} The QRL Contributors. Built with Docusaurus.`,
 			},
 			prism: {
-				theme: lightCodeTheme,
-				darkTheme: darkCodeTheme,
+				theme: themes.github,
+				darkTheme: themes.dracula,
 			},
 			liveCodeBlock: {
 				/**

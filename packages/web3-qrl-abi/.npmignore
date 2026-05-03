@@ -1,7 +1,4 @@
 .babelrc
-.eslintignore
-.eslintrc.json
-.eslintrc.js
 .gitignore
 .lintstagedrc.json
 .nycrc

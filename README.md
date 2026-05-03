@@ -2,73 +2,80 @@
   <img src="assets/logo/web3js.jpg" width="300" alt="web3.js" />
 </p>
 
-# Web3.js
+# QRL Web3.js
 
-[![Dependency Status][downloads-image]][npm-url] ![Unit Test Coverage](https://img.shields.io/codecov/c/github/web3/web3.js/4.x?label=unit%20test%20coverage)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/web3/web3.js/4.x?label=commit%20activity%20on%204.x)
-![Contributors](https://img.shields.io/github/contributors/web3/web3.js?label=contributors%20on%20all%20branches)
+[![CI](https://github.com/theQRL/web3.js/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/theQRL/web3.js/actions/workflows/ci.yml)
+[![Actionlint](https://github.com/theQRL/web3.js/actions/workflows/actionlint.yml/badge.svg?branch=main)](https://github.com/theQRL/web3.js/actions/workflows/actionlint.yml)
+[![npm downloads][downloads-image]][npm-url]
+![Commit Activity](https://img.shields.io/github/commit-activity/m/theQRL/web3.js/main?label=commit%20activity)
+![Contributors](https://img.shields.io/github/contributors/theQRL/web3.js?label=contributors)
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
-![Node Version](https://img.shields.io/badge/node-18.x-green)
+![Node Version](https://img.shields.io/badge/node-%3E%3D20-green)
 
-Web3.js is a TypeScript implementation of the [QRL JSON RPC API](https://eth.wiki/json-rpc/API) and related tooling maintained by [The QRL Contributors](https://chainsafe.io).
+QRL Web3.js is a TypeScript implementation of QRL JSON-RPC client tooling maintained by [The QRL Contributors](https://theqrl.org/).
+
+This fork is being prepared for audit and first release under the `@theqrl` npm organization. Until that release is cut, treat `main` as unreleased.
 
 ## Installation
 
-You can install the package either using [NPM](https://www.npmjs.com/package/@theqrl/web3) or using [Yarn](https://yarnpkg.com/package/@theqrl/web3)
+Published releases will be available from [npm](https://www.npmjs.com/package/@theqrl/web3). Local development uses [pnpm](https://pnpm.io/).
 
-> If you wanna checkout latest bugfix or feature, use `npm install @theqrl/web3@dev`
-
-### Using NPM
+After the first audited release:
 
 ```bash
 npm install @theqrl/web3
 ```
 
-### Using Yarn
-
 ```bash
-yarn add @theqrl/web3
+pnpm add @theqrl/web3
 ```
 
 ## Getting Started
 
--   :writing_hand: If you have questions [submit an issue](https://github.com/theqrl/web3.js/issues/new/choose) or join us on [Discord](https://theqrl.org/discord)
+-   If you have questions [submit an issue](https://github.com/theQRL/web3.js/issues/new/choose) or join us on [Discord](https://theqrl.org/discord).
     ![Discord](https://img.shields.io/discord/357604137204056065.svg?label=Discord&logo=discord)
 
 ## Prerequisites
 
--   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
--   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
+-   [NodeJS](https://nodejs.org/) (20 or newer)
+-   [pnpm](https://pnpm.io/) and [Turbo](https://turbo.build/)
 
 ## Useful links
 
-These links are for the Web3.js but should be useful pointers in the correct direction for theQRL/Web3.js as well.
-
--   [Web3 tree shaking support guide](https://docs.web3js.org/guides/advanced/tree_shaking)
--   [React App Example](https://github.com/ChainSafe/web3js-example-react-app)
+-   [QRL website](https://theqrl.org/)
+-   [QRL Discord](https://theqrl.org/discord)
+-   [Repository issues](https://github.com/theQRL/web3.js/issues/new/choose)
 
 ## Architecture Overview
 
-| Package                                                                                           | Version                                                                                                                                                                           | License                                                                                                               | Docs                                                                                                           | Description                                                                                                   |
-| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [web3](https://github.com/theqrl/web3.js/tree/main/packages/web3)                               | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3)                               | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3)                | :rotating_light: Entire Web3.js offering (includes all packages)                                              |
-| [web3-core](https://github.com/theqrl/web3.js/tree/main/packages/web3-core)                     | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-core%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-core)                     | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-core)           | Core functions for web3.js packages                                                                           |
-| [web3-errors](https://github.com/theqrl/web3.js/tree/main/packages/web3-errors)                 | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-errors%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-core)                   | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-errors)         | Errors Objects                                                                                                |
-| [web3-qrl](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl)                       | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-eth%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-eth)                       | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-eth)            | Modules to interact with the QRL blockchain and smart contracts                                          |
-| [web3-qrl-abi](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl-abi)               | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-qrl-abi%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-qrl-abi)               | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-qrl-abi)        | Functions for encoding and decoding QRVM in/output                                                             |
-| [web3-qrl-accounts](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl-accounts)     | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-qrl-accounts%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-qrl-accounts)     | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-qrl-accounts)   | Functions for managing QRL accounts and signing                                                          |
-| [web3-qrl-contract](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl-contract)     | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-qrl-contract%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-qrl-contract)     | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-qrl-contract)   | The contract package contained in [web3-qrl](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl) |
-| [web3-qrl-qrns](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl-qrns)               | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-qrl-qrns%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-qrl-qrns)               | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-qrl-qrns)        | Functions for interacting with the Quantum Resistant Name Service                                                      |
-| [web3-qrl-iban](https://github.com/theqrl/web3.js/tree/main/packages/web3-qrl-iban)             | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-qrl-iban%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-qrl-iban)             | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-qrl-iban)       | Functionality for converting QRL addressed to IBAN addressed and vice versa                              |
-| [web3-net](https://github.com/theqrl/web3.js/tree/main/packages/web3-net)                       | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-net%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-net)                       | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-net)            | Functions to interact with a QRL node's network properties                                              |
-| [web3-providers-http](https://github.com/theqrl/web3.js/tree/main/packages/web3-providers-http) | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-providers-http%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-providers-http) | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-providers-http) | Web3.js provider for the HTTP protocol                                                                        |
-| [web3-providers-ipc](https://github.com/theqrl/web3.js/tree/main/packages/web3-providers-ipc)   | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-providers-ipc%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-providers-ipc)   | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-providers-ipc)  | Web3.js provider for IPC                                                                                      |
-| [web3-providers-ws](https://github.com/theqrl/web3.js/tree/main/packages/web3-providers-ws)     | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-providers-ws%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-providers-ws)     | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-providers-ws)   | Web3.js provider for the Websocket protocol                                                                   |
-| [web3-rpc-methods](https://github.com/theqrl/web3.js/tree/main/packages/web3-rpc-methods)       | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-rpc-methods%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-types)             | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/)                    | RPC Methods                                                                                                   |
-| [web3-types](https://github.com/theqrl/web3.js/tree/main/packages/web3-types)                   | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-types%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-types)                   | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-types)          | Shared useable types                                                                                          |
-| [web3-utils](https://github.com/theqrl/web3.js/tree/main/packages/web3-utils)                   | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-utils%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-utils)                   | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-utils)          | Useful utility functions for Dapp developers                                                                  |
-| [web3-validator](https://github.com/theqrl/web3.js/tree/main/packages/web3-validator)           | [![npm](https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-validator%2Fpackage.json)](https://www.npmjs.com/package/@theqrl/web3-validator)           | [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) | [![documentation](https://img.shields.io/badge/typedoc-blue)](https://docs.theqrl.org/api/web3-validator)      | Utilities for validating objects                                                                              |
+Package names follow the repository policy in
+[`docs/package-naming.md`](docs/package-naming.md); `@theqrl/abi` is the
+documented foundational ABI-coder exception to the `@theqrl/web3-*` runtime
+package pattern.
+
+| Package                                                                                                   | npm                                                               | Docs                                                   | Description                                                                        |
+| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [`@theqrl/abi`](https://github.com/theQRL/web3.js/tree/main/packages/abi)                                 | [npm](https://www.npmjs.com/package/@theqrl/abi)                  | [API](https://docs.theqrl.org/api/abi)                 | ABI encoding and decoding helpers.                                                 |
+| [`@theqrl/web3`](https://github.com/theQRL/web3.js/tree/main/packages/web3)                               | [npm](https://www.npmjs.com/package/@theqrl/web3)                 | [API](https://docs.theqrl.org/api/web3)                | Main QRL Web3.js package.                                                          |
+| [`@theqrl/web3-core`](https://github.com/theQRL/web3.js/tree/main/packages/web3-core)                     | [npm](https://www.npmjs.com/package/@theqrl/web3-core)            | [API](https://docs.theqrl.org/api/web3-core)           | Shared core classes, request management, subscriptions, and plugin infrastructure. |
+| [`@theqrl/web3-errors`](https://github.com/theQRL/web3.js/tree/main/packages/web3-errors)                 | [npm](https://www.npmjs.com/package/@theqrl/web3-errors)          | [API](https://docs.theqrl.org/api/web3-errors)         | Shared error types.                                                                |
+| [`@theqrl/web3-net`](https://github.com/theQRL/web3.js/tree/main/packages/web3-net)                       | [npm](https://www.npmjs.com/package/@theqrl/web3-net)             | [API](https://docs.theqrl.org/api/web3-net)            | Network metadata helpers for QRL JSON-RPC providers.                               |
+| [`@theqrl/web3-providers-http`](https://github.com/theQRL/web3.js/tree/main/packages/web3-providers-http) | [npm](https://www.npmjs.com/package/@theqrl/web3-providers-http)  | [API](https://docs.theqrl.org/api/web3-providers-http) | HTTP provider.                                                                     |
+| [`@theqrl/web3-providers-ipc`](https://github.com/theQRL/web3.js/tree/main/packages/web3-providers-ipc)   | [npm](https://www.npmjs.com/package/@theqrl/web3-providers-ipc)   | [API](https://docs.theqrl.org/api/web3-providers-ipc)  | IPC provider.                                                                      |
+| [`@theqrl/web3-providers-ws`](https://github.com/theQRL/web3.js/tree/main/packages/web3-providers-ws)     | [npm](https://www.npmjs.com/package/@theqrl/web3-providers-ws)    | [API](https://docs.theqrl.org/api/web3-providers-ws)   | WebSocket provider.                                                                |
+| [`@theqrl/web3-qrl`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl)                       | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl)             | [API](https://docs.theqrl.org/api/web3-qrl)            | QRL blockchain and smart-contract APIs.                                            |
+| [`@theqrl/web3-qrl-abi`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl-abi)               | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl-abi)         | [API](https://docs.theqrl.org/api/web3-qrl-abi)        | QRVM ABI helpers.                                                                  |
+| [`@theqrl/web3-qrl-accounts`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl-accounts)     | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl-accounts)    | [API](https://docs.theqrl.org/api/web3-qrl-accounts)   | QRL account and signing helpers.                                                   |
+| [`@theqrl/web3-qrl-contract`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl-contract)     | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl-contract)    | [API](https://docs.theqrl.org/api/web3-qrl-contract)   | Contract wrappers and method/event helpers.                                        |
+| [`@theqrl/web3-qrl-iban`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl-iban)             | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl-iban)        | [API](https://docs.theqrl.org/api/web3-qrl-iban)       | QRL address and IBAN conversion helpers.                                           |
+| [`@theqrl/web3-qrl-qrns`](https://github.com/theQRL/web3.js/tree/main/packages/web3-qrl-qrns)             | [npm](https://www.npmjs.com/package/@theqrl/web3-qrl-qrns)        | [API](https://docs.theqrl.org/api/web3-qrl-qrns)       | Quantum Resistant Name Service helpers.                                            |
+| [`@theqrl/web3-rpc-methods`](https://github.com/theQRL/web3.js/tree/main/packages/web3-rpc-methods)       | [npm](https://www.npmjs.com/package/@theqrl/web3-rpc-methods)     | [API](https://docs.theqrl.org/api/web3-rpc-methods)    | Low-level RPC method wrappers.                                                     |
+| [`@theqrl/web3-types`](https://github.com/theQRL/web3.js/tree/main/packages/web3-types)                   | [npm](https://www.npmjs.com/package/@theqrl/web3-types)           | [API](https://docs.theqrl.org/api/web3-types)          | Shared TypeScript types.                                                           |
+| [`@theqrl/web3-utils`](https://github.com/theQRL/web3.js/tree/main/packages/web3-utils)                   | [npm](https://www.npmjs.com/package/@theqrl/web3-utils)           | [API](https://docs.theqrl.org/api/web3-utils)          | Utility functions for QRL applications.                                            |
+| [`@theqrl/web3-validator`](https://github.com/theQRL/web3.js/tree/main/packages/web3-validator)           | [npm](https://www.npmjs.com/package/@theqrl/web3-validator)       | [API](https://docs.theqrl.org/api/web3-validator)      | Runtime validation helpers.                                                        |
+| [`@theqrl/web3-packagetemplate`](https://github.com/theQRL/web3.js/tree/main/tools/web3-packagetemplate)  | [npm](https://www.npmjs.com/package/@theqrl/web3-packagetemplate) | -                                                      | Package template for maintainers.                                                  |
+| [`@theqrl/web3-plugin-example`](https://github.com/theQRL/web3.js/tree/main/tools/web3-plugin-example)    | [npm](https://www.npmjs.com/package/@theqrl/web3-plugin-example)  | -                                                      | Example plugin package.                                                            |
 
 ## Package.json Scripts
 
@@ -83,5 +90,5 @@ These links are for the Web3.js but should be useful pointers in the correct dir
 | test:integration | Uses `jest` to run tests under `/test/integration` in each package |
 | test:unit        | Uses `jest` to run tests under `/test/unit` in each package        |
 
-[npm-url]: https://npmjs.org/package/web3
-[downloads-image]: https://img.shields.io/npm/dm/web3?label=npm%20downloads
+[npm-url]: https://npmjs.org/package/@theqrl/web3
+[downloads-image]: https://img.shields.io/npm/dm/@theqrl/web3?label=npm%20downloads

@@ -158,7 +158,7 @@ describe('Web3SubscriptionManager', () => {
 			);
 			jest.spyOn(sub, 'sendSubscriptionRequest').mockImplementation(async () => {
 				(sub as any).id = 'value';
-				return Promise.resolve(sub.id as string);
+				return Promise.resolve(sub.id);
 			});
 			await subManager.addSubscription(sub);
 

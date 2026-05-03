@@ -49,10 +49,11 @@ export const mergeDeep = (
 				}
 				mergeDeep(
 					result[key] as Record<string, unknown>,
-					src[key] as Record<string, unknown>,
+					src[key],
 				);
 			} else if (!isNullish(src[key]) && Object.hasOwnProperty.call(src, key)) {
 				if (Array.isArray(src[key]) || src[key] instanceof TypedArray) {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 					result[key] = (src[key] as unknown[]).slice(0);
 				} else {
 					result[key] = src[key];

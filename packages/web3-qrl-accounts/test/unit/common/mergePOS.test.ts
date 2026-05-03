@@ -21,7 +21,7 @@ import * as testnetPOS from '../../fixtures/common/pos.json';
 import posExecGenesis from '../../fixtures/common/pos-exec-genesis.json';
 
 describe('[Common]: Merge/POS specific logic', () => {
-	it('getHardforkByBlockNumber()', () => {
+	it('getHardforkByBlockNumber() with default POS hardforks', () => {
 		const customChains = [testnetPOS];
 		const c = new Common({
 			chain: 'testnetPOS',
@@ -37,7 +37,7 @@ describe('[Common]: Merge/POS specific logic', () => {
 		expect(c.getHardforkByBlockNumber(12, 4999)).toBe('zond');
 	});
 
-	it('getHardforkByBlockNumber()', () => {
+	it('getHardforkByBlockNumber() with merge block boundary', () => {
 		const testnetMergeWithBlockNumber = JSON.parse(JSON.stringify(testnetPOS));
 		// Set Merge block to 15
 		// testnetMergeWithBlockNumber['hardforks'][8]['block'] = 16;
@@ -55,7 +55,7 @@ describe('[Common]: Merge/POS specific logic', () => {
 		expect(c.getHardforkByBlockNumber(12, 4999)).toBe('zond');
 	});
 
-	it('getHardforkByBlockNumber()', () => {
+	it('getHardforkByBlockNumber() with zond block boundary', () => {
 		const testnetMergeWithBlockNumber = JSON.parse(JSON.stringify(testnetPOS));
 		// Set Merge block to 15
 		// testnetMergeWithBlockNumber['hardforks'][8]['block'] = 16;
@@ -71,7 +71,7 @@ describe('[Common]: Merge/POS specific logic', () => {
 		expect(c.getHardforkByBlockNumber(18, 5001)).toBe('zond');
 	});
 
-	it('setHardforkByBlockNumber()', () => {
+	it('setHardforkByBlockNumber() with default POS hardforks', () => {
 		const customChains = [testnetPOS];
 		const c = new Common({
 			chain: 'testnetPOS',
@@ -87,7 +87,7 @@ describe('[Common]: Merge/POS specific logic', () => {
 		expect(c.setHardforkByBlockNumber(12, 4999)).toBe('zond');
 	});
 
-	it('setHardforkByBlockNumber()', () => {
+	it('setHardforkByBlockNumber() with merge block boundary', () => {
 		const testnetMergeWithBlockNumber = JSON.parse(JSON.stringify(testnetPOS));
 		// Set Merge block to 15
 		// testnetMergeWithBlockNumber['hardforks'][8]['block'] = 16;
@@ -105,7 +105,7 @@ describe('[Common]: Merge/POS specific logic', () => {
 		expect(c.setHardforkByBlockNumber(12, 4999)).toBe('zond');
 	});
 
-	it('setHardforkByBlockNumber()', () => {
+	it('setHardforkByBlockNumber() with zond block boundary', () => {
 		const testnetMergeWithBlockNumber = JSON.parse(JSON.stringify(testnetPOS));
 		// Set Merge block to 15
 		// testnetMergeWithBlockNumber['hardforks'][8]['block'] = 16;

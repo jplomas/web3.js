@@ -43,7 +43,8 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://127.0.0.1:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 export WEB3_SYSTEM_TEST_ENGINE=$ENGINE
 
-TEST_COMMAND=""
+TEST_COMMAND_KIND=""
+TEST_TASK=""
 
 if [[ $MODE == "ipc" ]]; then
         export WEB3_SYSTEM_TEST_PROVIDER=$IPC_PATH
@@ -52,19 +53,30 @@ fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	if [[ $TEST_OPTION == "coverage" ]]; then
-		TEST_COMMAND="test:coverage:integration"
+		TEST_COMMAND_KIND="script"
+		TEST_TASK="test:coverage:integration"
 	elif [[ $BACKEND == "testnet" || $BACKEND == "mainnet" ]]; then
-		TEST_COMMAND="lerna run test:e2e:$BACKEND"
+		TEST_COMMAND_KIND="turbo"
+		TEST_TASK="test:e2e:$BACKEND"
 	else
-		TEST_COMMAND="test:integration"
+		TEST_COMMAND_KIND="script"
+		TEST_TASK="test:integration"
 	fi
 else
-	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+	TEST_COMMAND_KIND="turbo"
+	TEST_TASK="test:e2e:$ENGINE"
 fi
 
+run_test_command() {
+	if [[ $TEST_COMMAND_KIND == "turbo" ]]; then
+		pnpm exec turbo run "$TEST_TASK"
+	else
+		pnpm run "$TEST_TASK"
+	fi
+}
 
 if [[ $BACKEND == "gqrl" || $BACKEND == "gqrl-binary" ]]; then
-	yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
+	pnpm run "$BACKEND:start:background" && pnpm run generate:accounts && run_test_command && pnpm run "$BACKEND:stop"
 else
-	yarn $TEST_COMMAND
+	run_test_command
 fi

@@ -15,16 +15,16 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 
 1. Setting up the Environment
 2. Create a new project directory and initialize a new Node.js project.
-3. Set up web3.js and connect to the Ganache network
+3. Set up web3.js and connect to a local Gqrl node
 4. Interact with the QRL blockchain using web3.js.
 
 ## Step 1: Setting up the Environment
 
 Before we start writing and deploying our contract, we need to set up our environment. For that, we need to install the following:
 
-1. Ganache - Ganache is a personal blockchain for QRL development that allows you to see how your smart contracts function in real-world scenarios. You can download it from http://truffleframework.com/ganache
+1. Gqrl - run a local Gqrl development node with HTTP JSON-RPC enabled on `http://localhost:8545`.
 2. Node.js - Node.js is a JavaScript runtime environment that allows you to run JavaScript on the server-side. You can download it from https://nodejs.org/en/download/
-3. npm - Node Package Manager is used to publish and install packages to and from the public npm registry or a private npm registry. Here is how to install it https://docs.npmjs.com/downloading-and-installing-node-js-and-npm. (Alternatively, you can use yarn instead of npm https://classic.yarnpkg.com/lang/en/docs/getting-started/)
+3. npm - Node Package Manager is used to publish and install packages to and from the public npm registry or a private npm registry. Here is how to install it https://docs.npmjs.com/downloading-and-installing-node-js-and-npm. (Alternatively, you can use pnpm instead of npm https://pnpm.io/installation)
 
 ## Step 2: Create a new project directory and initialize a new Node.js project
 
@@ -50,9 +50,9 @@ npm install --save @types/node
 
 This will install typescript for our project and install the types for node.
 
-## Step 3: Set up web3.js and connect to the Ganache network
+## Step 3: Set up web3.js and connect to a local Gqrl node
 
-In this step, we will set up the web3.js library and connect to the Ganache network. So, be sure to run Ganache if you did not already did.
+In this step, we will set up the web3.js library and connect to a local Gqrl development node. Make sure Gqrl is running locally with HTTP JSON-RPC available at `http://localhost:8545`.
 
 First, install the `web3` package using npm:
 
@@ -60,15 +60,15 @@ First, install the `web3` package using npm:
 npm install @theqrl/web3
 ```
 
-Note that we are installing the latest version of 4.x, at the time of this tutorial writing. You can check the latest version at https://www.npmjs.com/package/@theqrl/web3?activeTab=versions
+After the first audited release, you can check the latest published version at https://www.npmjs.com/package/@theqrl/web3?activeTab=versions.
 
 Next, create a new file called `index.ts` in your project directory and add the following code to it:
 
 ```javascript
 const { Web3 } = require('@theqrl/web3'); //  web3.js has native ESM builds and (`import Web3 from '@theqrl/web3'`)
 
-// Set up a connection to the Ganache network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+// Set up a connection to the local Gqrl node
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 // Log the current block number to the console
 web3.qrl
@@ -81,7 +81,7 @@ web3.qrl
 	});
 ```
 
-This code sets up a connection to the Ganache network and logs the current block number to the console.
+This code sets up a connection to the local Gqrl node and logs the current block number to the console.
 
 Run the following command to test the connection:
 
@@ -89,11 +89,11 @@ Run the following command to test the connection:
 npx ts-node index.ts
 ```
 
-If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
+If everything is working correctly, you should see the current block number logged to the console. If you get `connect ECONNREFUSED 127.0.0.1:8545`, check that your local Gqrl node is running and exposing HTTP JSON-RPC on port `8545`.
 
 ## Step 3: Interact with the QRL blockchain using web3.js
 
-In this step, we will use web3.js to interact with the Ganache network.
+In this step, we will use web3.js to interact with the local Gqrl node.
 
 In the first example, we are going to send a simple value transaction.
 Create a file named `transaction.ts` and fill it with the following code:
@@ -104,7 +104,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Set up a connection to the QRL network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 web3.qrl.Contract.handleRevert = true;
 
 async function interact() {
@@ -147,7 +147,7 @@ async function interact() {
 ```
 
 :::note
-📝 When running a local development blockchain using Ganache, all accounts are typically unlocked by default, allowing easy access and transaction execution during development and testing. This means that the accounts are accessible without requiring a private key or passphrase. That's why we just indicate the accounts in the examples with the `from` field.
+These examples assume your local Gqrl development node exposes accounts that can be used by JSON-RPC for local testing. Do not use production accounts or production private keys in local tutorial code.
 :::
 
 Run the following:
@@ -228,7 +228,7 @@ async function estimate() {
 		},
 	];
 
-	const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+	const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 	//get the available accounts
 	const accounts = await web3.qrl.getAccounts();
@@ -285,10 +285,10 @@ In the next example we are going to sign a transaction and use `sendSignedTransa
 
 ```typescript
 import Web3 from '@theqrl/web3';
-const web3 = new Web3('http://localhost:7545');
+const web3 = new Web3('http://localhost:8545');
 
-//make sure to copy the private key from ganache
-const privateKey = '0x0fed6f64e01bc9fac9587b6e7245fd9d056c3c004ad546a17d3d029977f0930a';
+// Replace this with a private key for a local development account only.
+const privateKey = '0x...';
 const value = web3.utils.toPlanck('1', 'quanta');
 
 async function sendSigned() {
@@ -353,15 +353,13 @@ With this knowledge, you can start experimenting with the QRL blockchain. Keep i
 
 ## Additional Resources
 
--   [Official web3.js Documentation](https://docs.web3js.org/)
+-   [QRL Web3.js Documentation](https://docs.theqrl.org/)
 -   [Hyperion Documentation](https://solidity.readthedocs.io/)
--   [Ganache](https://www.trufflesuite.com/ganache)
--   [Truffle](https://trufflesuite.com/)
--   [Remix IDE](https://remix.ethereum.org/)
+-   Gqrl local development node
 
 ## Tips and Best Practices
 
--   Always test your smart contracts on a local network like Ganache before deploying them to the mainnet.
+-   Always test your smart contracts on a local Gqrl development node before deploying them to mainnet.
 -   Use the latest version of web3.js and Hyperion to take advantage of the latest features and security patches.
 -   Keep your private keys secure and never share them with anyone.
 -   Use the gas limit and gas fee parameters carefully to avoid spending too much on transaction fees.

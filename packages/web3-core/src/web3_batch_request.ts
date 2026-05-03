@@ -42,7 +42,11 @@ export class Web3BatchRequest {
 		const payload = jsonRpc.toPayload(request) as JsonRpcRequest;
 		const promise = new Web3DeferredPromise<ResponseType>();
 
-		this._requests.set(payload.id as number, { payload, promise });
+		// Batch entries are heterogeneous; the returned promise keeps the caller's response type.
+		this._requests.set(payload.id as number, {
+			payload,
+			promise: promise as unknown as Web3DeferredPromise<unknown>,
+		});
 
 		return promise;
 	}

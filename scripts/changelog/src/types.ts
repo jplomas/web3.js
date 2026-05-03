@@ -67,7 +67,7 @@ export const getCommands = () => {
 			name: entrySectionHeader.toLowerCase(),
 			description: `Adds changelogEntry to packageName's CHANGELOG.md under ${entrySectionHeader} header`,
 			arguments: ['packageName', 'changelogEntry'],
-			example: `yarn changelog ${entrySectionHeader.toLowerCase()} [packageName] [changelogEntry]`,
+			example: `pnpm run changelog ${entrySectionHeader.toLowerCase()} [packageName] [changelogEntry]`,
 			commandFunction: addChangelogEntry,
 		});
 	}

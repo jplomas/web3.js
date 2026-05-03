@@ -31,13 +31,11 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/esm_black_box
-yarn --update-checksums
-yarn
+pnpm install --ignore-workspace --no-frozen-lockfile
 
-yarn "test:$BACKEND:$MODE"
+pnpm run "test:$BACKEND:$MODE"
 
 cd test/cjs_black_box
-yarn --update-checksums
-yarn
+pnpm install --ignore-workspace --no-frozen-lockfile
 
-yarn "test:$BACKEND:$MODE"
+pnpm run "test:$BACKEND:$MODE"

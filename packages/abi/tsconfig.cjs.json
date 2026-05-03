@@ -19,7 +19,8 @@
 		"preserveWatchOutput": true,
 		"noImplicitThis": true,
 		"noImplicitAny": true,
-		"pretty": false
+		"pretty": false,
+		"types": ["node"]
 	},
 	"include": ["src/**/*", "index.d.ts"]
 }

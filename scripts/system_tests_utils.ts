@@ -48,15 +48,16 @@ import {
 	Web3QRLExecutionAPI,
 } from '@theqrl/web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Web3 from '@theqrl/web3';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { NonPayableMethodObject } from '@theqrl/web3-qrl-contract';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import HttpProvider from '@theqrl/web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from '@theqrl/web3-providers-ipc';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import type Web3 from '@theqrl/web3';
 import accountsString from './accounts.json';
+
+type NonPayableMethodObject = {
+	encodeABI: () => string;
+};
 
 /**
  * Get the env variable from Cypress if it exists or node process
@@ -257,7 +258,7 @@ const walletsOnWorker = 20;
 if (tempAccountList.length === 0) {
 	tempAccountList = accountsString;
 }
-let currentIndex = Math.floor(Math.random() * (tempAccountList ? tempAccountList.length : 0));
+let currentIndex = Math.floor(Math.random() * tempAccountList.length);
 export const createTempAccount = async (
 	config: {
 		refill?: boolean;
@@ -265,7 +266,7 @@ export const createTempAccount = async (
 		password?: string;
 	} = {},
 ): Promise<{ address: string; seed: string }> => {
-	if (config.refill === false || config.seed || config.password) {
+	if ((typeof config.refill === 'boolean' && !config.refill) || config.seed || config.password) {
 		return createNewAccount({
 			refill: config.refill ?? true,
 			seed: config.seed,
@@ -301,8 +302,18 @@ export const getSystemTestAccountsWithKeys = async (): Promise<
 export const getSystemTestAccounts = async (): Promise<string[]> =>
 	(await getSystemTestAccountsWithKeys()).map(a => a.address);
 
+type Web3Constructor = new (provider: SupportedProviders) => Web3;
+
+const createWeb3 = (provider: unknown): Web3 => {
+	// Load the umbrella package only in helpers that need it. Some unit tests import this
+	// fixture for account helpers, and eager loading races Turbo's package build outputs.
+	// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports, import/no-extraneous-dependencies, global-require
+	const Web3Ctor = (require('@theqrl/web3') as { default: Web3Constructor }).default;
+	return new Web3Ctor(provider as SupportedProviders);
+};
+
 export const signTxAndSendEIP1559 = async (provider: unknown, tx: Transaction, seed: string) => {
-	const web3 = new Web3(provider as Web3BaseProvider);
+	const web3 = createWeb3(provider);
 	const acc = web3.qrl.accounts.seedToAccount(seed);
 	web3.qrl.wallet?.add(seed);
 
@@ -331,7 +342,7 @@ export const signAndSendContractMethodEIP1559 = async (
 		seed,
 	);
 
-export const createLocalAccount = async (web3: Web3) => {
+export const createLocalAccount = async (web3: ReturnType<typeof createWeb3>) => {
 	const account = web3.qrl.accounts.create();
 	await refillAccount(
 		(
@@ -359,13 +370,9 @@ const waitForSocketStatus = async <ResultType>(
 	}
 
 	return new Promise<ResultType>((resolve, reject) => {
-		const eventHandler = ((
-			_error: Error | ProviderRpcError | undefined,
-			data?: JsonRpcSubscriptionResult | JsonRpcNotification<ResultType>,
-		) => {
-			cleanup();
-			resolve((data as unknown as ResultType) ?? defaultResult);
-		}) as Web3ProviderEventCallback<ResultType>;
+		let statusInterval: ReturnType<typeof setInterval>;
+		let timeoutHandle: ReturnType<typeof setTimeout>;
+		let eventHandler: Web3ProviderEventCallback<ResultType>;
 
 		const cleanup = () => {
 			clearInterval(statusInterval);
@@ -373,14 +380,22 @@ const waitForSocketStatus = async <ResultType>(
 			provider.removeListener(eventName, eventHandler);
 		};
 
-		const statusInterval = setInterval(() => {
+		eventHandler = ((
+			_error: Error | ProviderRpcError | undefined,
+			data?: JsonRpcSubscriptionResult | JsonRpcNotification<ResultType>,
+		) => {
+			cleanup();
+			resolve((data as unknown as ResultType) ?? defaultResult);
+		}) as Web3ProviderEventCallback<ResultType>;
+
+		statusInterval = setInterval(() => {
 			if (provider.getStatus() === expectedStatus) {
 				cleanup();
 				resolve(defaultResult);
 			}
 		}, socketPollIntervalMs);
 
-		const timeoutHandle = setTimeout(() => {
+		timeoutHandle = setTimeout(() => {
 			cleanup();
 			reject(new Error(`Timeout waiting for socket status "${expectedStatus}".`));
 		}, socketWaitTimeoutMs);
@@ -422,10 +437,10 @@ export const waitForEvent = async (
 	});
 
 export const sendFewSampleTxs = async (cnt = 1) => {
-	const web3 = new Web3(getSystemTestProviderUrl());
+	const web3 = createWeb3(getSystemTestProviderUrl());
 	const fromAcc = await createLocalAccount(web3);
 	const toAcc = createAccount();
-	const res = [];
+	const res: unknown[] = [];
 	for (let i = 0; i < cnt; i += 1) {
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
@@ -437,7 +452,7 @@ export const sendFewSampleTxs = async (cnt = 1) => {
 			}),
 		);
 	}
-	await closeOpenConnection(web3);
+	await closeOpenConnection(web3 as unknown as Web3Context);
 	return res;
 };
 

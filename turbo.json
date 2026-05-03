@@ -1,0 +1,80 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"clean": {
+			"cache": false
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["lib/**", "dist/**", "src/version.ts"]
+		},
+		"build:cjs": {
+			"dependsOn": ["^build:cjs"],
+			"outputs": ["lib/commonjs/**"]
+		},
+		"build:esm": {
+			"dependsOn": ["^build:esm"],
+			"outputs": ["lib/esm/**"]
+		},
+		"build:types": {
+			"dependsOn": ["^build:types"],
+			"outputs": ["lib/types/**", "lib/**/*.d.ts"]
+		},
+		"build:web": {
+			"dependsOn": ["build", "^build"],
+			"outputs": ["dist/**"]
+		},
+		"build:web:analyze": {
+			"dependsOn": ["build:web"],
+			"outputs": ["dist/**"]
+		},
+		"lint": {},
+		"lint:fix": {
+			"cache": false
+		},
+		"format": {
+			"cache": false
+		},
+		"test": {
+			"dependsOn": ["build", "^build"]
+		},
+		"test:unit": {
+			"dependsOn": ["build", "^build"]
+		},
+		"test:integration": {
+			"dependsOn": ["build", "^build"]
+		},
+		"test:coverage:unit": {
+			"dependsOn": ["build", "^build"],
+			"outputs": [".coverage/**"]
+		},
+		"test:coverage:integration": {
+			"dependsOn": ["build", "^build"],
+			"outputs": [".coverage/**"]
+		},
+		"test:e2e:gqrl": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"test:e2e:mainnet": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"test:e2e:testnet": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"test:e2e:electron": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"test:e2e:chrome": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"test:e2e:firefox": {
+			"cache": false,
+			"dependsOn": ["build"]
+		}
+	}
+}
