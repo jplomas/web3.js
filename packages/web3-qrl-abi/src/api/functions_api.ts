@@ -62,10 +62,10 @@ export const encodeFunctionSignature = (functionName: string | AbiFunctionFragme
 
 	let name: string;
 
-	if (functionName && (typeof functionName === 'function' || typeof functionName === 'object')) {
-		name = jsonInterfaceMethodToString(functionName);
-	} else {
+	if (typeof functionName === 'string') {
 		name = functionName;
+	} else {
+		name = jsonInterfaceMethodToString(functionName);
 	}
 
 	return sha3Raw(name).slice(0, 10);
