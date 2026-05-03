@@ -51,9 +51,14 @@ import {
 import HttpProvider from '@theqrl/web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IpcProvider } from '@theqrl/web3-providers-ipc';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import type Web3 from '@theqrl/web3';
 import accountsString from './accounts.json';
+
+// Avoid an eager type-only import of the umbrella '@theqrl/web3' package: it depends on
+// '@theqrl/web3-qrl', so it can't be a dependency of web3-qrl, and turbo therefore doesn't
+// guarantee its lib outputs exist when unit tests pull this file in via fixture symlinks.
+// The runtime require below is lazy and only reached from integration-style helpers.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Web3 = any;
 
 type NonPayableMethodObject = {
 	encodeABI: () => string;
