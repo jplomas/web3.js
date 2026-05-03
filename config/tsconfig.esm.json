@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"outDir": "./lib/esm",
 		"esModuleInterop": true,
-		"module": "es2020"
+		"module": "es2020",
+		"types": ["node"]
 	},
 	"include": ["src/**/*", "index.d.ts"]
 }

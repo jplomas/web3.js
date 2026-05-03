@@ -34,6 +34,7 @@ describe('signTransaction', () => {
 			const account: Web3Account = web3.qrl.accounts.seedToAccount(txObj.seed);
 
 			web3.qrl.wallet?.add(txObj.seed);
+			let sentRawTransaction: unknown;
 
 			const normalTx: Transaction = {
 				...txObj.transaction,
@@ -83,7 +84,7 @@ describe('signTransaction', () => {
 							break;
 
 						case 'qrl_sendRawTransaction':
-							expect(payload.params[0]).toBe(txObj.signedLondon); // validate transaction for London HF
+							[sentRawTransaction] = payload.params;
 
 							// if (txObj.transaction.maxPriorityFeePerGas !== undefined) {
 							// 	// eslint-disable-next-line jest/no-conditional-expect
@@ -97,7 +98,7 @@ describe('signTransaction', () => {
 							break;
 
 						default:
-							throw new Error(`Unknown payload ${payload}`);
+							throw new Error(`Unknown payload ${JSON.stringify(payload)}`);
 					}
 
 					return new Promise(resolve => {
@@ -111,6 +112,7 @@ describe('signTransaction', () => {
 				checkRevertBeforeSending: false,
 			});
 			expect(res).toBeDefined();
+			expect(sentRawTransaction).toBe(txObj.signedLondon); // validate transaction for London HF
 		},
 	);
 });

@@ -227,7 +227,7 @@ describe('Web3QRL.sendSignedTransaction', () => {
 
 			// TODO Confirmations are dependent on the next block being mined,
 			// this is manually triggering the next block to be created since both
-			// Gqrl and Ganache wait for transaction before mining a block.
+			// Some test clients wait for a transaction before mining a block.
 			// This should be revisited to implement a better solution
 			await web3QRL.sendTransaction({
 				from: tempAcc.address,

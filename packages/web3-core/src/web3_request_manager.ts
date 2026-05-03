@@ -62,8 +62,8 @@ const availableProviders: {
 	HttpProvider: Web3BaseProviderConstructor;
 	WebsocketProvider: Web3BaseProviderConstructor;
 } = {
-	HttpProvider: HttpProvider as Web3BaseProviderConstructor,
-	WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
+	HttpProvider: HttpProvider as unknown as Web3BaseProviderConstructor,
+	WebsocketProvider: WSProvider as unknown as Web3BaseProviderConstructor,
 };
 
 export class Web3RequestManager<

@@ -244,8 +244,8 @@ export class Web3Context<
 
 	// eslint-disable-next-line no-use-before-define
 	public registerPlugin(plugin: Web3PluginBase) {
-		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
-		if (this[plugin.pluginNamespace] !== undefined)
+		const context = this as unknown as Record<string, unknown>;
+		if (context[plugin.pluginNamespace] !== undefined)
 			throw new ExistingPluginNamespaceError(plugin.pluginNamespace);
 
 		const _pluginObject = {
@@ -372,10 +372,8 @@ export class Web3Context<
 	 * Note: This method is only for backward compatibility, and It is recommended to use Web3 v4 Plugin feature for extending web3.js functionality if you are developing some thing new.
 	 */
 	public extend(extendObj: ExtensionObject) {
-		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
-		if (extendObj.property && !this[extendObj.property])
-			// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
-			this[extendObj.property] = {};
+		const context = this as unknown as Record<string, Record<string, unknown> | unknown>;
+		if (extendObj.property && !context[extendObj.property]) context[extendObj.property] = {};
 
 		extendObj.methods?.forEach(element => {
 			const method = async (...givenParams: unknown[]) =>
@@ -385,11 +383,9 @@ export class Web3Context<
 				});
 
 			if (extendObj.property)
-				// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-				this[extendObj.property][element.name] = method;
-			// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
-			else this[element.name] = method;
+				(context[extendObj.property] as Record<string, unknown>)[element.name] = method;
+			else context[element.name] = method;
 		});
 		return this;
 	}

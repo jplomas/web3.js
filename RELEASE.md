@@ -1,62 +1,110 @@
 # @theqrl/web3.js Release Guidelines
 
-_This document has not yet been fully ported from the original web3.js repository. It is a work in progress and will be updated in the future._
+This repository uses pnpm, Turbo, and `multi-semantic-release`. Releases are intended to be produced by GitHub Actions from `main` after the audit-readiness gates are complete and the repository is pushed under the `theQRL/web3.js` upstream project.
 
-_We need to use lerna pinned at v6 either with npx or installed globally to run the commands in this document_
+Until the first audited release, `main` is treated as unreleased. Do not publish packages manually from a workstation.
 
-## Version Number Definition
+## Release Strategy
 
-The @theqrl/web3.js project follows the [semver 2.0.0 specification](https://semver.org/).
+Packages are versioned independently by `multi-semantic-release` using Conventional Commits. When a release is enabled, CI analyzes commits merged to `main`, decides which workspace packages need new versions, updates package changelogs, creates Git tags and GitHub releases, and publishes public packages to the `@theqrl` npm organization.
 
-### Major
+Release publishing is guarded by:
 
-The `major` version has to be increased as soon as a breaking change is introduced. The definition of a breaking change is anything that requires a depending project to update their code base, build pipeline or tests.
+- The workflow must run in `theQRL/web3.js`.
+- The repository variable `RELEASES_ENABLED` must be set to `true`.
+- The protected GitHub environment `npm-publish` must approve the job.
+- The CI workflow must pass first.
+- Release tarballs must pass CommonJS and ESM smoke tests on Node 20 before publish.
+- npm publishing must run from Node 22.14 or newer with npm 11.5.1 or newer so npm trusted publishing can use OIDC.
+- npm publishing must use provenance (`NPM_CONFIG_PROVENANCE=true`).
 
-### Minor
+## Commit Message Format
 
-The `minor` is increased as soon as new smaller features do get introduced. A `minor` release will not affect any depending project. Such a release only introduces smaller enhancements and features a project could use.
+Use Conventional Commits:
 
-### Patch
+```text
+<type>[optional scope]: <description>
 
-A patch release only contains required bug fixes with a low risk to impact depending project.
+[optional body]
 
-Further details about versioning can be found in the [semver 2.0.0 specification](https://semver.org/) we follow.
+[optional footer(s)]
+```
 
-## Release Process
+Release-triggering commits:
 
-### Running E2E Tests
+| Commit type | Version bump |
+| --- | --- |
+| `fix:` | Patch |
+| `perf:` | Patch |
+| `feat:` | Minor |
+| `feat!:` or `BREAKING CHANGE:` | Major |
 
-`E2E Network Tests` will be triggered to run via a Github workflow when a PR is open for a branch prefixed with `release/` and is being merged into `4.x` branch. These tests depend on a couple of ENVs to be set that are configurable in Github's Action Secrets when running these tests in CI. The following required secrets are:
+Non-release changes should use prefixes such as `docs:`, `test:`, `ci:`, `chore:`, `refactor:`, or `style:`.
 
--   `E2E_TESTS_ALLOWED_SEND_TRANSACTION`: If set to `false` this will keep the Sepolia tests that spend ETH from runnning, setting to anything else will cause them to run
--   `TEST_ACCOUNT_PRIVATE_KEY`: The private key of the Sepolia account to use when submitting transactions
--   `INFURA_SEPOLIA_HTTP`: The provider to be used to access the Sepolia network
--   `INFURA_MAINNET_HTTP`: The provider to be used to access Mainnet
+## Pre-Release Requirements
 
----
+Before setting `RELEASES_ENABLED=true`, the release owner must confirm:
 
-1. `git checkout 4.x`: Verify you are on the `4.x` base branch
-2. `git checkout -b release/bumped-version`: Create and checkout a branch with the `bumped-version` e.g. `git checkout -b release/4.0.0-alpha.0`
-    - `bumped-version` of release branch should be of main web3 package.
-3. `yarn`: Verify all dependencies have been installed
-4. Bump packages version numbers using `lerna version --no-push --no-private --no-git-tag-version` . This will update package versions and also run lifecycle scripts.
-    - It will prompt for new version , modify package metadata and run life cycle scripts (in our case `version`), for bootstrapping lerna will use underlying yarn.
-5. Update the root and each package's `CHANGELOG.md`: Replace the `## [Unreleased]` header with new package version, and move `## [Unreleased]` header below listed changes
-    - For root `CHANGELOG.md` copy over all the listed changes for each package
-6. Run `yarn build:web` after lerna updates version and builds lib . This will bundle minified builds.
-7. Commit the version bump changes and builds in release branch created in step 2
-8. `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v4.0.1-alpha.0`
-9. `git push origin release/bumped-version`: Push release branch to `origin`
-10. `git push origin --tags`: Push release tag created in `Step 8` to `origin`
-11. Create a draft release on Github similar to [this Chainsafe example](https://github.com/chainsafe/web3.js/releases/tag/web3-providers-base%401.0.0-alpha.1)
-    - Check `This is a pre-release`
-    - In the release description, copy all entries in `CHANGELOG.md` for the version being released
-12. Click `Save draft`
-13. Open pull request to merge branch created in `Step 2` (`release/bumped-version`) into `4.x`
-14. Wait for all tests to pass in github CI/CD , If there are any unusual warnings or errors in logs, discuss with team
-15. When sufficient approvals have been met, publish draft release created in `Step 11`
-16. Run `npx lerna publish from-package --ignore-scripts --dist-tag <<TAG>>` in the root directory to publish packages to NPM
-    - IMPORTANT: Replace `<<TAG>>` with required tag in above command, e.g. if publishing RC, use following command:
-      `npx lerna publish from-package --ignore-scripts --dist-tag rc`
-    - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry.
-17. Finally if all of above steps are completed successfully, merge release PR into `4.x` branch.
+- The audit-readiness tracker has no open P0 release or CI blockers.
+- Required branch protection is configured for `main` according to
+  [`docs/repository-governance.md`](docs/repository-governance.md).
+- `CODEOWNERS` review is enforced.
+- The `npm-publish` environment is protected and limited to release maintainers.
+- npm organization access and trusted-publishing configuration for all `@theqrl/*` packages is ready.
+- Trusted publishing is scoped to `.github/workflows/release.yml`.
+- `pnpm install --frozen-lockfile --ignore-scripts`, `pnpm run doctor`,
+  `pnpm run audit:supply-chain`, and required build/test gates pass in CI.
+- `pnpm run release:dry-run` has been reviewed from a release-prep branch.
+
+## CI Release Flow
+
+The release workflow:
+
+1. Runs the reusable CI workflow.
+2. Uses Node 22.14 in the release-preparation job.
+3. Installs dependencies from `pnpm-lock.yaml`.
+4. Builds publishable packages.
+5. Snapshots current package versions.
+6. Runs `multi-semantic-release` to update package versions, changelogs, Git tags, and GitHub releases.
+7. Rebuilds packages after version updates.
+8. Packs released packages.
+9. Generates SHA-256 and SHA-512 checksums.
+10. Uploads tarballs and release metadata as a short-lived workflow artefact.
+11. Downloads the tarballs in a Node 20 job and smoke-tests CommonJS `require()` and ESM `import`.
+12. Publishes the already-tested tarballs from a Node 22.14/npm 11 job using npm trusted publishing.
+13. Generates SPDX and CycloneDX SBOMs.
+14. Creates GitHub attestations for release artefacts and SBOMs.
+15. Uploads tarballs, checksums, and SBOMs to each package release.
+
+## Local Commands
+
+Use these commands only for release preparation and verification:
+
+```sh
+corepack enable
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm run doctor
+pnpm run audit:supply-chain
+pnpm run build
+pnpm run build:web
+pnpm run release:inspect-packages
+pnpm run release:pack-packages
+pnpm run release:packages
+pnpm run release:smoke-tarballs dist/released-packages.tsv dist/tarballs
+pnpm run release:dry-run
+```
+
+`pnpm run release` is for CI. Do not run it locally against the upstream repository.
+
+## Package Artefacts
+
+Release tarballs must be built from CI output. Generated `lib/` and `dist/` directories are not expected to be committed unless that policy is explicitly changed before audit freeze.
+
+Each package release should have:
+
+- npm provenance.
+- GitHub release notes generated from Conventional Commits.
+- The npm tarball attached to the GitHub release.
+- SHA-256 and SHA-512 checksum files.
+- SPDX and CycloneDX SBOMs.
+- GitHub build-provenance and SBOM attestations.

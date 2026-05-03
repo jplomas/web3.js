@@ -1,7 +1,7 @@
 # @theqrl/web3.js - Web3-Errors
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
-![Node Version](https://img.shields.io/badge/node-18.x-green)
+![Node Version](https://img.shields.io/badge/node-%3E%3D20-green)
 [![NPM Package](https://img.shields.io/npm/v/@theqrl/web3-errors)](https://www.npmjs.com/package/@theqrl/web3-errors)
 [![Downloads](https://img.shields.io/npm/dy/@theqrl/web3-errors)](https://www.npmjs.com/package/@theqrl/web3-errors)
 
@@ -11,7 +11,7 @@ This is a sub-package of [@theqrl/web3.js](https://github.com/theqrl/web3.js).
 
 ## Installation
 
-You can install the package either using [NPM](https://www.npmjs.com/package/@theqrl/web3-errors) or using [Yarn](https://yarnpkg.com/package/@theqrl/web3-errors)
+You can install the package either using [NPM](https://www.npmjs.com/package/@theqrl/web3-errors) or using [pnpm](https://pnpm.io/)
 
 ### Using NPM
 
@@ -19,10 +19,10 @@ You can install the package either using [NPM](https://www.npmjs.com/package/@th
 npm install @theqrl/web3-errors
 ```
 
-### Using Yarn
+### Using pnpm
 
 ```bash
-yarn add @theqrl/web3-errors
+pnpm add @theqrl/web3-errors
 ```
 
 ## Getting Started
@@ -32,8 +32,8 @@ yarn add @theqrl/web3-errors
 
 ## Prerequisites
 
--   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
--   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
+-   :gear: [NodeJS](https://nodejs.org/) (20 or newer)
+-   :toolbox: [pnpm](https://pnpm.io/) and [Turbo](https://turbo.build/)
 
 ## Package.json Scripts
 
@@ -49,7 +49,7 @@ yarn add @theqrl/web3-errors
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: https://docs.theqrl.org/
-[repo]: https://github.com/web3/web3.js/tree/main/packages/web3-errors
-[npm-image]: https://img.shields.io/github/package-json/v/web3/web3.js/main?filename=packages%2Fweb3-errors%2Fpackage.json
-[npm-url]: https://npmjs.org/package/web3-errors
-[downloads-image]: https://img.shields.io/npm/dm/web3-errors?label=npm%20downloads
+[repo]: https://github.com/theQRL/web3.js/tree/main/packages/web3-errors
+[npm-image]: https://img.shields.io/github/package-json/v/theQRL/web3.js/main?filename=packages%2Fweb3-errors%2Fpackage.json
+[npm-url]: https://npmjs.org/package/@theqrl/web3-errors
+[downloads-image]: https://img.shields.io/npm/dm/@theqrl/web3-errors?label=npm%20downloads

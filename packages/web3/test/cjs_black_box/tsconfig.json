@@ -2,7 +2,12 @@
 	"extends": "../../tsconfig.cjs.json",
 	"compilerOptions": {
 		"declaration": false,
-		"declarationMap": false
+		"declarationMap": false,
+		"types": ["node", "jest"],
+		"baseUrl": "../../..",
+		"paths": {
+			"@theqrl/*": ["*/src/index.ts"]
+		}
 	},
 	"include": ["./**/*", "../node_modules/jest-extended/types/**/*.ts"]
 }

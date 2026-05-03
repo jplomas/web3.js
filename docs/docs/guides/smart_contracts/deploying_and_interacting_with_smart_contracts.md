@@ -7,7 +7,7 @@ sidebar_label: 'Deploying and Interacting with Smart Contracts'
 
 ## Introduction
 
-In this tutorial, we will walk through the process of deploying a smart contract to the QRL network, generating the ABI, and interacting with the smart contract using web3.js. We will cover the basic concepts of QRL, Hyperion, and web3.js and provide step-by-step instructions for deploying a simple smart contract to a test network using Ganache.
+In this tutorial, we will walk through the process of deploying a smart contract to a local Gqrl development node, generating the ABI, and interacting with the smart contract using web3.js. We will cover the basic concepts of QRL, Hyperion, and web3.js and provide step-by-step instructions for deploying a simple smart contract to a local QRL-compatible JSON-RPC endpoint.
 
 ## Overview
 
@@ -17,17 +17,17 @@ Here is a high-level overview of the steps we will be taking in this tutorial:
 2. Create a new project directory and initialize a new Node.js project.
 3. Write the Hyperion code for the smart contract and save it to a file.
 4. Compile the Hyperion code using the Hyperion Compiler and get its ABI and Bytecode.
-5. Set up the web3.js library and connect to the Ganache network.
-6. Deploy the smart contract to the Ganache network using web3.js.
+5. Set up the web3.js library and connect to the local Gqrl node.
+6. Deploy the smart contract to the local Gqrl node using web3.js.
 7. Interact with the smart contract using web3.js.
 
 ## Step 1: Setting up the Environment
 
 Before we start writing and deploying our contract, we need to set up our environment. For that, we need to install the following:
 
-1. Ganache - Ganache is a personal blockchain for QRL development that allows you to see how your smart contracts function in real-world scenarios. You can download it from http://truffleframework.com/ganache
+1. Gqrl - run a local Gqrl development node with HTTP JSON-RPC enabled on `http://localhost:8545`.
 2. Node.js - Node.js is a JavaScript runtime environment that allows you to run JavaScript on the server-side. You can download it from https://nodejs.org/en/download/
-3. npm - Node Package Manager is used to publish and install packages to and from the public npm registry or a private npm registry. Here is how to install it https://docs.npmjs.com/downloading-and-installing-node-js-and-npm. (Alternatively, you can use yarn instead of npm https://classic.yarnpkg.com/lang/en/docs/getting-started/)
+3. npm - Node Package Manager is used to publish and install packages to and from the public npm registry or a private npm registry. Here is how to install it https://docs.npmjs.com/downloading-and-installing-node-js-and-npm. (Alternatively, you can use pnpm instead of npm https://pnpm.io/installation)
 
 ## Step 2: Create a new project directory and initialize a new Node.js project
 
@@ -162,29 +162,28 @@ node compile.js
 If everything is working correctly, you should see both the Contract Bytecode and the Contract ABI logged to the console.
 
 :::tip
-📝 There are couple of other ways to get the bytecode and the ABI like using Truffle development framework and running `truffle compile` (https://trufflesuite.com/docs/truffle/quickstart/#compile).
-Another way is to use Remix and check the _Compilation Details_ after compiling the smart contract (https://remix-ide.readthedocs.io/en/latest/run.html#using-the-abi-with-ataddress)
+There may be other ways to generate ABI and bytecode, but this guide uses the QRL Hyperion compiler path so the example stays aligned with the QRL toolchain.
 :::
 
-## Step 5: Set up web3.js and connect to the Ganache network
+## Step 5: Set up web3.js and connect to the local Gqrl node
 
-In this step, we will set up the web3.js library and connect to the Ganache network. So, be sure to run Ganache if you did not already did.
+In this step, we will set up the web3.js library and connect to a local Gqrl development node. Make sure Gqrl is running locally with HTTP JSON-RPC available at `http://localhost:8545`.
 
 First, install the `@theqrl/web3` package using npm:
 
 ```
-npm install @theqrl/web3@4.0.1-rc.1
+npm install @theqrl/web3
 ```
 
-Note that we are installing the latest version of 4.x, at the time of this tutorial writing. You can check the latest version at https://www.npmjs.com/package/@theqrl/web3?activeTab=versions
+After the first audited release, you can check the latest published version at https://www.npmjs.com/package/@theqrl/web3?activeTab=versions.
 
 Next, create a new file called `index.js` in your project directory and add the following code to it:
 
 ```javascript
 const { Web3 } = require('@theqrl/web3'); //  web3.js has native ESM builds and (`import Web3 from '@theqrl/web3'`)
 
-// Set up a connection to the Ganache network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+// Set up a connection to the local Gqrl node
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 // Log the current block number to the console
 web3.qrl
@@ -197,7 +196,7 @@ web3.qrl
 	});
 ```
 
-This code sets up a connection to the Ganache network and logs the current block number to the console.
+This code sets up a connection to the local Gqrl node and logs the current block number to the console.
 
 Run the following command to test the connection:
 
@@ -205,11 +204,11 @@ Run the following command to test the connection:
 node index.js
 ```
 
-If everything is working correctly, you should see the current block number logged to the console. However, if you got an error with the reason `connect ECONNREFUSED 127.0.0.1:7545` then double check that you are running Ganache locally on port `7545`.
+If everything is working correctly, you should see the current block number logged to the console. If you get `connect ECONNREFUSED 127.0.0.1:8545`, check that your local Gqrl node is running and exposing HTTP JSON-RPC on port `8545`.
 
-## Step 6: Deploy the smart contract to the Ganache network using web3.js
+## Step 6: Deploy the smart contract to the local Gqrl node using web3.js
 
-In this step, we will use web3.js to deploy the smart contract to the Ganache network.
+In this step, we will use web3.js to deploy the smart contract to the local Gqrl node.
 
 Create a file named `deploy.js` and fill it with the following code:
 
@@ -221,7 +220,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Set up a connection to the QRL network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 web3.qrl.Contract.handleRevert = true;
 
 // Read the bytecode from the file system
@@ -249,7 +248,7 @@ async function deploy() {
 	console.log('estimated gas:', gas);
 
 	try {
-		// Deploy the contract to the Ganache network
+		// Deploy the contract to the local Gqrl node
 		const tx = await myContract.send({
 			from: defaultAccount,
 			gas,
@@ -269,7 +268,7 @@ async function deploy() {
 deploy();
 ```
 
-This code reads the bytecode from the `MyContractBytecode.bin` file and creates a new contract object using the ABI and bytecode. And, as an optional step, it estimates the gas that will be used to deploy the smart contract. It then deploys the contract to the Ganache network. It also saves the address inside the file `MyContractAddress.bin` which we be used when interacting with the contract.
+This code reads the bytecode from the `MyContractBytecode.bin` file and creates a new contract object using the ABI and bytecode. As an optional step, it estimates the gas that will be used to deploy the smart contract. It then deploys the contract to the local Gqrl node. It also saves the address inside the file `MyContractAddress.bin`, which will be used when interacting with the contract.
 
 Run the following command to deploy the smart contract:
 
@@ -287,7 +286,7 @@ Contract deployed at address: Q16447837D4A572d0a8b419201bdcD91E6e428Df1
 
 ## Step 7: Interact with the smart contract using web3.js
 
-In this step, we will use web3.js to interact with the smart contract on the Ganache network.
+In this step, we will use web3.js to interact with the smart contract on the local Gqrl node.
 
 Create a file named `interact.js` and fill it with the following code:
 
@@ -297,7 +296,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Set up a connection to the QRL network
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 web3.qrl.Contract.handleRevert = true;
 
 // Read the contract address from the file system
@@ -419,15 +418,13 @@ With this knowledge, you can start experimenting with writing smart contract in 
 
 ## Additional Resources
 
--   [Official web3.js Documentation](https://docs.theqrl.org/)
+-   [QRL Web3.js Documentation](https://docs.theqrl.org/)
 -   [Hyperion Documentation](https://solidity.readthedocs.io/)
--   [Ganache](https://www.trufflesuite.com/ganache)
--   [Truffle](https://trufflesuite.com/)
--   [Remix IDE](https://remix.ethereum.org/)
+-   Gqrl local development node
 
 ## Tips and Best Practices
 
--   Always test your smart contracts on a local network like Ganache before deploying them to the mainnet.
+-   Always test your smart contracts on a local Gqrl development node before deploying them to mainnet.
 -   Use the latest version of web3.js and Hyperion to take advantage of the latest features and security patches.
 -   Keep your private keys secure and never share them with anyone.
 -   Use the gas limit and gas fee parameters carefully to avoid spending too much on transaction fees.

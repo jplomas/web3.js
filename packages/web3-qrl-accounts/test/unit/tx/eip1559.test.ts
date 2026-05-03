@@ -19,9 +19,9 @@ import { hexToBytes } from '@theqrl/web3-utils';
 import { Chain, Common, Hardfork } from '../../../src/common';
 
 import { FeeMarketEIP1559Transaction } from '../../../src';
+import { newMLDSA87Descriptor } from '../../../src/qrl_wallet';
 
 import testdata from '../../fixtures/json/eip1559.json';
-import { newMLDSA87Descriptor } from '@theqrl/wallet.js';
 
 const common = new Common({
 	chain: 1,
@@ -176,7 +176,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 		const expectedHash = hexToBytes(
 			'0xd901a3a8a24477c4d032ca89da077bb710ee581f51f66d087b9732e78d66833e',
 		);
-		const desc = newMLDSA87Descriptor();
+			const desc = newMLDSA87Descriptor();
 		const extraParams = Uint8Array.from([]);
 		expect(unsignedTx.getMessageToSign(desc.toBytes(), extraParams, true)).toEqual(expectedHash);
 		const expectedSerialization = hexToBytes(

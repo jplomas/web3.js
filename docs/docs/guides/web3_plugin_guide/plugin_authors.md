@@ -3,17 +3,15 @@ sidebar_position: 1
 sidebar_label: 'For Plugin Developers'
 ---
 
-# web3.js Plugin Developer Guide
+# QRL Web3.js Plugin Developer Guide
 
 :::info
 This guide is intended for developers who want to create plugins for @theqrl/web3.js.
-It has yet to be ported from the original [web3.js documentation](https://docs.web3js.org/guides/web3_plugin_guide/plugin_authors/), but should be a useful starting point for anyone looking to extend the functionality of @theqrl/web3.js through plugins.
 :::
 
-This guide intends to provide the necessary context for developing plugins for web3.js.
+This guide provides the necessary context for developing plugins for QRL Web3.js.
 
-Feel free to explore some of [the already built plugins](https://github.com/chainSafe?q=web3.js-plugin) and/or
-use this [template](https://github.com/web3/web3.js-plugin-template) to start with development of your Web3.js plugin.
+Use the local [`@theqrl/web3-plugin-example`](https://github.com/theQRL/web3.js/tree/main/tools/web3-plugin-example) package as the reference implementation for QRL Web3.js plugin development.
 
 :::caution
 To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
@@ -21,14 +19,14 @@ To provide type safety and IntelliSense for your plugin users, please refer to t
 
 ## Plugin Dependencies
 
-Your plugin should depend on the `@theqrl/web3` package.  This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `@theqrl/web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
+Your plugin should depend on the `@theqrl/web3` package. This will allow your plugin class to extend the provided `Web3PluginBase` abstract class. However, `@theqrl/web3` shouldn't be listed as a regular dependency, instead it should be listed in your plugin's `package.json` as a [peer dependency](https://nodejs.org/en/blog/npm/peer-dependencies/).
 
 ```json
 {
-	"name": "web3-plugin-custom-rpc-methods",
+	"name": "@theqrl/web3-plugin-custom-rpc-methods",
 	"version": "0.1.0",
 	"peerDependencies": {
-		"@theqrl/web3": ">= 0.1.0"
+		"@theqrl/web3": ">= 0.4.0"
 	}
 }
 ```
@@ -37,7 +35,7 @@ When your users install your plugin, this will allow the package manager to make
 
 ## Extending `Web3PluginBase`
 
-Your plugin class should `extend` the `Web3PluginBase` abstract class. This class `extends` [Web3Context](/api/web3-core/class/Web3Context) and when the user registers your plugin with a class, your plugin's `Web3Context` will point to the module's `Web3Context` giving your plugin access to things such as user configured [requestManager](/api/web3-core/class/Web3Context#requestManager) and [accountProvider](/api/web3-core/class/Web3Context#accountProvider).
+Your plugin class should `extend` the `Web3PluginBase` abstract class. This class `extends` [Web3Context](/api/@theqrl/web3-core/classes/Web3Context) and when the user registers your plugin with a class, your plugin's `Web3Context` will point to the module's `Web3Context` giving your plugin access to things such as user configured [requestManager](/api/@theqrl/web3-core/classes/Web3Context#requestmanager) and [accountProvider](/api/@theqrl/web3-core/classes/Web3Context#accountprovider).
 
 ```typescript
 import { Web3PluginBase } from '@theqrl/web3';
@@ -47,7 +45,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase { ... }
 
 ### Extending `Web3QRLPluginBase`
 
-In addition to `Web3PluginBase`, you can choose to extend `Web3QRLPluginBase` which will provide the [QRL JSON RPC API interface](/api/web3-types#QRLExecutionAPI), which packages such as `Web3QRL` use, as a generic to your plugin's `requestManager`, giving it type support for the QRL JSON RPC spec, which is based on [the Ethereum spec](https://ethereum.github.io/execution-apis/docs/reference/json-rpc-api). This would be the recommended approach if your plugin makes QRL JSON RPC calls directly to a provider using web3's provided `requestManager`.
+In addition to `Web3PluginBase`, you can choose to extend `Web3QRLPluginBase` which will provide the [QRL JSON RPC API interface](/api/@theqrl/web3-types/type-aliases/QRLExecutionAPI), which packages such as `Web3QRL` use, as a generic to your plugin's `requestManager`, giving it type support for the QRL JSON RPC spec, which is based on [the Ethereum spec](https://ethereum.github.io/execution-apis/docs/reference/json-rpc-api). This would be the recommended approach if your plugin makes QRL JSON RPC calls directly to a provider using web3's provided `requestManager`.
 
 ```typescript
 import { Web3QRLPluginBase } from '@theqrl/web3';
@@ -90,7 +88,7 @@ await web3Context.customRpcMethods.someMethod();
 
 ### Using the Inherited `Web3Context`
 
-Below is an example of `CustomRpcMethodsPlugin` making use of `this.requestManager` which will have access to a QRL provider if one was configured by the user. In the event that no `provider` was set by the user, the below code will throw a [ProviderError](/api/web3-errors/class/ProviderError) if `customRpcMethod` was to be called:
+Below is an example of `CustomRpcMethodsPlugin` making use of `this.requestManager` which will have access to a QRL provider if one was configured by the user. In the event that no `provider` was set by the user, the below code will throw a [ProviderError](/api/@theqrl/web3-errors/classes/ProviderError) if `customRpcMethod` was to be called:
 
 ```typescript
 import { Web3PluginBase } from '@theqrl/web3';
@@ -107,7 +105,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
-Below depicts a plugin user's code that does not configure a QRL provider, resulting in a thrown [ProviderError](/api/web3-errors/class/ProviderError) when calling `customRpcMethod`:
+Below depicts a plugin user's code that does not configure a QRL provider, resulting in a thrown [ProviderError](/api/@theqrl/web3-errors/classes/ProviderError) when calling `customRpcMethod`:
 
 ```typescript
 // registering_a_plugin.ts
@@ -123,7 +121,7 @@ web3Context.registerPlugin(new CustomRpcMethodsPlugin());
 await web3Context.customRpcMethods.customRpcMethod();
 ```
 
-Thrown [ProviderError](/api/web3-errors/class/ProviderError):
+Thrown [ProviderError](/api/@theqrl/web3-errors/classes/ProviderError):
 
 ```bash
 ProviderError: Provider not available. Use `.setProvider` or `.provider=` to initialize the provider.
@@ -131,7 +129,7 @@ ProviderError: Provider not available. Use `.setProvider` or `.provider=` to ini
 
 ### Providing an API Generic to `Web3PluginBase`
 
-If needed, you can provide an API type (that follows the [Web3ApiSpec](/api/web3-types#Web3APISpec) pattern) as a generic to `Web3PluginBase` that will add type hinting to the `requestManager` when developing your plugin. In the below code, this is the `CustomRpcApi` type that's being passed as `Web3PluginBase<CustomRpcApi>`
+If needed, you can provide an API type (that follows the [Web3ApiSpec](/api/@theqrl/web3-types/type-aliases/Web3APISpec) pattern) as a generic to `Web3PluginBase` that will add type hinting to the `requestManager` when developing your plugin. In the below code, this is the `CustomRpcApi` type that's being passed as `Web3PluginBase<CustomRpcApi>`
 
 ```typescript
 import { Web3PluginBase } from '@theqrl/web3';
@@ -156,7 +154,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 
 ### Overriding `Web3Context`'s `.link` Method
 
-There currently exists [an issue](https://github.com/web3/web3.js/issues/5492) with certain web3.js packages not correctly linking their `Web3Context` with the context of the class the user has registered the plugin with. As mentioned in the issue, this can result in a bug where a plugin instantiates an instance of `Contract` (from `web3-qrl-contract`) and attempts to call a method on the `Contract` instance (which uses the `requestManager` to make a call to the QRL provider), resulting in a [ProviderError](/api/web3-errors/class/ProviderError) even though the plugin user has set a provider and it should be available to the plugin.
+Some packages that inherit `Web3Context` must be explicitly linked to the context of the class the user has registered the plugin with. Without that link, a plugin that instantiates an instance of `Contract` from `web3-qrl-contract` and calls a method on that `Contract` instance can throw a [ProviderError](/api/@theqrl/web3-errors/classes/ProviderError) even when the plugin user has set a provider.
 
 A workaround for this issue is available, below is an example of it:
 
@@ -309,4 +307,4 @@ But, the user who does not call `.registerPlugin`, before accessing your plugin,
 
 ## Complete Example
 
-You may find it helpful to reference a complete example for developing and using a web3 plugin. The [Web3.js Chainlink Plugin](https://github.com/ChainSafe/web3.js-plugin-chainlink) repository provides an excellent example which you can check out.  While this example has not yet been ported to @theqrl/web3.js, it serves as a good reference for how to structure your plugin, implement methods, and use the `Web3Context` effectively.
+You may find it helpful to reference a complete example for developing and using a QRL Web3.js plugin. The [`@theqrl/web3-plugin-example`](https://github.com/theQRL/web3.js/tree/main/tools/web3-plugin-example) package in this repository demonstrates plugin structure, method implementation, and `Web3Context` usage.

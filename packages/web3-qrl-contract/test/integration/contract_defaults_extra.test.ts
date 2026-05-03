@@ -198,8 +198,8 @@ describe('contract defaults (extra)', () => {
 
 			// Make the test run faster by casing the polling to start after 2 blocks
 			contract.transactionBlockTimeout = 1;
-			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
-			//	does not respond, when raising the nonce
+			// Prevent transaction from sticking for a long time if the provider
+			// does not respond when raising the nonce.
 			contract.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
 			// Increase other timeouts
 			contract.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;

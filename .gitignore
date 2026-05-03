@@ -19,6 +19,8 @@ lib-cov
 
 # Dependency directories
 node_modules
+.turbo
+.pnpm-store
 
 # Optional npm cache directory
 .npm
@@ -37,6 +39,9 @@ dist/
 
 # Unsupported lock files
 package-lock.json
+yarn.lock
+packages/web3/test/*_black_box/pnpm-lock.yaml
+packages/web3/test/*_black_box/yarn.lock
 
 tmp/
 

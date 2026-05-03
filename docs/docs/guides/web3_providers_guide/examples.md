@@ -8,9 +8,9 @@ sidebar_label: Examples
 
 Before we get started, make sure you have a basic understanding of JavaScript and QRL. Additionally, we need to set up our environment by installing the following:
 
-1. **Ganache**
+1. **Gqrl**
 
-    Ganache is a personal blockchain for QRL development that allows you to test how your smart contracts function in real-world scenarios. You can download it from [http://truffleframework.com/ganache](http://truffleframework.com/ganache).
+    Run a local Gqrl development node with HTTP JSON-RPC enabled on `http://localhost:8545` and WebSocket JSON-RPC enabled on `ws://localhost:8546`.
 
 2. **Node.js**
 
@@ -20,11 +20,11 @@ Before we get started, make sure you have a basic understanding of JavaScript an
 
     npm (Node Package Manager) is used to publish and install packages to and from the public npm registry or a private npm registry. You can install it by following the instructions here: [https://docs.npmjs.com/downloading-and-installing-node-js-and-npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
-    Alternatively, you can use **yarn** instead of **npm** by following the instructions here: [https://classic.yarnpkg.com/lang/en/docs/getting-started/](https://classic.yarnpkg.com/lang/en/docs/getting-started/).
+    Alternatively, you can use **pnpm** instead of **npm** by following the instructions here: [https://pnpm.io/installation](https://pnpm.io/installation).
 
-4. **Gqrl** (Optional, used only at the IPC provider example)
+4. **Gqrl IPC** (Optional, used only at the IPC provider example)
 
-    Gqrl (go-qrl) is a QRL execution client meaning it handles transactions, deployment and execution of smart contracts and contains an embedded computer known as the Quantum Resistant Virtual Machine. You can install it by following the instructions here: [https://geth.ethereum.org/docs/getting-started/installing-geth](https://geth.ethereum.org/docs/getting-started/installing-geth)
+    If you want to use IPC, start Gqrl with an IPC path and use that path in the IPC example below.
 
 ## Types of Providers
 
@@ -52,7 +52,7 @@ To connect to the QRL network using the HTTP provider, follow these steps:
 3. Install web3.js using npm:
 
     ```bash
-    npm install @theqrl/web3@4.0.1-rc.1
+    npm install @theqrl/web3
     ```
 
 4. Create a new JavaScript file called `web3-http-provider.js` in your code editor.
@@ -63,8 +63,8 @@ To connect to the QRL network using the HTTP provider, follow these steps:
     const { Web3 } = require('@theqrl/web3');
 
     // Connect to the QRL network using the HTTP provider
-    const ganacheUrl = 'http://localhost:7545';
-    const httpProvider = new Web3.providers.HttpProvider(ganacheUrl);
+    const gqrlUrl = 'http://localhost:8545';
+    const httpProvider = new Web3.providers.HttpProvider(gqrlUrl);
     const web3 = new Web3(httpProvider);
 
     async function main() {
@@ -73,11 +73,9 @@ To connect to the QRL network using the HTTP provider, follow these steps:
     		const currentBlockNumber = await web3.qrl.getBlockNumber();
     		console.log('Current block number:', currentBlockNumber);
 
-    		// Get the list of accounts in the connected node (e.g., Ganache)
     		const accounts = await web3.qrl.getAccounts();
 
     		// Send a transaction to the network and wait for the transaction to be mined.
-    		// Note that sending a transaction with Ganache will cause it, in its default configuration, to min a new block.
     		const transactionReceipt = await web3.qrl.sendTransaction({
     			from: accounts[0],
     			to: accounts[1],
@@ -96,9 +94,9 @@ To connect to the QRL network using the HTTP provider, follow these steps:
     main();
     ```
 
-6. Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
+6. Ensure that Gqrl is running locally as mentioned in the [Prerequisites](#prerequisites) section.
 
-7. In the command prompt or terminal window, type `node web3-http-provider.js` and press Enter. This will run your JavaScript file and connect to the QRL network using the HTTP provider and Ganache.
+7. In the command prompt or terminal window, type `node web3-http-provider.js` and press Enter. This will run your JavaScript file and connect to the local Gqrl node using the HTTP provider.
 
 If everything is set up properly, you should see the current block number, the transaction receipt, and the updated block number printed in the console:
 
@@ -143,7 +141,7 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 3. Install web3.js using npm:
 
     ```bash
-     npm install @theqrl/web3@4.0.1-rc.1
+     npm install @theqrl/web3
     ```
 
 4. Create a new JavaScript file called `web3-websocket-provider.js` in your code editor.
@@ -154,8 +152,8 @@ The first 3 steps are the same as in the pervious section. So, you may skip them
 const { Web3 } = require('@theqrl/web3');
 
 // Connect to the QRL network using WebSocket provider
-const ganacheUrl = 'ws://localhost:8545';
-const wsProvider = new Web3.providers.WebsocketProvider(ganacheUrl);
+const gqrlWsUrl = 'ws://localhost:8546';
+const wsProvider = new Web3.providers.WebsocketProvider(gqrlWsUrl);
 const web3 = new Web3(wsProvider);
 
 async function main() {
@@ -179,7 +177,7 @@ async function main() {
 			console.log('Error when subscribing to New block header: ', error),
 		);
 
-		// Get the list of accounts in the connected node which is in this case: Ganache.
+		// Get the list of accounts in the connected local Gqrl node.
 		const accounts = await web3.qrl.getAccounts();
 		// Send a transaction to the network
 		const transactionReceipt = await web3.qrl.sendTransaction({
@@ -196,7 +194,7 @@ async function main() {
 main();
 ```
 
-6. Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
+6. Ensure that Gqrl is running locally as mentioned in the [Prerequisites](#prerequisites) section.
 
 7. Type `node web3-websocket-provider.js` in the command prompt or terminal window and press Enter. This will run your JavaScript file.
 
@@ -280,7 +278,7 @@ INFO [12-10|15:10:37.127] Mapped network port		  	proto=udp extport=0 intport=30
 4. Install web3.js using npm:
 
     ```bash
-    npm install @theqrl/web3@4.0.1-rc.1
+    npm install @theqrl/web3
     ```
 
 5. Create a new JavaScript file called `web3-ipc-provider.js` in your code editor.
@@ -353,63 +351,61 @@ Keep in mind that using IPC Provider with `gqrl` in development mode in a produc
 
 ### Third-party Providers (Compliant with EIP 1193)
 
-web3.js accepts any provider that is in compliance with [EIP-1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md). It has tests written to ensure compatibility with @truffle/hdwallet-provider, Ganache provider, Hardhat provider, and Incubed (IN3) as a provider. The following section, [Browser Injected QRL Provider](#browser-injected-ethereum-provider), in this tutorial explains how to use a special case of these third-party providers.
+web3.js accepts provider objects that comply with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) and speak QRL-compatible JSON-RPC. The following example shows the shape of a minimal external provider by forwarding requests to a local Gqrl HTTP endpoint.
 
-Here is a step-by-step example and a code snippet to connect your web application to the QRL network using `@truffle/hdwallet-provider` as an example of an external provider compliant with EIP 1193.
+Open a command prompt or terminal window in a new folder, then initialize the project and install web3.js:
 
-1. Open a command prompt or terminal window in a new folder.
-2. Type `npm init -y` and press Enter. This will create a `package.json` file in the current directory.
-3. Install web3.js and HTTP provider using npm:
+```bash
+npm init -y
+npm install @theqrl/web3
+```
 
-    ```bash
-    npm install @theqrl/web3@4.0.1-rc.1 @truffle/hdwallet-provider bip39
-    ```
+Create a new JavaScript file called `index.js`, copy the following code into it, and save the file:
 
-4. Create a new JavaScript file, called `index.js`, in your code editor.
-5. Copy and paste the following code into your JavaScript file, and then save the file:
+```js
+const { Web3 } = require('@theqrl/web3');
 
-    ```js
-    const { Web3 } = require('@theqrl/web3');
-    const HDWalletProvider = require('@truffle/hdwallet-provider');
-    const bip39 = require('bip39');
+const provider = {
+	async request({ method, params = [] }) {
+		const response = await fetch('http://localhost:8545', {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				id: 1,
+				method,
+				params,
+			}),
+		});
+		const payload = await response.json();
+		if (payload.error) throw new Error(payload.error.message);
+		return payload.result;
+	},
+};
 
-    const mnemonic = bip39.generateMnemonic(); // generates seed phrase
-    console.log('seed phrase:', mnemonic);
+const web3 = new Web3(provider);
 
-    // Connect to the QRL network using an HTTP provider and WalletProvider
-    const provider = new HDWalletProvider(
-    	mnemonic,
-    	'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-    );
-    const web3 = new Web3(provider);
+web3.qrl
+	.getBlockNumber()
+	.then(function (blockNumber) {
+		console.log('Current block number:', blockNumber);
+	})
+	.catch(function (error) {
+		console.log('Error:', error);
+	});
+```
 
-    // Get the current block number from the network
-    web3.qrl
-    	.getBlockNumber()
-    	.then(function (blockNumber) {
-    		console.log('Current block number:', blockNumber);
-    	})
-    	.catch(function (error) {
-    		console.log('Error:', error);
-    	});
-    ```
+Make sure your local Gqrl node is running and exposes HTTP JSON-RPC on `http://localhost:8545`.
 
-6. Replace `'YOUR_INFURA_PROJECT_ID'` with your own Infura project ID. You can obtain an Infura project ID by signing up for a free account at https://infura.io/register. Alternatively, you can use any other URL that is compatible with HDWalletProvider, such as a local Ganache accessible at `'http://localhost:7545'`.
-
-7. In the command prompt, run `node index.js` and press Enter. This will execute your JavaScript file and connect to the QRL network using HDWalletProvider with Infura.
+In the command prompt, run `node index.js` and press Enter. This will execute your JavaScript file and connect to the local Gqrl node through the custom provider.
 
 If everything is set up properly, you should see the current block number printed in the console similar to the following.
 
 ```bash
-seed phrase: remain climb clock valid budget cable tunnel force split level measure repair
-Current block number: 17317844n
+Current block number: 1n
 ```
 
-:::danger
-Your seed phrase gives complete access to your QRL account and it should **never** be shared with anyone you don't want to give full access to your account. The seed phrase is `console.log`ed in the code example to show you what it looks like, but you should **never** do this with a seed phrase to an account you plan on using to send real money.
-:::
-
-The sample above connected you to the QRL network using truffle HD Wallet-enabled Web3 provider. You can modify it to interact with the network, perform transactions, and read/write data from the QRL network.
+The sample above connected you to the local Gqrl node using a custom EIP-1193 provider object. You can modify the provider to route requests to another QRL-compatible endpoint.
 
 ## Practical ways of connecting to a provider
 
@@ -418,16 +414,16 @@ The sample above connected you to the QRL network using truffle HD Wallet-enable
 
 ### Browser Injected QRL Provider
 
-It is easy to connect to the QRL network using a QRL browser extension such as MetaMask, or a QRL-enabled browser like the browser inside TrustWallet. Because they inject their provider object into the browser's JavaScript context, enabling direct interaction with the QRL network from your web application. Moreover, the wallet management is conveniently handled by these extensions or browsers, making it the standard approach for DApp developers to facilitate user interactions with the QRL network.
+It is easy to connect to the QRL network using a QRL-compatible browser wallet or QRL-enabled browser that injects a provider object into the browser's JavaScript context. This enables direct interaction with the QRL network from your web application while wallet management is handled by the wallet.
 
-Technically, you use `window.qrl` when it is injected by the QRL browser extension or the QRL-enabled browser. However, before using this provider, you need to check if it is available and then call `enable()` to request access to the user's MetaMask account.
+Technically, you use `window.qrl` when it is injected by the QRL browser wallet or QRL-enabled browser. Before using this provider, check that it is available and request access to the user's QRL account.
 
-Before start coding you will need to setup and configure Ganache and MetaMask, if you have not already:
+Before you start coding:
 
--   Ensure that Ganache is running as mentioned in the [Prerequisites](#prerequisites) section.
--   Install the MetaMask extension for your browser. You can download MetaMask from their website: https://metamask.io/.
+-   Ensure that a local Gqrl node is running as mentioned in the [Prerequisites](#prerequisites) section.
+-   Install or configure a QRL-compatible browser wallet that injects `window.qrl`.
 
-Follow these steps to connect to the QRL network with MetaMask and web3.js, including the steps to create a local web server using Node.js:
+Follow these steps to connect to the QRL network with an injected provider and web3.js, including the steps to create a local web server using Node.js:
 
 1. Open a command prompt or terminal window and navigate to where you would like to create the folder for this example.
 2. Create a new folder and navigate to it:
@@ -458,33 +454,33 @@ Follow these steps to connect to the QRL network with MetaMask and web3.js, incl
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Connecting to the QRL network with Web3.js and MetaMask</title>
+		<title>Connecting to the QRL network with Web3.js</title>
 	</head>
 	<body>
-		<h1>Connecting to the QRL network with Web3.js and MetaMask</h1>
+		<h1>Connecting to the QRL network with Web3.js</h1>
 		<pre id="log">
-  You need to approve connecting this website to MetaMask.
-  Click on the MetaMask icon in the browser extension, if it did not show a popup already.
+  You need to approve connecting this website to your QRL wallet.
+  Open your QRL browser wallet if it did not show a popup already.
   </pre
 		>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1-alpha.5/web3.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@theqrl/web3/dist/web3.min.js"></script>
 		<script>
 			window.addEventListener('load', async function () {
 				// Check if web3 is available
 				if (typeof window.qrl !== 'undefined') {
 					// Use the browser injected QRL provider
 					web3 = new Web3(window.qrl);
-					// Request access to the user's MetaMask account (qrl.enable() is deprecated)
+					// Request access to the user's QRL account.
 					// Note: Even though, you can also get the accounts from `await web3.qrl.getAccounts()`,
-					// 	you still need to make a call to any MetaMask RPC to cause MetaMask to ask for concent.
+					// 	you still need to make a wallet RPC call to request user consent.
 					const accounts = await window.qrl.request({
 						method: 'qrl_requestAccounts',
 					});
-					console.log('Accounts requested from MetaMask RPC: ', accounts);
+					console.log('Accounts requested from wallet RPC: ', accounts);
 
 					document.getElementById('log').textContent =
-						'Sending a self transaction... Follow the instructions on MetaMask.';
+						'Sending a self transaction... Follow the instructions in your QRL wallet.';
 
 					try {
 						// Send a transaction to the network and wait for the transaction to be mined.
@@ -508,9 +504,9 @@ Follow these steps to connect to the QRL network with MetaMask and web3.js, incl
 							'Error happened: ' + JSON.stringify(error, null, '  ');
 					}
 				} else {
-					// If web3 is not available, give instructions to install MetaMask
+					// If the provider is not available, give instructions to install a QRL-compatible wallet.
 					document.getElementById('log').innerHTML =
-						'Please install MetaMask to connect to the QRL network.';
+						'Please install a QRL-compatible browser wallet to connect to the QRL network.';
 				}
 			});
 		</script>
@@ -539,12 +535,12 @@ Follow these steps to connect to the QRL network with MetaMask and web3.js, incl
     node server.js
     ```
 
-10. Open your web browser and navigate to `http://localhost:8097/`. MetaMask should ask for your approval to connect to your website. Follow the steps and give your consent.
-11. If everything is set up properly, you should be able to connect to the QRL network with MetaMask and see the logged account address.
+10. Open your web browser and navigate to `http://localhost:8097/`. Your QRL wallet should ask for your approval to connect to your website. Follow the steps and give your consent.
+11. If everything is set up properly, you should be able to connect to the QRL network with the injected provider and see the logged account address.
 
 Note that in the above steps you had created a local web server using Node.js and Express, serving your HTML file from the root directory of your project. You needs this local server because many browser does not allow extensions to inject objects for static files located on your machine. However, you can customize the port number and the root directory if needed.
 
-Now you can start building your QRL application with web3.js and MetaMask!
+Now you can start building your QRL application with web3.js and a QRL-compatible browser wallet.
 
 ### Setting Web3 Provider using a String URL
 
@@ -555,26 +551,16 @@ And when a string is passed, an instance of the compatible class above will be c
 To set the Web3 provider from a URL, you can use the following code snippet:
 
 ```js
-const web3 = new Web3('https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID');
-```
-
-Replace `<YOUR_INFURA_PROJECT_ID>` with your own Infura project ID. This code snippet creates a new Web3 instance with Infura's Ropsten network endpoint as the provider.
-
-However, if you do not want to use Infura and want to run your own QRL node, you can set the provider to a local node with, for example, the `http` protocol, like this:
-
-```js
 const web3 = new Web3('http://localhost:8545');
 ```
 
 This code snippet sets the provider to a local node running on port 8545.
 
-You can also use the `WebSocket` protocol to connect to a remote QRL node that supports it, like this:
+You can also use the `WebSocket` protocol to connect to a local or remote QRL node that supports it:
 
 ```js
-const web3 = new Web3('wss://eth-mainnet.alchemyapi.io/v2/<YOUR_API_KEY>');
+const web3 = new Web3('ws://localhost:8546');
 ```
-
-With this code snippet, Web3 will create a WebSocket provider object connection to Alchemy's mainnet endpoint. However, you need to replace `<YOUR_API_KEY>` with your own API Key.
 
 A few points to consider:
 

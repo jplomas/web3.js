@@ -18,5 +18,9 @@
 		"@theqrl/web3-qrl": "^0.1.0",
 		"@theqrl/web3-qrl-contract": "^0.1.0",
 		"@theqrl/web3-validator": "^0.1.0"
-	}
+	},
+	"engines": {
+		"node": ">=20"
+	},
+	"packageManager": "pnpm@10.27.0"
 }

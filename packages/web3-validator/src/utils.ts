@@ -27,6 +27,7 @@ import {
 import { isAbiParameterSchema } from './validation/abi.js';
 import { isHexStrict } from './validation/string.js';
 import { Web3ValidatorError } from './errors.js';
+// eslint-disable-next-line import/no-cycle
 import { isAddressString } from './validation/address.js';
 
 const extraTypes = ['hex', 'number', 'blockNumber', 'blockNumberOrTag', 'filter', 'bloom'];

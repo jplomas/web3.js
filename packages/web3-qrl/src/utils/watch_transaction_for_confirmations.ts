@@ -14,7 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Bytes, QRLExecutionAPI, Web3BaseProvider, TransactionReceipt } from '@theqrl/web3-types';
+import {
+	Bytes,
+	DataFormat,
+	Numbers,
+	QRLExecutionAPI,
+	Web3BaseProvider,
+	TransactionReceipt,
+} from '@theqrl/web3-types';
 import { Web3Context, Web3PromiEvent } from '@theqrl/web3-core';
 import { format } from '@theqrl/web3-utils';
 import { isNullish } from '@theqrl/web3-validator';
@@ -23,7 +30,6 @@ import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '@theqrl/web3-errors';
-import { DataFormat } from '@theqrl/web3-types';
 import { transactionReceiptSchema } from '../schemas.js';
 import {
 	watchTransactionByPolling,
@@ -33,11 +39,10 @@ import { watchTransactionBySubscription } from './watch_transaction_by_subscript
 
 export function watchTransactionForConfirmations<
 	ReturnFormat extends DataFormat,
-	Web3PromiEventEventType extends Web3PromiEventEventTypeBase<ReturnFormat>,
 	ResolveType = TransactionReceipt,
 >(
 	web3Context: Web3Context<QRLExecutionAPI>,
-	transactionPromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventType>,
+	transactionPromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventTypeBase<ReturnFormat>>,
 	transactionReceipt: TransactionReceipt,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
@@ -52,12 +57,14 @@ export function watchTransactionForConfirmations<
 	if (!transactionReceipt.blockNumber)
 		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
+	const firstConfirmation: Numbers = 1;
+
 	// As we have the receipt, it's the first confirmation that tx is accepted.
 	transactionPromiEvent.emit('confirmation', {
-		confirmations: format({ format: 'uint' }, 1, returnFormat),
+		confirmations: format({ format: 'uint' }, firstConfirmation, returnFormat),
 		receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 		latestBlockHash: format({ format: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
-	} as any);
+	});
 
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;

@@ -53,11 +53,15 @@ import {
 	utf8ToHex,
 	uuidV4,
 } from '@theqrl/web3-utils';
-
 import { isHexStrict, isNullish, isString, validator } from '@theqrl/web3-validator';
+import { CryptoPublicKeyBytes } from './qrl_crypto.js';
+import {
+	newMLDSA87Descriptor,
+	newMLDSA87WalletFromExtendedSeed,
+	newQrlExtendedSeed,
+	qrlSeedFromBytes,
+} from './qrl_wallet.js';
 import { keyStoreSchema } from './schemas.js';
-import { CryptoPublicKeyBytes } from '@theqrl/mldsa87';
-import { newWalletFromExtendedSeed, Seed, newMLDSA87Descriptor, ExtendedSeed } from '@theqrl/wallet.js';
 import { TransactionFactory } from './tx/transactionFactory.js';
 import type { SignTransactionResult, TypedTransaction, Web3Account, SignResult } from './types.js';
 
@@ -84,6 +88,30 @@ export const parseAndValidatePublicKey = (data: Bytes, ignoreLength?: boolean): 
 
 	return publicKeyUint8Array;
 };
+
+/**
+ * Get the seed Uint8Array after the validation
+ */
+export function parseAndValidateSeed(data: Bytes, ignoreLength?: boolean): Uint8Array {
+	let seedUint8Array: Uint8Array;
+
+	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToUint8Array'
+	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 104) {
+		throw new SeedLengthError();
+	}
+
+	try {
+		seedUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
+	} catch {
+		throw new InvalidSeedError();
+	}
+
+	if (!ignoreLength && seedUint8Array.byteLength !== 51) {
+		throw new SeedLengthError();
+	}
+
+	return seedUint8Array;
+}
 
 /**
  *
@@ -129,9 +157,9 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, seed: Bytes): SignResult => {
-	const wallet = newWalletFromExtendedSeed(seed);
+	const wallet = newMLDSA87WalletFromExtendedSeed(seed);
 	const hash = hashMessage(data);
-	const signature = wallet.sign(hash.substring(2));
+	const signature = wallet.sign(hexToBytes(hash));
 
 	return {
 		message: data,
@@ -333,12 +361,12 @@ export const encrypt = async (
 		'aes-256-gcm',
 	);
 	const ciphertext = bytesToHex(cipher).slice(2);
-	const acc = seedToAccount(seedUint8Array);
+	const wallet = newMLDSA87WalletFromExtendedSeed(seedUint8Array);
 
 	return {
 		version: 1,
 		id: uuidV4(),
-		address: `Q${acc.address.slice(1).toLowerCase()}`,
+		address: `Q${toChecksumAddress(wallet.getAddressStr()).slice(1).toLowerCase()}`,
 		crypto: {
 			ciphertext,
 			cipherparams: {
@@ -349,30 +377,6 @@ export const encrypt = async (
 			kdfparams,
 		},
 	};
-};
-
-/**
- * Get the seed Uint8Array after the validation
- */
-export const parseAndValidateSeed = (data: Bytes, ignoreLength?: boolean): Uint8Array => {
-	let seedUint8Array: Uint8Array;
-
-	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToUint8Array'
-	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 104) {
-		throw new SeedLengthError();
-	}
-
-	try {
-		seedUint8Array = data instanceof Uint8Array ? data : bytesToUint8Array(data);
-	} catch {
-		throw new InvalidSeedError();
-	}
-
-	if (!ignoreLength && seedUint8Array.byteLength !== 51) {
-		throw new SeedLengthError();
-	}
-
-	return seedUint8Array;
 };
 
 /**
@@ -397,8 +401,8 @@ export const parseAndValidateSeed = (data: Bytes, ignoreLength?: boolean): Uint8
  * }
  * ```
  */
-export const seedToAccount = (seed: Bytes): Web3Account => {
-	const acc = newWalletFromExtendedSeed(seed);
+export function seedToAccount(seed: Bytes): Web3Account {
+	const acc = newMLDSA87WalletFromExtendedSeed(seed);
 
 	return {
 		address: toChecksumAddress(acc.getAddressStr()),
@@ -410,9 +414,9 @@ export const seedToAccount = (seed: Bytes): Web3Account => {
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), seed),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
-		 	encrypt(acc.getExtendedSeed().toBytes(), password, options),
+			encrypt(acc.getExtendedSeed().toBytes(), password, options),
 	};
-};
+}
 
 /**
  *
@@ -433,8 +437,8 @@ export const seedToAccount = (seed: Bytes): Web3Account => {
  */
 export const create = (): Web3Account => {
 	const descriptor = newMLDSA87Descriptor();
-	const seed = Seed.from(randomBytes(48));
-	const extendedSeed = ExtendedSeed.newExtendedSeed(descriptor, seed);
+	const seed = qrlSeedFromBytes(randomBytes(48));
+	const extendedSeed = newQrlExtendedSeed(descriptor, seed);
 	return seedToAccount(extendedSeed.toBytes());
 };
 
@@ -497,7 +501,7 @@ export const decrypt = async (
 
 	let derivedKey;
 	if (json.crypto.kdf === 'argon2id') {
-		const kdfparams = json.crypto.kdfparams as Argon2idParams;
+		const { kdfparams } = json.crypto;
 		const uint8ArraySalt =
 			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 		derivedKey = argon2idSync(

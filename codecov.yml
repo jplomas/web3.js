@@ -54,16 +54,16 @@ component_management:
     - component_id: "@theqrl/web3-providers-ipc"
       paths:
           - /packages/web3-providers-ipc/src/
-    - component_id: "web3-providers-ws"
+    - component_id: "@theqrl/web3-providers-ws"
       paths:
           - /packages/web3-providers-ws/src/
-    - component_id: "web3-rpc-methods"
+    - component_id: "@theqrl/web3-rpc-methods"
       paths:
           - /packages/web3-rpc-methods/src/
-    - component_id: "web3-utils"
+    - component_id: "@theqrl/web3-utils"
       paths:
           - /packages/web3-utils/src/
-    - component_id: "web3-validator"
+    - component_id: "@theqrl/web3-validator"
       paths:
           - /packages/web3-validator/src/
 
@@ -72,4 +72,4 @@ comment:
   behavior: 'default'
   require_changes: false
   require_base: no
-  require_head: no       
+  require_head: no

@@ -2,9 +2,9 @@
 
 ## Start / Stop
 
-- Start: `yarn pos:start`
-- Stop: `yarn pos:stop`
-- `yarn pos:start` also runs `yarn pos:clef:setup` after the network is up.
+- Start: `pnpm run pos:start`
+- Stop: `pnpm run pos:stop`
+- `pnpm run pos:start` also runs `pnpm run pos:clef:setup` after the network is up.
 
 ## Clef: import accounts + auto-authorization
 
@@ -16,7 +16,7 @@ To:
 
 run manually:
 
-- `yarn pos:clef:setup`
+- `pnpm run pos:clef:setup`
 
 This will:
 - upload a small `clef-autoui` shim into the enclave and restart `signer-clef` to run behind it
@@ -26,4 +26,4 @@ This will:
 
 - Default clef key password is `passwordpassword` (override with `CLEF_KEY_PASSWORD=...`).
 - This is meant for **local testing only**; it auto-approves signing requests.
-- If you tear down the enclave (`yarn pos:stop`), `yarn pos:start` will run clef setup again on the next start.
+- If you tear down the enclave (`pnpm run pos:stop`), `pnpm run pos:start` will run clef setup again on the next start.

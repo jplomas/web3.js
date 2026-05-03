@@ -94,9 +94,9 @@ describe(`${getSystemTestBackend()} tests - getTransactionFromBlock`, () => {
 				extraParams: expect.any(String),
 				signature: expect.any(String),
 				publicKey: expect.any(String),
-				to: null,
 				value: '0x0',
 			});
+			expect(result?.to).toBeNull();
 		}
 	});
 });

@@ -38,8 +38,8 @@ try {
 
 List of references:
 
--   [qrl.accounts.wallet.add](/api/web3-qrl-accounts/class/Wallet#add)
--   [qrl.sendTransaction](/api/web3-qrl/class/Web3QRL#sendTransaction)
+-   [qrl.accounts.wallet.add](/api/@theqrl/web3-qrl-accounts/classes/Wallet#add)
+-   [qrl.sendTransaction](/api/@theqrl/web3-qrl/classes/Web3QRL#sendtransaction)
 
 ## Contract Transaction
 
@@ -87,7 +87,7 @@ try {
 
 List of references:
 
--   [qrl.accounts.wallet.add](/api/web3-qrl-accounts/class/Wallet#add)
--   [qrl.Contract](/api/web3-qrl-contract/class/Contract)
--   [contract.deploy](/api/web3-qrl-contract/class/Contract#deploy)
--   [contract.methods](/api/web3-qrl-contract/class/Contract#methods)
+-   [qrl.accounts.wallet.add](/api/@theqrl/web3-qrl-accounts/classes/Wallet#add)
+-   [qrl.Contract](/api/@theqrl/web3-qrl-contract/classes/Contract)
+-   [contract.deploy](/api/@theqrl/web3-qrl-contract/classes/Contract#deploy)
+-   [contract.methods](/api/@theqrl/web3-qrl-contract/classes/Contract#methods)

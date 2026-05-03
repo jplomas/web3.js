@@ -1,0 +1,59 @@
+packages:
+  - "packages/*"
+  - "tools/*"
+  - "docs"
+
+# Supply-chain hardening for dependency resolution and install scripts.
+# Values are in minutes; 10080 minutes is 7 days.
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+overrides:
+  "braces@<3.0.3": ">=3.0.3"
+  "undici@<6.24.0": ">=6.24.0 <7.0.0"
+  "@docusaurus/core": 3.10.0
+  "@docusaurus/mdx-loader": 3.10.0
+  "@docusaurus/module-type-aliases": 3.10.0
+  "@docusaurus/plugin-content-blog": 3.10.0
+  "@docusaurus/plugin-content-docs": 3.10.0
+  "@docusaurus/plugin-content-pages": 3.10.0
+  "@docusaurus/plugin-css-cascade-layers": 3.10.0
+  "@docusaurus/plugin-debug": 3.10.0
+  "@docusaurus/plugin-google-analytics": 3.10.0
+  "@docusaurus/plugin-google-gtag": 3.10.0
+  "@docusaurus/plugin-google-tag-manager": 3.10.0
+  "@docusaurus/plugin-sitemap": 3.10.0
+  "@docusaurus/plugin-svgr": 3.10.0
+  "@docusaurus/preset-classic": 3.10.0
+  "@docusaurus/theme-classic": 3.10.0
+  "@docusaurus/theme-common": 3.10.0
+  "@docusaurus/theme-live-codeblock": 3.10.0
+  "@docusaurus/theme-search-algolia": 3.10.0
+  "@docusaurus/types": 3.10.0
+  "@docusaurus/utils": 3.10.0
+  "@docusaurus/utils-common": 3.10.0
+  "@docusaurus/utils-validation": 3.10.0
+  baseline-browser-mapping: 2.8.9
+  browserslist: 4.26.3
+  es-module-lexer: 2.0.0
+  express: 4.21.2
+  loader-runner: 4.3.1
+  path-to-regexp: 0.1.13
+  "schema-utils@4>ajv": 8.17.1
+  serialize-javascript: 7.0.5
+  socks: 2.8.7
+  webpack: 5.105.4
+  webpack-sources: 3.3.3
+strictDepBuilds: true
+allowBuilds:
+  "@parcel/watcher": true
+  bufferutil: true
+  core-js: true
+  es5-ext: true
+  keccak: true
+  nx: true
+  secp256k1: true
+  unrs-resolver: true
+  utf-8-validate: true
+  web3: true
+  web3-bzz: true
+  web3-shh: true

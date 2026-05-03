@@ -1,0 +1,118 @@
+# Audit Evidence Commands
+
+This document defines the command evidence expected before audit freeze and
+before an npm release. It gives auditors and maintainers a stable checklist for
+install, lint, build, unit, integration, e2e, docs, package, tarball smoke, and
+coverage verification.
+
+Run commands from the repository root unless a command says otherwise. Capture
+the command, date, Node version, pnpm version, exit status, and any generated
+artefact paths in the audit evidence bundle.
+
+## Environment
+
+Use the same baseline as CI:
+
+```sh
+node --version
+pnpm --version
+corepack enable
+```
+
+Expected result:
+
+- Node is within the supported `>=20` range.
+- pnpm is the Corepack-managed pnpm 10 line used by the lockfile.
+- `corepack enable` exits `0`.
+
+## Required Local Evidence
+
+| Area | Command | Expected passing evidence |
+| --- | --- | --- |
+| Install | `pnpm install --frozen-lockfile --ignore-scripts` | Exit `0`; lockfile is unchanged; dependency build scripts are not executed during this install. |
+| Install with reviewed scripts | `pnpm install --frozen-lockfile` | Exit `0`; any dependency build scripts are limited to the reviewed `allowBuilds` list in `pnpm-workspace.yaml`. |
+| Toolchain | `pnpm run doctor` | Exit `0`; Node, pnpm, lockfile, TypeScript/Jest/ESLint, and required local toolchain checks pass. |
+| Repository hygiene | `pnpm run hygiene` | Exit `0`; prints `Repository hygiene checks passed`; no tracked generated output, local secrets, Yarn artefacts, copied files, or invalid symlinks. |
+| Workflow lint | `actionlint .github/workflows/*.yml` | Exit `0`; no workflow syntax or expression errors. |
+| Whitespace | `git diff --check` | Exit `0`; no trailing whitespace, conflict markers, or whitespace errors. |
+| Supply chain audit | `pnpm run audit:supply-chain` | Exit `0`; no high or critical production dependency advisories. |
+| Workspace lint | `pnpm run lint` | Exit `0`; warnings are acceptable only if already present in the current baseline and not from changed code. |
+| Package build | `pnpm run build` | Exit `0`; Turbo reports all package/tool build tasks successful. |
+| Browser build | `pnpm run build:web` | Exit `0`; browser bundles build for `@theqrl/web3` and `@theqrl/web3-validator`. |
+| Unit tests | `pnpm run test:unit` | Exit `0`; all workspace unit suites and script tests pass. |
+| Docs | `pnpm run build:docs` | Exit `0`; Docusaurus build completes with broken links treated as errors. |
+| Package list | `pnpm run release:packages` | Exit `0`; lists the publishable public packages and versions expected for release. |
+| Package inspection | `pnpm run release:inspect-packages` | Exit `0`; dry-run pack output has all declared entrypoints and no forbidden package contents. |
+| Pack | `pnpm run release:pack-packages` | Exit `0`; writes `dist/released-packages.tsv`, `dist/released-packages.json`, and package tarballs under `dist/tarballs/`. |
+| Smoke import | `pnpm run release:smoke-tarballs dist/released-packages.tsv dist/tarballs` | Exit `0`; each packed tarball can be installed into fresh CommonJS and ESM projects, required, and imported. |
+| Coverage | `pnpm run test:coverage:unit` | Exit `0`; package-local JSON coverage artefacts are written under `packages/*/.coverage/unit/` and `tools/*/.coverage/unit/`. |
+
+## CI Evidence
+
+Required GitHub status checks should match the commands above:
+
+- `Verify (Node 20.x)`, `Verify (Node 22.x)`, and `Verify (Node 24.x)` run
+  frozen ignored-script install, doctor, hygiene, lint, build, browser build,
+  and unit tests.
+- `Supply Chain Audit` runs the production high/critical audit.
+- `Package Inspection` builds, inspects, packs, and smoke-tests release
+  tarballs.
+- `Unit Coverage` runs unit coverage and uploads configured JSON artefacts to
+  Codecov.
+- `Docs Build` runs the Docusaurus/TypeDoc docs build.
+- `Lint workflow files` runs actionlint.
+- `Dependency Review` blocks high/critical vulnerable dependency changes in pull
+  requests.
+
+For local GitHub Actions parity, record at least:
+
+```sh
+act pull_request -W .github/workflows/ci.yml --dryrun
+act workflow_dispatch -W .github/workflows/ci.yml --action-offline-mode --pull=false
+```
+
+Expected result:
+
+- Dry-run parses the workflow and planned jobs successfully.
+- Full `act` runs may require Docker registry/network access. If registry DNS or
+  package download failures occur inside Docker while the equivalent local pnpm
+  commands pass, record the Docker/network failure as environment-blocked rather
+  than a source failure.
+
+## Integration And E2E Evidence
+
+Integration and e2e checks are not yet required fast PR gates. Before audit
+freeze, either make them green and required, or document the exact release
+exception and follow-up issue.
+
+| Area | Command | Expected passing evidence |
+| --- | --- | --- |
+| Workspace integration | `pnpm run test:integration` | Exit `0` against the configured provider/backend; integration suites pass. |
+| Local GQRL HTTP e2e | `pnpm run test:e2e:gqrl:http` | Exit `0` after a local GQRL-compatible node is started and accounts are available. |
+| Local GQRL WS e2e | `pnpm run test:e2e:gqrl:ws` | Exit `0` after a local GQRL-compatible WebSocket endpoint is available. |
+| Local GQRL IPC e2e | `pnpm run test:e2e:gqrl:ipc` | Exit `0` after a local GQRL-compatible IPC endpoint is available. |
+| Remote testnet HTTP/WS | `pnpm run test:e2e:testnet:http` and `pnpm run test:e2e:testnet:ws` | Exit `0` against the documented testnet endpoint and credentials. |
+| Remote mainnet HTTP/WS | `pnpm run test:e2e:mainnet:http` and `pnpm run test:e2e:mainnet:ws` | Exit `0` for read-only mainnet checks only; no private key or value-transfer dependency. |
+| E2E coverage | `pnpm run test:e2e:coverage` | Exit `0`; integration/e2e coverage artefacts are generated. |
+
+Current known prerequisite gap: `scripts/test-runner.sh` still references legacy
+`gqrl:start:background`, `gqrl-binary:start:background`, `generate:accounts`,
+and stop scripts that are not currently exposed by the root `package.json`.
+Resolve that runner mapping before treating local GQRL e2e evidence as
+release-blocking.
+
+## Artefacts To Preserve
+
+For an audit handoff, preserve:
+
+- Terminal logs for every command in this document.
+- `dist/released-packages.tsv`, `dist/released-packages.json`, and the tarballs
+  under `dist/tarballs/` from the package evidence run.
+- Unit coverage JSON artefacts under package/tool `.coverage/unit/` directories.
+- CI run URLs for required status checks.
+- Any environment-blocked evidence notes, including exact failing command,
+  failing environment, and the equivalent local command that passed.
+
+Generated artefacts should remain untracked. Run `pnpm run clean` before final
+source handoff if ignored build/test output should be removed from the working
+tree.

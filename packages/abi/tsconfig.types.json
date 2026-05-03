@@ -11,7 +11,8 @@
 		"noUnusedParameters": false,
 		// "moduleResolution": "node16",
 		"importHelpers": true,
-		"noEmitOnError": true
+		"noEmitOnError": true,
+		"types": ["node"]
 	},
 	"include": ["src/**/*", "index.d.ts"]
 }

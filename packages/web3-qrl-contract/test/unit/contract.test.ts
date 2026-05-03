@@ -127,6 +127,7 @@ describe('Contract', () => {
 				provider,
 			});
 
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(contract.provider).toEqual({
 				clientUrl: provider,
 				httpProviderOptions: undefined,
@@ -145,6 +146,7 @@ describe('Contract', () => {
 				},
 			);
 
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(contract.provider).toEqual({
 				clientUrl: provider,
 				httpProviderOptions: undefined,

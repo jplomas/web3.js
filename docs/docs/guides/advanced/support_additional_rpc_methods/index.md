@@ -20,7 +20,7 @@ Following tutorial will guide you through the process of creating a custom plugi
 1. First add web3.js as peer dependency in project´s `package.json` and create a TypeScript class for your plugin. This class should extend the `Web3Plugin` class provided by web3.js.
 
 :::info
-This will give your plugin access to [requestManager](/api/web3-core/class/Web3Context#requestManager) and [accountProvider](/api/web3-core/class/Web3Context#accountProvider).
+This will give your plugin access to [requestManager](/api/@theqrl/web3-core/classes/Web3Context#requestmanager) and [accountProvider](/api/@theqrl/web3-core/classes/Web3Context#accountprovider).
 :::caution
 
 ```ts

@@ -162,7 +162,7 @@ export class Eip838ExecutionError extends Web3ContractError {
 			if ('originalError' in error.data) {
 				originalError = error.data.originalError;
 			} else {
-				// Ganache has no `originalError` sub-object unlike others
+				// Some provider implementations have no `originalError` sub-object.
 				originalError = error.data;
 			}
 			this.data = originalError.data;

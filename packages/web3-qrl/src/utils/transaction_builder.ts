@@ -43,6 +43,7 @@ import {
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 } from '@theqrl/web3-errors';
+import { seedToAccount } from '@theqrl/web3-qrl-accounts';
 import { bytesToHex, format, toChecksumAddress } from '@theqrl/web3-utils';
 import { NUMBER_DATA_FORMAT } from '../constants.js';
 // eslint-disable-next-line import/no-cycle
@@ -52,7 +53,6 @@ import { transactionSchema } from '../schemas.js';
 import { InternalTransaction } from '../types.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing.js';
-import { newWalletFromExtendedSeed } from '@theqrl/wallet.js';
 
 export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
@@ -65,13 +65,14 @@ export const getTransactionFromOrToAttr = (
 	seed?: HexString | Uint8Array,
 ): Address | undefined => {
 	if (transaction !== undefined && attr in transaction && transaction[attr] !== undefined) {
-		if (typeof transaction[attr] === 'string' && isAddressString(transaction[attr] as string)) {
-			return transaction[attr] as Address;
+		const transactionAttribute = transaction[attr];
+		if (typeof transactionAttribute === 'string' && isAddressString(transactionAttribute)) {
+			return transactionAttribute;
 		}
-		if (isNumber(transaction[attr] as Numbers)) {
+		if (isNumber(transactionAttribute as Numbers)) {
 			if (web3Context.wallet) {
 				const account = web3Context.wallet.get(
-					format({ format: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
+					format({ format: 'uint' }, transactionAttribute as Numbers, NUMBER_DATA_FORMAT),
 				);
 
 				if (!isNullish(account)) {
@@ -90,9 +91,8 @@ export const getTransactionFromOrToAttr = (
 	}
 	if (attr === 'from') {
 		if (!isNullish(seed)) {
-			const wallet = newWalletFromExtendedSeed(seed);
-			return toChecksumAddress(wallet.getAddressStr());
-		} 
+			return toChecksumAddress(seedToAccount(seed).address);
+		}
 		if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
 	}
 

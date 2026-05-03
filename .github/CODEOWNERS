@@ -1,0 +1,10 @@
+# Default owners for everything in the repo
+* @theQRL/core
+
+# QRL account, transaction, and contract packages require crypto review
+/packages/web3-qrl/ @theQRL/crypto
+/packages/web3-qrl-accounts/ @theQRL/crypto
+/packages/web3-qrl-contract/ @theQRL/crypto
+
+# CI/CD changes
+/.github/ @theQRL/devops

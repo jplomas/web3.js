@@ -47,7 +47,7 @@ import { Iban } from '@theqrl/web3-qrl-iban';
  */
 export interface Web3QRLInterface extends QRL {
 	/**
-	 * Extended [Contract](/api/web3-qrl-contract/class/Contract) constructor for main `web3` object. See [Contract](/api/web3-qrl-contract/class/Contract) for further details.
+	 * Extended [Contract](/api/@theqrl/web3-qrl-contract/classes/Contract) constructor for main `web3` object. See [Contract](/api/@theqrl/web3-qrl-contract/classes/Contract) for further details.
 	 *
 	 * You can use `.setProvider` on this constructor to set provider for **all the instances** of the contracts which were created by `web3.qrl.Contract`.
 	 *

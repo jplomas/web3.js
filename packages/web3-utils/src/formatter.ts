@@ -57,9 +57,7 @@ const findSchemaByDataPath = (
 	for (const dataPart of dataPath) {
 		if (result.oneOf && previousDataPath) {
 			const prev = previousDataPath ?? '';
-			const path = oneOfPath.find((element: [string, number]) => {
-				return prev === element[0];
-			});
+			const path = oneOfPath.find((element: [string, number]) => prev === element[0]);
 
 			if (path && path[0] === previousDataPath) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

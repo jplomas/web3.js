@@ -89,4 +89,4 @@ web3.qrl.sendTransaction({...})
 
 List of references:
 
--   [Web3PromiEvent](/api/web3-core/class/Web3PromiEvent)
+-   [Web3PromiEvent](/api/@theqrl/web3-core/classes/Web3PromiEvent)
