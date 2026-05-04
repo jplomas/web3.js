@@ -21,6 +21,7 @@ lib-cov
 node_modules
 .turbo
 .pnpm-store
+.release
 
 # Optional npm cache directory
 .npm

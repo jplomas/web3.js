@@ -54,7 +54,7 @@ jobs:
         run: pnpm run release:inspect-packages
 
       - name: Snapshot package versions
-        run: node scripts/release/packages.js snapshot dist/release-versions-before.json
+        run: node scripts/release/packages.js snapshot .release/release-versions-before.json
 
       - name: Run multi-semantic-release
         env:
@@ -67,7 +67,7 @@ jobs:
 
       - name: Detect released packages
         id: released
-        run: node scripts/release/packages.js diff dist/release-versions-before.json dist/released-packages.json
+        run: node scripts/release/packages.js diff .release/release-versions-before.json .release/released-packages.json
 
       - name: Rebuild packages after version updates
         if: steps.released.outputs.released == 'true'
@@ -85,10 +85,12 @@ jobs:
         if: steps.released.outputs.released == 'true'
         run: |
           mkdir -p dist/tarballs
+          test -s .release/released-packages.tsv
           while IFS=$'\t' read -r package_path package_name package_version _release_tag _tarball_name; do
             echo "Packing ${package_name}@${package_version}"
             pnpm --dir "${package_path}" pack --pack-destination ../../dist/tarballs
-          done < dist/released-packages.tsv
+          done < .release/released-packages.tsv
+          cp .release/released-packages.json .release/released-packages.tsv dist/
 
       - name: Generate checksums
         if: steps.released.outputs.released == 'true'
