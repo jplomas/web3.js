@@ -220,7 +220,8 @@ jobs:
               dist/checksums-sha512.txt \
               dist/sbom-spdx.json \
               dist/sbom-cyclonedx.json \
-              --clobber
+              --clobber \
+              --repo "${GITHUB_REPOSITORY}"
           done < dist/released-packages.tsv
 
   slsa-subjects:
@@ -285,5 +286,6 @@ jobs:
           while IFS=$'\t' read -r _package_path _package_name _package_version release_tag _tarball_name; do
             gh release upload "${release_tag}" \
               dist/provenance.intoto.jsonl \
-              --clobber
+              --clobber \
+              --repo "${GITHUB_REPOSITORY}"
           done < dist/released-packages.tsv
