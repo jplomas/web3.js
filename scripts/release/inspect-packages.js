@@ -43,6 +43,8 @@ const forbiddenPatterns = [
 	[/ copy\./, 'copy file'],
 ];
 
+const provenanceRepositoryUrl = 'https://github.com/theQRL/web3.js';
+
 const packDryRun = packagePath => {
 	const output = execFileSync('npm', ['pack', '--dry-run', '--json'], {
 		cwd: packagePath,
@@ -73,6 +75,12 @@ for (const pkg of publishablePackages()) {
 		errors.push(`${pkg.name}: package.json must not contain a committed gitHead`);
 	}
 
+	if (manifest.repository?.url !== provenanceRepositoryUrl) {
+		errors.push(
+			`${pkg.name}: repository.url must be ${provenanceRepositoryUrl} for npm provenance verification`,
+		);
+	}
+
 	if (entrypoints.length === 0) {
 		errors.push(`${pkg.name}: no package entrypoint declared`);
 	}
@@ -99,7 +107,7 @@ for (const pkg of publishablePackages()) {
 	summaries.push(`${pkg.name}: ${files.size} files, ${pack.unpackedSize} unpacked bytes`);
 }
 
-for (const summary of summaries) console.log(summary);
+for (const summary of summaries) console.info(summary);
 
 if (errors.length > 0) {
 	console.error('\nPackage inspection failed:');
@@ -107,4 +115,4 @@ if (errors.length > 0) {
 	process.exit(1);
 }
 
-console.log(`Inspected ${summaries.length} publishable package dry-runs`);
+console.info(`Inspected ${summaries.length} publishable package dry-runs`);

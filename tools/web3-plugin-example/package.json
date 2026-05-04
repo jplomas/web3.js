@@ -9,7 +9,7 @@
 	"types": "./lib/index.d.ts",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/theqrl/web3.js.git",
+		"url": "https://github.com/theQRL/web3.js",
 		"directory": "tools/web3-plugin-example"
 	},
 	"engines": {
