@@ -41,6 +41,18 @@ Release-triggering commits:
 
 Non-release changes should use prefixes such as `docs:`, `test:`, `ci:`, `chore:`, `refactor:`, or `style:`.
 
+## Keeping Package Versions In Sync
+
+`multi-semantic-release` releases packages based on committed changes in each package path. If maintainers need to deliberately keep all publishable package versions aligned, run this locally before opening the release-prep PR:
+
+```sh
+pnpm run release:touch-packages
+```
+
+This writes a package-local `.release-touch` marker into every publishable package. Commit those marker changes with a release-triggering Conventional Commit such as `fix(release): refresh package release markers`. The marker files are intentionally outside the package `files` allowlists and are excluded from npm tarballs.
+
+Do not run `release:touch-packages` inside the release workflow. Uncommitted files created by CI are not part of the commit history analyzed by semantic-release and should not be used to force package releases.
+
 ## Pre-Release Requirements
 
 Before setting `RELEASES_ENABLED=true`, the release owner must confirm:
