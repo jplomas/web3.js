@@ -20,9 +20,9 @@
 		"access": "public"
 	},
 	"repository": {
-		"directory": "packages/abi",
 		"type": "git",
-		"url": "git://github.com/theQRL/web3.js.git"
+		"url": "git+https://github.com/theqrl/web3.js.git",
+		"directory": "packages/abi"
 	},
 	"scripts": {
 		"clean": "rimraf dist && rimraf lib",
