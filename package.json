@@ -14,7 +14,7 @@
 	"homepage": "https://github.com/theqrl/web3.js#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/theqrl/web3.js.git"
+		"url": "https://github.com/theQRL/web3.js"
 	},
 	"bugs": {
 		"url": "https://github.com/theqrl/web3.js/issues"

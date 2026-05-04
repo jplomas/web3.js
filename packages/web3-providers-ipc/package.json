@@ -16,7 +16,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/theqrl/web3.js.git",
+		"url": "https://github.com/theQRL/web3.js",
 		"directory": "packages/web3-providers-ipc"
 	},
 	"author": "The QRL Contributors",
