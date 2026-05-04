@@ -72,6 +72,7 @@
 		"release:pack-packages": "node scripts/release/pack-packages.js",
 		"release:packages": "node scripts/release/packages.js list",
 		"release:smoke-tarballs": "node scripts/release/smoke-tarballs.js",
+		"release:touch-packages": "node scripts/release/touch-packages.js",
 		"doctor": "node scripts/doctor.js",
 		"audit:supply-chain": "pnpm audit --prod --audit-level high"
 	},
