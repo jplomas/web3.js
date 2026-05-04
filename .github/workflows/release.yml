@@ -220,3 +220,68 @@ jobs:
               dist/sbom-cyclonedx.json \
               --clobber
           done < dist/released-packages.tsv
+
+  slsa-subjects:
+    name: Compute SLSA Subjects
+    needs: prepare
+    if: needs.prepare.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+    steps:
+      - name: Download release candidate tarballs
+        uses: actions/download-artifact@v8
+        with:
+          name: release-candidate-tarballs
+          path: dist
+
+      - name: Generate SLSA subject hashes
+        id: hash
+        run: |
+          set -euo pipefail
+          cd dist/tarballs
+          echo "hashes=$(sha256sum ./*.tgz | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+  slsa-provenance:
+    name: SLSA Provenance
+    needs: [prepare, publish, slsa-subjects]
+    if: needs.prepare.outputs.released == 'true'
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
+    with:
+      base64-subjects: ${{ needs.slsa-subjects.outputs.hashes }}
+      upload-assets: false
+      provenance-name: provenance.intoto.jsonl
+
+  slsa-upload:
+    name: Upload SLSA Provenance
+    needs: [prepare, publish, slsa-provenance]
+    if: needs.prepare.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release metadata
+        uses: actions/download-artifact@v8
+        with:
+          name: release-candidate-tarballs
+          path: dist
+
+      - name: Download SLSA provenance
+        uses: actions/download-artifact@v8
+        with:
+          name: provenance.intoto.jsonl
+          path: dist
+
+      - name: Upload SLSA provenance to package releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          while IFS=$'\t' read -r _package_path _package_name _package_version release_tag _tarball_name; do
+            gh release upload "${release_tag}" \
+              dist/provenance.intoto.jsonl \
+              --clobber
+          done < dist/released-packages.tsv
