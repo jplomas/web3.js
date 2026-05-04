@@ -68,7 +68,6 @@
 		"compile:contracts": "node ./scripts/compile_contracts.js && pnpm run format && pnpm run lint:fix",
 		"release": "multi-semantic-release --ignore-private-packages",
 		"release:dry-run": "multi-semantic-release --ignore-private-packages --dry-run",
-		"release:backfill-package-tags": "node scripts/release/backfill-package-tags.js",
 		"release:inspect-packages": "node scripts/release/inspect-packages.js",
 		"release:pack-packages": "node scripts/release/pack-packages.js",
 		"release:packages": "node scripts/release/packages.js list",
@@ -78,10 +77,8 @@
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.12.0",
-		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/commit-analyzer": "12.0.0",
 		"@semantic-release/exec": "6.0.3",
-		"@semantic-release/git": "10.0.1",
 		"@semantic-release/github": "11.0.6",
 		"@semantic-release/release-notes-generator": "13.0.0",
 		"@theqrl/eslint-config-base-web3": "workspace:*",

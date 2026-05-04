@@ -1,6 +1,6 @@
 {
 	"branches": ["main"],
-	"repositoryUrl": "https://github.com/theqrl/web3.js.git",
+	"repositoryUrl": "https://github.com/theQRL/web3.js.git",
 	"plugins": [
 		[
 			"@semantic-release/commit-analyzer",
@@ -20,18 +20,10 @@
 				"preset": "conventionalcommits"
 			}
 		],
-		"@semantic-release/changelog",
 		[
 			"@semantic-release/exec",
 			{
-				"prepareCmd": "npm version ${nextRelease.version} --no-git-tag-version --allow-same-version"
-			}
-		],
-		[
-			"@semantic-release/git",
-			{
-				"assets": ["package.json", "CHANGELOG.md"],
-				"message": "chore(release): ${nextRelease.gitTag} [skip ci]\n\n${nextRelease.notes}"
+				"prepareCmd": "node ../../scripts/release/set-package-version.js ${nextRelease.version}"
 			}
 		],
 		"@semantic-release/github"
