@@ -1,5 +1,6 @@
 {
 	"branches": ["main"],
+	"repositoryUrl": "https://github.com/theqrl/web3.js.git",
 	"plugins": [
 		[
 			"@semantic-release/commit-analyzer",
