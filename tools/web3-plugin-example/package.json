@@ -7,7 +7,11 @@
 	"description": "Example implementations of Web3.js' plugin system",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
-	"repository": "https://github.com/theqrl/web3.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/theqrl/web3.js.git",
+		"directory": "tools/web3-plugin-example"
+	},
 	"engines": {
 		"node": ">=20"
 	},

@@ -14,7 +14,11 @@
 			"require": "./lib/commonjs/index.js"
 		}
 	},
-	"repository": "https://github.com/theqrl/web3.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/theqrl/web3.js.git",
+		"directory": "packages/web3-providers-http"
+	},
 	"author": "The QRL Contributors",
 	"license": "LGPL-3.0",
 	"engines": {

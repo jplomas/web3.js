@@ -56,6 +56,9 @@ jobs:
       - name: Snapshot package versions
         run: node scripts/release/packages.js snapshot dist/release-versions-before.json
 
+      - name: Backfill existing package release tags
+        run: pnpm run release:backfill-package-tags
+
       - name: Run multi-semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
