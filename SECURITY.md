@@ -31,6 +31,12 @@ Please include as much of the following as possible:
 The QRL team will triage private reports, coordinate fixes, and publish
 security advisories or release notes when appropriate.
 
+## Release Verification
+
+After the first audited release, published packages are expected to be verifiable
+through npm provenance, GitHub release artefacts, checksums, SBOMs, GitHub
+attestations, and SLSA provenance.
+
 ## Scope
 
 This policy covers first-party code in this repository. Dependency security

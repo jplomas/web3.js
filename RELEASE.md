@@ -45,9 +45,8 @@ Non-release changes should use prefixes such as `docs:`, `test:`, `ci:`, `chore:
 
 Before setting `RELEASES_ENABLED=true`, the release owner must confirm:
 
-- The audit-readiness tracker has no open P0 release or CI blockers.
-- Required branch protection is configured for `main` according to
-  [`docs/repository-governance.md`](docs/repository-governance.md).
+- No tests/CI blockers.
+- Required branch protection is configured for `main`
 - `CODEOWNERS` review is enforced.
 - The `npm-publish` environment is protected and limited to release maintainers.
 - npm organization access and trusted-publishing configuration for all `@theqrl/*` packages is ready.
@@ -75,6 +74,8 @@ The release workflow:
 13. Generates SPDX and CycloneDX SBOMs.
 14. Creates GitHub attestations for release artefacts and SBOMs.
 15. Uploads tarballs, checksums, and SBOMs to each package release.
+16. Generates SLSA provenance for released tarballs.
+17. Uploads `provenance.intoto.jsonl` to each package release.
 
 ## Local Commands
 
@@ -108,3 +109,7 @@ Each package release should have:
 - SHA-256 and SHA-512 checksum files.
 - SPDX and CycloneDX SBOMs.
 - GitHub build-provenance and SBOM attestations.
+- SLSA provenance as `provenance.intoto.jsonl`.
+
+Post-release verification steps are documented in
+[`docs/release-verification.md`](docs/release-verification.md).
