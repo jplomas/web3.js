@@ -50,6 +50,22 @@ npm install --save @types/node
 
 This will install typescript for our project and install the types for node.
 
+Next create a `tsconfig.json` file in your project directory with the following content:
+
+```json
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "es2022",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  }
+}
+```
+
 ## Step 3: Set up web3.js and connect to a local Gqrl node
 
 In this step, we will set up the web3.js library and connect to a local Gqrl development node. Make sure Gqrl is running locally with HTTP JSON-RPC available at `http://localhost:8545`.
