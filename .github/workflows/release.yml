@@ -56,6 +56,43 @@ jobs:
       - name: Snapshot package versions
         run: node scripts/release/packages.js snapshot .release/release-versions-before.json
 
+      - name: Coordinate lockstep release
+        # If there are releasable commits since the last per-package tag, refresh
+        # the .release-touch stamp in every package and create a local-only
+        # `fix(release)` commit so multi-semantic-release sees a touch in every
+        # package and bumps them together. The commit lives only in the runner
+        # and is never pushed back to the remote.
+        run: |
+          set -euo pipefail
+          last_release=$(git tag --list '@theqrl/*@*.*.*' | sort -V | tail -n1 || true)
+          if [ -z "$last_release" ]; then
+            echo "No prior release tag found; proceeding with full lockstep."
+            needs_release=true
+          else
+            echo "Last release tag: $last_release"
+            releasable=$(git log "${last_release}..HEAD" --pretty=%s \
+              | grep -E '^(feat|fix|perf)(\(.+\))?!?:' || true)
+            if [ -n "$releasable" ]; then
+              echo "Releasable commits since ${last_release}:"
+              echo "$releasable"
+              needs_release=true
+            else
+              echo "No releasable commits since ${last_release}; skipping lockstep touch."
+              needs_release=false
+            fi
+          fi
+          if [ "$needs_release" = "true" ]; then
+            pnpm run release:touch-packages
+            if ! git diff --quiet -- packages tools; then
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git add packages tools
+              git commit -m "fix(release): coordinated lockstep release"
+            else
+              echo "No new touches to commit (already aligned for this push)."
+            fi
+          fi
+
       - name: Run multi-semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
