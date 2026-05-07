@@ -21,9 +21,22 @@ import { mergeDeepData } from '../fixtures/objects';
 describe('objects', () => {
 	describe('mergeDeep', () => {
 		it.each(mergeDeepData)('$message', ({ destination, sources, output }) => {
-			mergeDeep(destination, ...sources);
+			const result = mergeDeep(destination, ...sources);
 
-			expect(destination).toEqual(output);
+			expect(result).toEqual(output);
+		});
+
+		it('should not pollute Object.prototype via __proto__', () => {
+			const untrusted = JSON.parse('{"__proto__":{"polluted":"yes"}}');
+			const result = mergeDeep({}, untrusted) as Record<string, unknown>;
+			expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+			expect(result.polluted).toBeUndefined();
+		});
+
+		it('should ignore constructor and prototype keys', () => {
+			const untrusted = { constructor: { polluted: 'yes' }, prototype: { polluted: 'yes' } };
+			mergeDeep({}, untrusted);
+			expect(({} as Record<string, unknown>).polluted).toBeUndefined();
 		});
 
 		it('should not mutate the sources', () => {

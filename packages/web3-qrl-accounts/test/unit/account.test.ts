@@ -60,9 +60,19 @@ describe('accounts', () => {
 	describe('seedToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validSeedtoAccountData)('%s', (input, output) => {
-				expect(JSON.stringify(seedToAccount(input.address))).toEqual(
-					JSON.stringify(output),
-				);
+				const account = seedToAccount(input.address);
+				expect(account.address).toEqual(output.address);
+				expect(account.seed).toEqual(output.seed);
+				expect(typeof account.sign).toBe('function');
+				expect(typeof account.signTransaction).toBe('function');
+				expect(typeof account.encrypt).toBe('function');
+			});
+
+			it('should not enumerate seed and should redact JSON.stringify', () => {
+				const account = seedToAccount(validSeedtoAccountData[0][0].address);
+				expect(Object.keys(account)).not.toContain('seed');
+				expect(JSON.stringify(account)).not.toContain(account.seed);
+				expect(JSON.stringify(account)).toContain('<redacted>');
 			});
 		});
 

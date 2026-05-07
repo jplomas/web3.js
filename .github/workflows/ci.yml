@@ -136,7 +136,7 @@ jobs:
 
       - name: Upload unit coverage to Codecov
         if: env.CODECOV_TOKEN != ''
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
         with:
           token: ${{ env.CODECOV_TOKEN }}
           files: ./packages/*/.coverage/unit/*.json,./tools/*/.coverage/unit/*.json

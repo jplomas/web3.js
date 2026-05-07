@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { format, isNullish, keccak256 } from '@theqrl/web3-utils';
+import { isAddressString } from '@theqrl/web3-validator';
 
 import {
 	AbiConstructorFragment,
@@ -113,6 +114,11 @@ export const encodeEventABI = (
 	if (!opts.topics.length) delete opts.topics;
 
 	if (address) {
+		if (!isAddressString(address)) {
+			throw new Web3ContractError(
+				`Invalid filter address: ${address}; expected a Q-prefixed QRL address`,
+			);
+		}
 		opts.address = `Q${address.slice(1).toLowerCase()}`;
 	}
 

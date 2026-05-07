@@ -79,6 +79,7 @@ import {
 } from '@theqrl/web3-types';
 import { format, isDataFormat, keccak256, toChecksumAddress } from '@theqrl/web3-utils';
 import {
+	isAddressString,
 	isNullish,
 	validator,
 	utils as validatorUtils,
@@ -808,9 +809,14 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
-		this._address = value
-			? toChecksumAddress(format({ format: 'address' }, value, returnFormat))
-			: value;
+		if (isNullish(value) || value === '') {
+			this._address = value;
+			return;
+		}
+		if (typeof value !== 'string' || !isAddressString(value, false)) {
+			throw new Web3ContractError(`Invalid contract address: ${String(value)}`);
+		}
+		this._address = toChecksumAddress(format({ format: 'address' }, value, returnFormat));
 	}
 
 	private _parseAndSetJsonInterface(

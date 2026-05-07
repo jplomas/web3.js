@@ -92,6 +92,18 @@ export default class WebSocketProvider<
 		reconnectOptions?: Partial<ReconnectOptions>,
 	) {
 		super(socketPath, socketOptions, reconnectOptions);
+		WebSocketProvider.warnIfCleartext(socketPath);
+	}
+
+	private static warnIfCleartext(socketPath: string): void {
+		if (!/^ws:\/\//i.test(socketPath)) return;
+		const host = socketPath.replace(/^ws:\/\//i, '').split(/[/?#]/)[0].split(':')[0];
+		const loopbacks = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
+		if (loopbacks.has(host.toLowerCase())) return;
+		// eslint-disable-next-line no-console
+		console.warn(
+			`web3-providers-ws: cleartext ws:// URL to non-loopback host "${host}". Use wss:// for production.`,
+		);
 	}
 
 	public getStatus(): Web3ProviderStatus {
@@ -112,13 +124,16 @@ export default class WebSocketProvider<
 	}
 
 	protected _openSocketConnection() {
-		this._socketConnection = new WebSocket(
-			this._socketPath,
-			undefined,
+		const defaults: ClientOptions = {
+			maxPayload: 10 * 1024 * 1024,
+			perMessageDeflate: false,
+		};
+		const userOptions =
 			this._socketOptions && Object.keys(this._socketOptions).length === 0
 				? undefined
-				: this._socketOptions,
-		);
+				: this._socketOptions;
+		const merged = { ...defaults, ...(userOptions ?? {}) } as ClientOptions;
+		this._socketConnection = new WebSocket(this._socketPath, undefined, merged);
 	}
 
 	protected _closeSocketConnection(code?: number, data?: string) {

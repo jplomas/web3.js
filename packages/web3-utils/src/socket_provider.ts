@@ -377,11 +377,16 @@ export abstract class SocketProvider<
 
 		if (this._reconnectAttempts < this._reconnectOptions.maxAttempts) {
 			this._reconnectAttempts += 1;
+			const base = this._reconnectOptions.delay;
+			const exp = base * 2 ** (this._reconnectAttempts - 1);
+			const capped = Math.min(exp, 60_000);
+			const jitter = capped * (Math.random() * 0.4 - 0.2);
+			const wait = Math.max(0, Math.floor(capped + jitter));
 			setTimeout(() => {
 				this._removeSocketListeners();
 				this.connect();
 				this.isReconnecting = false;
-			}, this._reconnectOptions.delay);
+			}, wait);
 		} else {
 			this.isReconnecting = false;
 			this._clearQueues();
@@ -478,7 +483,7 @@ export abstract class SocketProvider<
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
 				this._eventEmitter.emit('message', response);
-				return;
+				continue;
 			}
 
 			const requestId = jsonRpc.isBatchResponse(response)
@@ -488,7 +493,7 @@ export abstract class SocketProvider<
 			const requestItem = this._sentRequestsQueue.get(requestId);
 
 			if (!requestItem) {
-				return;
+				continue;
 			}
 
 			if (

@@ -59,9 +59,12 @@ describe('accounts', () => {
 	describe('seedToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validSeedtoAccountData)('%s', (input, output) => {
-				expect(JSON.stringify(seedToAccount(input.address))).toEqual(
-					JSON.stringify(output),
-				);
+				const account = seedToAccount(input.address);
+				expect(account.address).toEqual(output.address);
+				expect(account.seed).toEqual(output.seed);
+				expect(typeof account.sign).toBe('function');
+				expect(typeof account.signTransaction).toBe('function');
+				expect(typeof account.encrypt).toBe('function');
 			});
 		});
 

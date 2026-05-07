@@ -24,6 +24,7 @@ describe('registry', () => {
 	let object: Web3ContextObject;
 	let registry: Registry;
 	const mockAddress = 'Q0000000000000000000000000000000000000000';
+	const mockResolverAddress = 'Q1234567890123456789012345678901234567890';
 	const QRNS_NAME = 'web3js.qrl';
 
 	beforeAll(() => {
@@ -147,12 +148,12 @@ describe('registry', () => {
 				.spyOn(
 					{
 						call: async () => {
-							return mockAddress;
+							return mockResolverAddress;
 						},
 					},
 					'call',
 				)
-				.mockReturnValue(Promise.resolve(mockAddress));
+				.mockReturnValue(Promise.resolve(mockResolverAddress));
 
 			const resolverMock = jest
 				.spyOn(registry['contract'].methods, 'resolver')
@@ -186,7 +187,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.getResolver(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow('non-string resolver address');
 			expect(resolverMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});

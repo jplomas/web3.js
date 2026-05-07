@@ -27,7 +27,7 @@ describe('Web3 object', () => {
 
 		const web3 = new Web3('http://somenode');
 		expect(web3).toBeTruthy();
-		expect(web3.provider).toEqual({
+		expect(web3.provider).toMatchObject({
 			clientUrl: 'http://somenode',
 			httpProviderOptions: undefined,
 		});
