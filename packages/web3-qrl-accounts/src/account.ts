@@ -62,6 +62,7 @@ import {
 	qrlSeedFromBytes,
 } from './qrl_wallet.js';
 import { keyStoreSchema } from './schemas.js';
+import { validateArgon2idParams } from './kdf_policy.js';
 import { TransactionFactory } from './tx/transactionFactory.js';
 import type { SignTransactionResult, TypedTransaction, Web3Account, SignResult } from './types.js';
 
@@ -216,9 +217,9 @@ export const signTransaction = async (
 	const validationErrors = signedTx.validate(true);
 
 	if (validationErrors.length > 0) {
-		let errorString = 'Signer Error ';
+		let errorString = 'Signer Error';
 		for (const validationError of validationErrors) {
-			errorString += `${errorString} ${validationError}.`;
+			errorString += ` ${validationError}.`;
 		}
 		throw new TransactionSigningError(errorString);
 	}
@@ -342,6 +343,7 @@ export const encrypt = async (
 			dklen: options?.dklen ?? 32,
 			salt: bytesToHex(salt).replace('0x', ''),
 		};
+		validateArgon2idParams(kdfparams);
 		derivedKey = argon2idSync(
 			uint8ArrayPassword,
 			salt,
@@ -403,10 +405,10 @@ export const encrypt = async (
  */
 export function seedToAccount(seed: Bytes): Web3Account {
 	const acc = newMLDSA87WalletFromExtendedSeed(seed);
+	const seedHex = bytesToHex(acc.getExtendedSeed().toBytes());
 
-	return {
+	const account = {
 		address: toChecksumAddress(acc.getAddressStr()),
-		seed: bytesToHex(acc.getExtendedSeed().toBytes()),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
@@ -415,7 +417,19 @@ export function seedToAccount(seed: Bytes): Web3Account {
 			sign(typeof data === 'string' ? data : JSON.stringify(data), seed),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
 			encrypt(acc.getExtendedSeed().toBytes(), password, options),
-	};
+		toJSON() {
+			return { address: account.address, seed: '<redacted>' };
+		},
+	} as unknown as Web3Account;
+
+	Object.defineProperty(account, 'seed', {
+		value: seedHex,
+		enumerable: false,
+		writable: false,
+		configurable: false,
+	});
+
+	return account;
 }
 
 /**
@@ -502,6 +516,7 @@ export const decrypt = async (
 	let derivedKey;
 	if (json.crypto.kdf === 'argon2id') {
 		const { kdfparams } = json.crypto;
+		validateArgon2idParams(kdfparams);
 		const uint8ArraySalt =
 			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 		derivedKey = argon2idSync(

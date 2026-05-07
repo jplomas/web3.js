@@ -31,17 +31,59 @@ import { HttpProviderOptions } from './types.js';
 
 export { HttpProviderOptions } from './types.js';
 
+const DEFAULT_MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
+
 export default class HttpProvider<
 	API extends Web3APISpec = QRLExecutionAPI,
 > extends Web3BaseProvider<API> {
 	private readonly clientUrl: string;
 	private readonly httpProviderOptions: HttpProviderOptions | undefined;
+	private readonly maxResponseBytes: number;
 
 	public constructor(clientUrl: string, httpProviderOptions?: HttpProviderOptions) {
 		super();
 		if (!HttpProvider.validateClientUrl(clientUrl)) throw new InvalidClientError(clientUrl);
+		HttpProvider.warnIfCleartext(clientUrl);
 		this.clientUrl = clientUrl;
 		this.httpProviderOptions = httpProviderOptions;
+		this.maxResponseBytes =
+			httpProviderOptions?.maxResponseBytes ?? DEFAULT_MAX_RESPONSE_BYTES;
+	}
+
+	private static warnIfCleartext(clientUrl: string): void {
+		if (!/^http:\/\//i.test(clientUrl)) return;
+		const host = clientUrl.replace(/^http:\/\//i, '').split(/[/?#]/)[0].split(':')[0];
+		const loopbacks = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
+		if (loopbacks.has(host.toLowerCase())) return;
+		// eslint-disable-next-line no-console
+		console.warn(
+			`web3-providers-http: cleartext http:// URL to non-loopback host "${host}". Use https:// for production.`,
+		);
+	}
+
+	private async parseBoundedJson<T>(response: Response): Promise<T> {
+		const contentLength = response.headers.get('content-length') ?? '';
+		if (contentLength) {
+			const declared = Number(contentLength);
+			if (Number.isFinite(declared) && declared > this.maxResponseBytes) {
+				throw new ResponseError(
+					{} as never,
+					`HTTP response exceeds maxResponseBytes (${declared} > ${this.maxResponseBytes})`,
+				);
+			}
+		}
+		const text = await response.text();
+		if (text.length > this.maxResponseBytes) {
+			throw new ResponseError(
+				{} as never,
+				`HTTP response exceeds maxResponseBytes (${text.length} > ${this.maxResponseBytes})`,
+			);
+		}
+		try {
+			return JSON.parse(text) as T;
+		} catch (err) {
+			throw new ResponseError({} as never, `Failed to parse HTTP response: ${String(err)}`);
+		}
 	}
 
 	private static validateClientUrl(clientUrl: string): boolean {
@@ -79,10 +121,14 @@ export default class HttpProvider<
 			body: JSON.stringify(payload),
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		if (!response.ok) throw new ResponseError(await response.json());
+		if (!response.ok) {
+			throw new ResponseError(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+				(await this.parseBoundedJson(response)) as never,
+			);
+		}
 
-		return (await response.json()) as JsonRpcResponseWithResult<ResultType>;
+		return this.parseBoundedJson<JsonRpcResponseWithResult<ResultType>>(response);
 	}
 
 	/* eslint-disable class-methods-use-this */

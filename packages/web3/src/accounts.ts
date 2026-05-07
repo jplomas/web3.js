@@ -53,14 +53,29 @@ export const initAccountsForContext = (context: Web3Context<QRLExecutionAPI>) =>
 		return signTransaction(tx, seedBytes);
 	};
 
+	const wrapAccount = <S extends (transaction: Transaction) => unknown>(
+		account: ReturnType<typeof seedToAccount>,
+		signTx: S,
+	) => {
+		const wrapper = { ...account, signTransaction: signTx };
+		Object.defineProperty(wrapper, 'seed', {
+			value: account.seed,
+			enumerable: false,
+			writable: false,
+			configurable: false,
+		});
+		Object.defineProperty(wrapper, 'toJSON', {
+			value: () => ({ address: wrapper.address, seed: '<redacted>' }),
+			enumerable: false,
+		});
+		return wrapper;
+	};
+
 	const seedToAccountWithContext = (seed: Uint8Array | string) => {
 		const account = seedToAccount(seed);
-
-		return {
-			...account,
-			signTransaction: async (transaction: Transaction) =>
-				signTransactionWithContext(transaction, account.seed),
-		};
+		return wrapAccount(account, async (transaction: Transaction) =>
+			signTransactionWithContext(transaction, account.seed),
+		);
 	};
 
 	const decryptWithContext = async (
@@ -69,22 +84,16 @@ export const initAccountsForContext = (context: Web3Context<QRLExecutionAPI>) =>
 		options?: Record<string, unknown>,
 	) => {
 		const account = await decrypt(keystore, password, (options?.nonStrict as boolean) ?? true);
-
-		return {
-			...account,
-			signTransaction: async (transaction: Transaction) =>
-				signTransactionWithContext(transaction, account.seed),
-		};
+		return wrapAccount(account, async (transaction: Transaction) =>
+			signTransactionWithContext(transaction, account.seed),
+		);
 	};
 
 	const createWithContext = () => {
 		const account = create();
-
-		return {
-			...account,
-			signTransaction: async (transaction: Transaction) =>
-				signTransactionWithContext(transaction, account.seed),
-		};
+		return wrapAccount(account, async (transaction: Transaction) =>
+			signTransactionWithContext(transaction, account.seed),
+		);
 	};
 
 	const wallet = new Wallet({

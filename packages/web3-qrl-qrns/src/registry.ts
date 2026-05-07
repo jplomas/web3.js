@@ -18,10 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3ContextObject } from '@theqrl/web3-core';
 import { Contract } from '@theqrl/web3-qrl-contract';
 import { Address } from '@theqrl/web3-types';
+import { isAddressString } from '@theqrl/web3-validator';
 import { QRNSRegistryAbi } from './abi/qrns/QRNSRegistry.js';
 import { PublicResolverAbi } from './abi/qrns/PublicResolver.js';
 import { registryAddresses } from './config.js';
 import { namehash } from './utils.js';
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const QRL_ZERO_ADDRESS = 'Q0000000000000000000000000000000000000000';
 
 export class Registry {
 	private readonly contract: Contract<typeof QRNSRegistryAbi>;
@@ -71,13 +75,22 @@ export class Registry {
 				.resolver(namehash(name))
 				.call()
 				.then(address => {
-					// address type is unknown, not sure why
-					if (typeof address === 'string') {
-						const contract = new Contract(PublicResolverAbi, address, this.context);
-						// TODO: set contract provider needs to be added when qrns current provider
-						return contract;
+					if (typeof address !== 'string') {
+						throw new Error('QRNS registry returned non-string resolver address');
 					}
-					throw new Error();
+					if (!isAddressString(address)) {
+						throw new Error(
+							`QRNS registry returned invalid resolver address: ${address}`,
+						);
+					}
+					const lower = address.toLowerCase();
+					if (
+						lower === ZERO_ADDRESS.toLowerCase() ||
+						lower === QRL_ZERO_ADDRESS.toLowerCase()
+					) {
+						throw new Error('QRNS registry returned zero resolver address');
+					}
+					return new Contract(PublicResolverAbi, address, this.context);
 				});
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertInstructionError Needs to be added after web3-qrl call method is implemented

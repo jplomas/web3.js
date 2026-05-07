@@ -16,11 +16,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Bytes, Numbers, BlockHeaderOutput, TransactionReceipt } from '@theqrl/web3-types';
 import { format } from '@theqrl/web3-utils';
+import { isHexStrict } from '@theqrl/web3-validator';
 
 import { DataFormat } from '@theqrl/web3-types';
 import { NewHeadsSubscription } from '../web3_subscriptions.js';
 import { transactionReceiptSchema } from '../schemas.js';
 import { WaitProps, watchTransactionByPolling } from './watch_transaction_by_pooling.js';
+
+const isValidUnsignedHexNumber = (value: unknown): value is string | number | bigint => {
+	if (typeof value === 'bigint' || typeof value === 'number') {
+		return value >= 0;
+	}
+	if (typeof value !== 'string') {
+		return false;
+	}
+	if (value.startsWith('-')) return false;
+	if (!isHexStrict(value)) return false;
+	return true;
+};
+
+const isValidBlockHash = (value: unknown): value is string =>
+	typeof value === 'string' && /^0x[0-9a-fA-F]{64}$/.test(value);
 
 /**
  * This function watches a Transaction by subscribing to new heads.
@@ -47,6 +63,8 @@ export const watchTransactionBySubscription = <
 					needToWatchLater = false;
 					if (
 						!newBlockHeader?.number ||
+						!isValidUnsignedHexNumber(newBlockHeader.number) ||
+						!isValidBlockHash(newBlockHeader.parentHash) ||
 						// For some cases, the on-data event is fired couple times for the same block!
 						// This needs investigation but seems to be because of multiple `subscription.on('data'...)` even this should not cause that.
 						lastCaughtBlockHash === newBlockHeader?.parentHash

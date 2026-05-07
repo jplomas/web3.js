@@ -33,6 +33,23 @@ import { InternalTransaction } from '../types.js';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionType } from './transaction_builder.js';
 
+// 256-bit unsigned upper bound; on-chain fee fields are uint256.
+const MAX_UINT256 = (BigInt(1) << BigInt(256)) - BigInt(1);
+
+const safeBigInt = (value: Numbers | undefined, label: string): bigint => {
+	if (isNullish(value)) {
+		throw new Error(`Expected numeric ${label}, got ${String(value)}`);
+	}
+	if (typeof value === 'string' && value.startsWith('-')) {
+		throw new Error(`Negative ${label} from RPC: ${value}`);
+	}
+	const result = BigInt(value);
+	if (result < BigInt(0) || result > MAX_UINT256) {
+		throw new Error(`${label} out of uint256 range: ${result.toString()}`);
+	}
+	return result;
+};
+
 async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	transaction: FormatType<Transaction, typeof QRL_DATA_FORMAT>,
 	web3Context: Web3Context<QRLExecutionAPI>,
@@ -40,19 +57,21 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
 
+	const baseFeePerGas = safeBigInt(block.baseFeePerGas as Numbers, 'block.baseFeePerGas');
+	const maxPriorityFeePerGas = safeBigInt(
+		(transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas) as Numbers,
+		'maxPriorityFeePerGas',
+	);
+
 	return {
 		maxPriorityFeePerGas: format(
 			{ format: 'uint' },
-			transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas,
+			maxPriorityFeePerGas as Numbers,
 			returnFormat,
 		),
 		maxFeePerGas: format(
 			{ format: 'uint' },
-			(transaction.maxFeePerGas ??
-				BigInt(block.baseFeePerGas) * BigInt(2) +
-					BigInt(
-						transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas,
-					)) as Numbers,
+			(transaction.maxFeePerGas ?? baseFeePerGas * BigInt(2) + maxPriorityFeePerGas) as Numbers,
 			returnFormat,
 		),
 	};

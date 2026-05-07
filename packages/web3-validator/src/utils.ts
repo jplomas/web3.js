@@ -65,7 +65,7 @@ export const parseBaseType = <T = typeof VALID_QRL_BASE_TYPES[number]>(
 		baseTypeSize = parseInt(strippedType.substring(3), 10);
 		strippedType = 'int';
 	} else if (strippedType.startsWith('uint')) {
-		baseTypeSize = parseInt(type.substring(4), 10);
+		baseTypeSize = parseInt(strippedType.substring(4), 10);
 		strippedType = 'uint';
 	} else if (strippedType.startsWith('bytes')) {
 		baseTypeSize = parseInt(strippedType.substring(5), 10);
@@ -75,6 +75,39 @@ export const parseBaseType = <T = typeof VALID_QRL_BASE_TYPES[number]>(
 	}
 
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
+};
+
+const assertSupportedSize = (
+	type: string,
+	baseType: string | undefined,
+	baseTypeSize: number | undefined,
+): void => {
+	if (baseTypeSize === undefined || Number.isNaN(baseTypeSize)) return;
+	if (
+		(baseType === 'int' || baseType === 'uint') &&
+		(baseTypeSize <= 0 || baseTypeSize > 256 || baseTypeSize % 8 !== 0)
+	) {
+		throw new Web3ValidatorError([
+			{
+				keyword: 'eth',
+				message: `Eth data type "${type}" is not valid: unsupported ${baseType} size`,
+				params: { eth: type },
+				instancePath: '',
+				schemaPath: '',
+			},
+		]);
+	}
+	if (baseType === 'bytes' && (baseTypeSize <= 0 || baseTypeSize > 32)) {
+		throw new Web3ValidatorError([
+			{
+				keyword: 'eth',
+				message: `Eth data type "${type}" is not valid: unsupported bytes size`,
+				params: { eth: type },
+				instancePath: '',
+				schemaPath: '',
+			},
+		]);
+	}
 };
 
 const convertEthType = (
@@ -96,6 +129,7 @@ const convertEthType = (
 	}
 
 	const { baseType, baseTypeSize } = parseBaseType(type);
+	assertSupportedSize(type, baseType as string | undefined, baseTypeSize);
 
 	if (!baseType && !extraTypes.includes(type)) {
 		throw new Web3ValidatorError([
@@ -143,7 +177,7 @@ export const abiSchemaToJsonSchema = (
 		// e.g. {name: 'a', type: 'uint'}
 		if (isAbiParameterSchema(abi)) {
 			abiType = abi.type;
-			abiName = abi.name;
+			abiName = abi.name || `${level}/${index}`;
 			abiComponents = abi.components as FullValidationSchema;
 			// If its short form string value e.g. ['uint']
 		} else if (typeof abi === 'string') {

@@ -32,26 +32,31 @@ const isIterable = (item: unknown): item is Record<string, unknown> =>
  * @param sources - An array of source objects.
  * @returns - The merged object.
  */
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 export const mergeDeep = (
 	destination: Record<string, unknown>,
 	...sources: Record<string, unknown>[]
 ): Record<string, unknown> => {
-	const result = destination; // clone deep here
-	if (!isIterable(result)) {
-		return result;
+	if (!isIterable(destination)) {
+		return destination;
 	}
+	const result = { ...destination };
 	for (const src of sources) {
 		// eslint-disable-next-line no-restricted-syntax
 		for (const key in src) {
+			if (FORBIDDEN_KEYS.has(key) || !Object.hasOwnProperty.call(src, key)) {
+				continue;
+			}
 			if (isIterable(src[key])) {
 				if (!result[key]) {
 					result[key] = {};
 				}
-				mergeDeep(
+				result[key] = mergeDeep(
 					result[key] as Record<string, unknown>,
-					src[key],
+					src[key] as Record<string, unknown>,
 				);
-			} else if (!isNullish(src[key]) && Object.hasOwnProperty.call(src, key)) {
+			} else if (!isNullish(src[key])) {
 				if (Array.isArray(src[key]) || src[key] instanceof TypedArray) {
 					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 					result[key] = (src[key] as unknown[]).slice(0);

@@ -18,6 +18,8 @@ import { JsonRpcResponse } from '@theqrl/web3-types';
 import { InvalidResponseError } from '@theqrl/web3-errors';
 import { EventEmitter } from 'events';
 
+const MAX_CHUNK_BYTES = 10 * 1024 * 1024;
+
 export class ChunkResponseParser {
 	private lastChunk: string | undefined;
 	private lastChunkTimeout: NodeJS.Timeout | undefined;
@@ -58,6 +60,20 @@ export class ChunkResponseParser {
 			}
 
 			let result;
+
+			if (chunkData.length > MAX_CHUNK_BYTES) {
+				this.lastChunk = undefined;
+				this.clearQueues();
+				this.eventEmitter.emit(
+					'error',
+					new InvalidResponseError({
+						id: 1,
+						jsonrpc: '2.0',
+						error: { code: 2, message: 'Chunk size exceeds maximum' },
+					}),
+				);
+				return;
+			}
 
 			try {
 				result = JSON.parse(chunkData) as unknown as JsonRpcResponse;

@@ -141,6 +141,14 @@ export class LogsSubscription extends Web3Subscription<
 	}
 
 	protected formatSubscriptionResult(data: EventLog) {
+		if (
+			!data ||
+			typeof data !== 'object' ||
+			!Array.isArray((data as { topics?: unknown }).topics) ||
+			typeof (data as { data?: unknown }).data !== 'string'
+		) {
+			throw new Error('LogsSubscription received malformed log frame');
+		}
 		return decodeEventABI(this.abi, data as LogsInput, this.jsonInterface, super.returnFormat);
 	}
 }
