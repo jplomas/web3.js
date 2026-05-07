@@ -253,7 +253,11 @@ jobs:
       actions: read
       id-token: write
       contents: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@f7dd8c54c2067bafc12ca7a55595d5ee9b75204a # v2.1.0
+    # NOTE: SLSA generator must be referenced by tag, not SHA — the reusable
+    # workflow inspects its own caller-ref to embed the version into the
+    # provenance and aborts when called by digest. See:
+    # https://github.com/slsa-framework/slsa-github-generator/blob/main/internal/builders/generic/README.md
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
     with:
       base64-subjects: ${{ needs.slsa-subjects.outputs.hashes }}
       upload-assets: false
