@@ -659,7 +659,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(ws@8.20.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
       ws:
-        specifier: ^8.8.1
+        specifier: ^8.17.1
         version: 8.20.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@theqrl/eslint-config-base-web3':
