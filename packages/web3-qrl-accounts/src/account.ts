@@ -356,12 +356,7 @@ export const encrypt = async (
 		throw new InvalidKdfError();
 	}
 
-	const cipher = await createCipheriv(
-		seedUint8Array,
-		derivedKey,
-		initializationVector,
-		'aes-256-gcm',
-	);
+	const cipher = await createCipheriv(seedUint8Array, derivedKey, initializationVector);
 	const ciphertext = bytesToHex(cipher).slice(2);
 	const wallet = newMLDSA87WalletFromExtendedSeed(seedUint8Array);
 
