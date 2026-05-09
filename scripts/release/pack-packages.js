@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const { mkdirSync, mkdtempSync, writeFileSync } = require('fs');
-const { tmpdir } = require('os');
+const { mkdirSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 const { execFileSync } = require('child_process');
 
@@ -9,7 +8,6 @@ const { publishablePackages, releaseTag, tarballName } = require('./packages');
 
 const [outputDirectory = 'dist'] = process.argv.slice(2);
 const tarballDirectory = resolve(outputDirectory, 'tarballs');
-const npmCache = process.env.npm_config_cache || mkdtempSync(resolve(tmpdir(), 'web3-pack-npm-cache-'));
 
 mkdirSync(tarballDirectory, { recursive: true });
 
@@ -19,18 +17,14 @@ const releasedPackages = publishablePackages().map(pkg => ({
 	tarballName: tarballName(pkg),
 }));
 
+// `pnpm pack` (unlike `npm pack`) replaces the `workspace:` protocol on
+// dependencies with the resolved version range, so the tarballs install
+// cleanly under any package manager.
 for (const pkg of releasedPackages) {
 	console.log(`Packing ${pkg.name}@${pkg.version}`);
-	execFileSync('npm', ['pack', '--pack-destination', tarballDirectory], {
+	execFileSync('pnpm', ['pack', '--pack-destination', tarballDirectory], {
 		cwd: pkg.path,
 		stdio: 'inherit',
-		env: {
-			...process.env,
-			npm_config_audit: 'false',
-			npm_config_fund: 'false',
-			npm_config_ignore_scripts: 'true',
-			npm_config_cache: npmCache,
-		},
 	});
 }
 
