@@ -6,6 +6,8 @@ packages:
 # Supply-chain hardening for dependency resolution and install scripts.
 # Values are in minutes; 10080 minutes is 7 days.
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+- '@theqrl/*'
 blockExoticSubdeps: true
 overrides:
   "braces@<3.0.3": ">=3.0.3"

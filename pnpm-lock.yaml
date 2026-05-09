@@ -259,7 +259,7 @@ importers:
         version: 5.8.0
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -299,56 +299,56 @@ importers:
     dependencies:
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-net':
         specifier: ^0.4.0
-        version: link:../web3-net
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-providers-http':
         specifier: ^0.4.0
-        version: link:../web3-providers-http
+        version: 0.4.4
       '@theqrl/web3-providers-ws':
         specifier: ^0.4.0
-        version: link:../web3-providers-ws
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl':
         specifier: ^0.4.0
-        version: link:../web3-qrl
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-abi':
         specifier: ^0.4.0
-        version: link:../web3-qrl-abi
+        version: 0.4.4
       '@theqrl/web3-qrl-accounts':
         specifier: ^0.4.0
-        version: link:../web3-qrl-accounts
+        version: 0.4.4
       '@theqrl/web3-qrl-contract':
         specifier: ^0.4.0
-        version: link:../web3-qrl-contract
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-iban':
         specifier: ^0.4.0
-        version: link:../web3-qrl-iban
+        version: 0.4.4
       '@theqrl/web3-qrl-qrns':
         specifier: ^0.4.0
-        version: link:../web3-qrl-qrns
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-rpc-methods':
         specifier: ^0.4.0
-        version: link:../web3-rpc-methods
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
         version: link:../../tools/eslint-config-base-web3
       '@theqrl/web3-providers-ipc':
         specifier: ^0.4.0
-        version: link:../web3-providers-ipc
+        version: 0.4.4
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
@@ -390,25 +390,25 @@ importers:
     dependencies:
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-providers-http':
         specifier: ^0.4.0
-        version: link:../web3-providers-http
+        version: 0.4.4
       '@theqrl/web3-providers-ws':
         specifier: ^0.4.0
-        version: link:../web3-providers-ws
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-iban':
         specifier: ^0.4.0
-        version: link:../web3-qrl-iban
+        version: 0.4.4
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -452,13 +452,13 @@ importers:
     optionalDependencies:
       '@theqrl/web3-providers-ipc':
         specifier: ^0.4.0
-        version: link:../web3-providers-ipc
+        version: 0.4.4
 
   packages/web3-errors:
     dependencies:
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -498,16 +498,16 @@ importers:
     dependencies:
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-rpc-methods':
         specifier: ^0.4.0
-        version: link:../web3-rpc-methods
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -547,13 +547,13 @@ importers:
     dependencies:
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       cross-fetch:
         specifier: ^3.1.5
         version: 3.2.0(encoding@0.1.13)
@@ -599,13 +599,13 @@ importers:
     dependencies:
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -645,13 +645,13 @@ importers:
     dependencies:
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@types/ws':
         specifier: 8.5.3
         version: 8.5.3
@@ -715,34 +715,34 @@ importers:
         version: 2.0.2
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-net':
         specifier: ^0.4.0
-        version: link:../web3-net
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-providers-ws':
         specifier: ^0.4.0
-        version: link:../web3-providers-ws
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-abi':
         specifier: ^0.4.0
-        version: link:../web3-qrl-abi
+        version: 0.4.4
       '@theqrl/web3-qrl-accounts':
         specifier: ^0.4.0
-        version: link:../web3-qrl-accounts
+        version: 0.4.4
       '@theqrl/web3-rpc-methods':
         specifier: ^0.4.0
-        version: link:../web3-rpc-methods
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
       setimmediate:
         specifier: ^1.0.5
         version: 1.0.5
@@ -752,7 +752,7 @@ importers:
         version: link:../../tools/eslint-config-base-web3
       '@theqrl/web3-providers-http':
         specifier: ^0.4.0
-        version: link:../web3-providers-http
+        version: 0.4.4
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
@@ -791,22 +791,22 @@ importers:
         version: 5.8.0
       '@theqrl/abi':
         specifier: ^0.4.0
-        version: link:../abi
+        version: 0.4.4
       '@theqrl/wallet.js':
         specifier: ^2.0.2
         version: 2.0.2
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
       crc-32:
         specifier: ^1.2.2
         version: 1.2.2
@@ -866,23 +866,23 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       '@theqrl/qrl-cryptography':
-        specifier: ^0.1.0
-        version: 0.1.1
+        specifier: ^0.1.3
+        version: 0.1.3
       '@theqrl/wallet.js':
         specifier: ^2.0.2
         version: 2.0.2
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
       crc-32:
         specifier: ^1.2.2
         version: 1.2.2
@@ -895,7 +895,7 @@ importers:
         version: link:../../tools/eslint-config-base-web3
       '@theqrl/web3-providers-ipc':
         specifier: ^0.4.0
-        version: link:../web3-providers-ipc
+        version: 0.4.4
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
@@ -934,25 +934,25 @@ importers:
     dependencies:
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-qrl':
         specifier: ^0.4.0
-        version: link:../web3-qrl
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-abi':
         specifier: ^0.4.0
-        version: link:../web3-qrl-abi
+        version: 0.4.4
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@humeris/espresso-shot':
         specifier: ^4.0.0
@@ -962,7 +962,7 @@ importers:
         version: link:../../tools/eslint-config-base-web3
       '@theqrl/web3-qrl-accounts':
         specifier: ^0.4.0
-        version: link:../web3-qrl-accounts
+        version: 0.4.4
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
@@ -998,16 +998,16 @@ importers:
     dependencies:
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -1050,28 +1050,28 @@ importers:
         version: 1.11.1
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-net':
         specifier: ^0.4.0
-        version: link:../web3-net
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl':
         specifier: ^0.4.0
-        version: link:../web3-qrl
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-contract':
         specifier: ^0.4.0
-        version: link:../web3-qrl-contract
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../web3-utils
+        version: 0.4.4
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -1111,13 +1111,13 @@ importers:
     dependencies:
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: ^0.4.0
@@ -1195,17 +1195,17 @@ importers:
   packages/web3-utils:
     dependencies:
       '@theqrl/qrl-cryptography':
-        specifier: ^0.1.0
-        version: 0.1.1
+        specifier: ^0.1.3
+        version: 0.1.3
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       '@theqrl/web3-validator':
         specifier: ^0.4.0
-        version: link:../web3-validator
+        version: 0.4.4
     devDependencies:
       '@humeris/espresso-shot':
         specifier: ^4.0.0
@@ -1250,14 +1250,14 @@ importers:
   packages/web3-validator:
     dependencies:
       '@theqrl/qrl-cryptography':
-        specifier: ^0.1.0
-        version: 0.1.1
+        specifier: ^0.1.3
+        version: 0.1.3
       '@theqrl/web3-errors':
         specifier: ^0.4.0
-        version: link:../web3-errors
+        version: 0.4.3
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../web3-types
+        version: 0.4.3
       util:
         specifier: ^0.12.5
         version: 0.12.5
@@ -1375,22 +1375,22 @@ importers:
         version: link:../eslint-config-base-web3
       '@theqrl/web3':
         specifier: ^0.4.0
-        version: link:../../packages/web3
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-core':
         specifier: ^0.4.0
-        version: link:../../packages/web3-core
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-qrl-abi':
         specifier: ^0.4.0
-        version: link:../../packages/web3-qrl-abi
+        version: 0.4.4
       '@theqrl/web3-qrl-contract':
         specifier: ^0.4.0
-        version: link:../../packages/web3-qrl-contract
+        version: 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@theqrl/web3-types':
         specifier: ^0.4.0
-        version: link:../../packages/web3-types
+        version: 0.4.3
       '@theqrl/web3-utils':
         specifier: ^0.4.0
-        version: link:../../packages/web3-utils
+        version: 0.4.4
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.14
@@ -3093,9 +3093,6 @@ packages:
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
-  '@noble/curves@1.0.0':
-    resolution: {integrity: sha512-2upgEu0iLiDVDZkNLeFV2+ht0BAVgQnEmCk6JsOch9Rp8xfkMCbvbAZlA2pBHQc73dbl+vFOXfqkf4uemdn0bw==}
-
   '@noble/curves@1.4.2':
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
 
@@ -3106,9 +3103,6 @@ packages:
   '@noble/hashes@1.2.0':
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==}
 
-  '@noble/hashes@1.3.0':
-    resolution: {integrity: sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==}
-
   '@noble/hashes@1.4.0':
     resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
     engines: {node: '>= 16'}
@@ -3117,12 +3111,12 @@ packages:
     resolution: {integrity: sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==}
     engines: {node: ^14.21.3 || >=16}
 
-  '@noble/hashes@1.8.0':
-    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
-    engines: {node: ^14.21.3 || >=16}
-
   '@noble/hashes@2.0.1':
     resolution: {integrity: sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==}
+    engines: {node: '>= 20.19.0'}
+
+  '@noble/hashes@2.2.0':
+    resolution: {integrity: sha512-IYqDGiTXab6FniAgnSdZwgWbomxpy9FtYvLKs7wCUs2a8RkITG+DFGO1DM9cr+E3/RgADRpFjrKVaJ1z6sjtEg==}
     engines: {node: '>= 20.19.0'}
 
   '@noble/secp256k1@1.7.1':
@@ -3549,6 +3543,10 @@ packages:
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
     engines: {node: '>=14.16'}
 
+  '@theqrl/abi@0.4.4':
+    resolution: {integrity: sha512-3rG8SNF92KUGC1DR95YkFPI+dv7FC0FVEnMKI4oA0VV+wJnEptHySNIOmYFQNEMu+M+wPrPkT9h8jl5uv2/Iag==}
+    engines: {node: '>=20'}
+
   '@theqrl/hypc@0.0.2':
     resolution: {integrity: sha512-XsP7hETJdlmmdGtmp/K5ZtTcz3EzZaP+WhjuOTf4PmhE+6oijN271H10htYHvBo95ED2OYiuUCYucYNw7Q6mfQ==}
     hasBin: true
@@ -3557,14 +3555,87 @@ packages:
     resolution: {integrity: sha512-BPEvwrrphkMjyPnDorMzQdfrtICTZsiUxiBnwFkv2SfIcQwTTPQV3kTVfidZXXE7033ZCvhu1u5Aiw6TrjxPPQ==}
     engines: {node: '>=20.19.0'}
 
+  '@theqrl/mldsa87@2.0.4':
+    resolution: {integrity: sha512-xUcrFSZ1OeRSyzU5xCd/TuB+dE/z7U9MafNtKZYmPhRwcucNbhobsXHab8GO5w02dy732sdPidOT2Tkn+vjZuA==}
+    engines: {node: '>=20.19.0'}
+
   '@theqrl/qrl-contracts@0.1.0':
     resolution: {integrity: sha512-xCKoOiEyy+uIe+20yCn+F5vFOHNb8c0610oypoyCXFsEG1iX+AcookUHaRNQndYOcgze8d+yAUJ9KnJ5NsHywQ==}
 
-  '@theqrl/qrl-cryptography@0.1.1':
-    resolution: {integrity: sha512-a81By7tsLiiTeVANrl7+0JXPBsOGhS78j+R4c1F3DOnbafliK34RHlezjVZnkGI9AoFkr3bUOfrkAtnETEOGgA==}
+  '@theqrl/qrl-cryptography@0.1.3':
+    resolution: {integrity: sha512-rtgii8JB6W0Gk7jen2WZU6Iubl+mHKFUobGG6zzipippVxhbeA0Vb6SJ/Hi5IEbGr44KlY4sBZMjWEBLaSEQpw==}
+    engines: {node: '>=20.19'}
 
   '@theqrl/wallet.js@2.0.2':
     resolution: {integrity: sha512-gqmPE1D7qk2d6Qir0/iZeRGGr2eAVjps9Zql0P4pIw/uBjs81FBYio90c+RawkuKyc2WjlOLF6l3VI02z/rMSg==}
+
+  '@theqrl/web3-core@0.4.4':
+    resolution: {integrity: sha512-GgIe3U/6NhONG7YKlYp1HzjFt8gkGwfbPac6HKDqJVpQo1dd2pNjcWUfP4EFa3YP5748xnatStQrSCBx76gg5w==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-errors@0.4.3':
+    resolution: {integrity: sha512-tazXfP8xZdzr3MwaH6o6kLn+64CYhUS+2ybufTanVqL+YoErIwMyPQQaL/t4GBMTHypFDSy4AVRfEQLvCw+Z9w==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-net@0.4.4':
+    resolution: {integrity: sha512-AeEFBYzYbJI16Iap3Td9GybFj9rAvkqCFbJYKQp4IJSWWgsEJYHcevig57cahTmeiYpNscbrmrL0jPQAI+m3Cg==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-providers-http@0.4.4':
+    resolution: {integrity: sha512-Ol6usX4HWWPStTkfUIhdSmnGX9XZ6RciwG8mOBWkw/A0KL50LE137C+uAOb36NMK7tO/vF2E5xHdFCGM2d705g==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-providers-ipc@0.4.4':
+    resolution: {integrity: sha512-Dd4vOKZ3YnoiR5HJHBQse+xbeQ4zc+r9MFHs4mKalh+3oeqB3TCQOfN7NImoB2dUBMmThUlyz0C0uw0mVL7IVw==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-providers-ws@0.4.4':
+    resolution: {integrity: sha512-AAlNywppRAZcygAro7Q0Vu7b7loCjtKdtH61EIVwKjfcAqpJFDnCCrIZ+qiLlAZO09fFuYHwzx6O4KUgzTqgfA==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl-abi@0.4.4':
+    resolution: {integrity: sha512-aI1vFF+SwDq+dOnq9AHDtAw+zHaJUqAY2PVfCvgAlbseZh26Hl/qSL27YxNN2hCZOJoHVSa3du44TZxO1qrtYA==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl-accounts@0.4.4':
+    resolution: {integrity: sha512-0FpoMl56A+xbjuaNUCWFtpEa59T2bhuUuX+j/2zD6bYvGFO1z/DFVdhWVAFihUxZCjSwuM6p01d+azjqvMkTNg==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl-contract@0.4.4':
+    resolution: {integrity: sha512-dcsgwPZvV7bZGaUp9o/FDOMPmBd1unWccau/6fa8jYV8fiWcX+dgQrg8kjC0B+Qdr2ePAx9tMYzKCl1AxHVCtw==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl-iban@0.4.4':
+    resolution: {integrity: sha512-9vg2VELTkA54CeMEEhE79VTVTXULTxFSOKmyl0d9+HL77EDx8hl8FL7FWbwgKYvI5RXJ3osRifNTdugPE2qGNQ==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl-qrns@0.4.4':
+    resolution: {integrity: sha512-lfOkrSWQidwGU2IvSWBTzo6mVFjOieUlyR7/1M0z3HyN0NOgPx8SDy6LNv2EJjBZkWzCS5e6NsLptiXq5it/Dw==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-qrl@0.4.4':
+    resolution: {integrity: sha512-kBJhW3AJf5wabjuNz3kpo0CJFaO6m2Rayf7YKyYKhbIfX6fzUBOWRaL6gpFj7onR9KlO0vvHO3Lb4pXZFw6Ekw==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-rpc-methods@0.4.4':
+    resolution: {integrity: sha512-Ris/b0I1LkQhIh/8PBKwR9tONGhlhjV+559vmCZYmsRdyg1RwKI943H6Jk9EBdB6/yPBshGGPhPi2sV3V7i65g==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-types@0.4.3':
+    resolution: {integrity: sha512-8RV7QN4Qx+4sjrfkNWguJsZ/P8W19zvQWkr35YmzonG+WDdEYBINIfnSt1Lxy0pcNNSpRUQ+EwdomVmMH11vmA==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-utils@0.4.4':
+    resolution: {integrity: sha512-3efGY0HhE0selNoawGbnHW/7tm3cHSK0gIedxjvIMDCQeRnhmd6nNfMAWk3GUA0H3CwGc96SHo+XP3yMDw51+Q==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3-validator@0.4.4':
+    resolution: {integrity: sha512-XhG5bnXDEdhzODDFen1ZBWTkqkeUaotdJWfzWbOHXeWKXHRuqSIPluLYgLt/Ph+s8VyPd0W+frafJi7oBsUXcw==}
+    engines: {node: '>=20'}
+
+  '@theqrl/web3@0.4.4':
+    resolution: {integrity: sha512-5XHHQP2RXB4BzUuvu1iTRxsRhtYqiXKx1TcyfMuKGFCifykP2jxEt0B2AG9cD8DnbRh6JWmavrDeK/aeu10d+A==}
+    engines: {node: '>=20'}
 
   '@tsconfig/docusaurus@2.0.9':
     resolution: {integrity: sha512-0jVxZCgy2v7TnJrW9kVNikNwJHeiWb68Zhiiw2vHw4tzBFSP5vS2zn3O5EY2oPEVz5dXZRkK7MnWG3Ay5q0mIg==}
@@ -13048,10 +13119,6 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@noble/curves@1.0.0':
-    dependencies:
-      '@noble/hashes': 1.3.0
-
   '@noble/curves@1.4.2':
     dependencies:
       '@noble/hashes': 1.4.0
@@ -13062,15 +13129,13 @@ snapshots:
 
   '@noble/hashes@1.2.0': {}
 
-  '@noble/hashes@1.3.0': {}
-
   '@noble/hashes@1.4.0': {}
 
   '@noble/hashes@1.7.2': {}
 
-  '@noble/hashes@1.8.0': {}
-
   '@noble/hashes@2.0.1': {}
+
+  '@noble/hashes@2.2.0': {}
 
   '@noble/secp256k1@1.7.1': {}
 
@@ -13673,6 +13738,19 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
+  '@theqrl/abi@0.4.4':
+    dependencies:
+      '@ethersproject/address': 5.8.0
+      '@ethersproject/bignumber': 5.8.0
+      '@ethersproject/bytes': 5.8.0
+      '@ethersproject/constants': 5.8.0
+      '@ethersproject/hash': 5.8.0
+      '@ethersproject/keccak256': 5.8.0
+      '@ethersproject/logger': 5.8.0
+      '@ethersproject/properties': 5.8.0
+      '@ethersproject/strings': 5.8.0
+      '@theqrl/web3-utils': 0.4.4
+
   '@theqrl/hypc@0.0.2':
     dependencies:
       command-exists: 1.2.9
@@ -13689,18 +13767,209 @@ snapshots:
     dependencies:
       '@noble/hashes': 2.0.1
 
+  '@theqrl/mldsa87@2.0.4':
+    dependencies:
+      '@noble/hashes': 2.0.1
+
   '@theqrl/qrl-contracts@0.1.0': {}
 
-  '@theqrl/qrl-cryptography@0.1.1':
+  '@theqrl/qrl-cryptography@0.1.3':
     dependencies:
-      '@noble/curves': 1.0.0
-      '@noble/hashes': 1.8.0
-      '@theqrl/mldsa87': 2.0.1
+      '@noble/hashes': 2.2.0
+      '@theqrl/mldsa87': 2.0.4
 
   '@theqrl/wallet.js@2.0.2':
     dependencies:
       '@noble/hashes': 2.0.1
       '@theqrl/mldsa87': 2.0.1
+
+  '@theqrl/web3-core@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-providers-http': 0.4.4
+      '@theqrl/web3-providers-ws': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-iban': 0.4.4
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+    optionalDependencies:
+      '@theqrl/web3-providers-ipc': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-errors@0.4.3':
+    dependencies:
+      '@theqrl/web3-types': 0.4.3
+
+  '@theqrl/web3-net@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-rpc-methods': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-providers-http@0.4.4':
+    dependencies:
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      cross-fetch: 3.2.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+
+  '@theqrl/web3-providers-ipc@0.4.4':
+    dependencies:
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+
+  '@theqrl/web3-providers-ws@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@types/ws': 8.5.3
+      isomorphic-ws: 5.0.0(ws@8.20.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+      ws: 8.20.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@theqrl/web3-qrl-abi@0.4.4':
+    dependencies:
+      '@ethersproject/bignumber': 5.8.0
+      '@theqrl/abi': 0.4.4
+      '@theqrl/wallet.js': 2.0.2
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+      crc-32: 1.2.2
+      sha3: 2.1.4
+
+  '@theqrl/web3-qrl-accounts@0.4.4':
+    dependencies:
+      '@ethereumjs/rlp': 4.0.1
+      '@theqrl/mldsa87': 2.0.1
+      '@theqrl/qrl-cryptography': 0.1.3
+      '@theqrl/wallet.js': 2.0.2
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+      crc-32: 1.2.2
+      sha3: 2.1.4
+
+  '@theqrl/web3-qrl-contract@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-qrl': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-abi': 0.4.4
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-qrl-iban@0.4.4':
+    dependencies:
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+
+  '@theqrl/web3-qrl-qrns@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-net': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-contract': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-qrl@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/wallet.js': 2.0.2
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-net': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-providers-ws': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-abi': 0.4.4
+      '@theqrl/web3-qrl-accounts': 0.4.4
+      '@theqrl/web3-rpc-methods': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+      setimmediate: 1.0.5
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-rpc-methods@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-validator': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@theqrl/web3-types@0.4.3': {}
+
+  '@theqrl/web3-utils@0.4.4':
+    dependencies:
+      '@theqrl/qrl-cryptography': 0.1.3
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-validator': 0.4.4
+
+  '@theqrl/web3-validator@0.4.4':
+    dependencies:
+      '@theqrl/qrl-cryptography': 0.1.3
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-types': 0.4.3
+      util: 0.12.5
+      zod: 3.22.3
+
+  '@theqrl/web3@0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@theqrl/web3-core': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-errors': 0.4.3
+      '@theqrl/web3-net': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-providers-http': 0.4.4
+      '@theqrl/web3-providers-ws': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-abi': 0.4.4
+      '@theqrl/web3-qrl-accounts': 0.4.4
+      '@theqrl/web3-qrl-contract': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-qrl-iban': 0.4.4
+      '@theqrl/web3-qrl-qrns': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-rpc-methods': 0.4.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@theqrl/web3-types': 0.4.3
+      '@theqrl/web3-utils': 0.4.4
+      '@theqrl/web3-validator': 0.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
 
   '@tsconfig/docusaurus@2.0.9': {}
 
