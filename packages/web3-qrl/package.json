@@ -53,7 +53,7 @@
 	},
 	"devDependencies": {
 		"@theqrl/eslint-config-base-web3": "^0.4.0",
-		"@theqrl/web3-providers-http": "^0.4.0",
+		"@theqrl/web3-providers-http": "workspace:^",
 		"@types/jest": "^29.5.0",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
 		"@typescript-eslint/parser": "^8.59.0",
@@ -67,16 +67,16 @@
 	},
 	"dependencies": {
 		"@theqrl/wallet.js": "^2.0.2",
-		"@theqrl/web3-core": "^0.4.0",
-		"@theqrl/web3-errors": "^0.4.0",
-		"@theqrl/web3-net": "^0.4.0",
-		"@theqrl/web3-providers-ws": "^0.4.0",
-		"@theqrl/web3-qrl-abi": "^0.4.0",
-		"@theqrl/web3-qrl-accounts": "^0.4.0",
-		"@theqrl/web3-rpc-methods": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-utils": "^0.4.0",
-		"@theqrl/web3-validator": "^0.4.0",
+		"@theqrl/web3-core": "workspace:^",
+		"@theqrl/web3-errors": "workspace:^",
+		"@theqrl/web3-net": "workspace:^",
+		"@theqrl/web3-providers-ws": "workspace:^",
+		"@theqrl/web3-qrl-abi": "workspace:^",
+		"@theqrl/web3-qrl-accounts": "workspace:^",
+		"@theqrl/web3-rpc-methods": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-utils": "workspace:^",
+		"@theqrl/web3-validator": "workspace:^",
 		"setimmediate": "^1.0.5"
 	}
 }

@@ -49,12 +49,12 @@
 	},
 	"dependencies": {
 		"@ethersproject/bignumber": "^5.7.0",
-		"@theqrl/abi": "^0.4.0",
+		"@theqrl/abi": "workspace:^",
 		"@theqrl/wallet.js": "^2.0.2",
-		"@theqrl/web3-errors": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-utils": "^0.4.0",
-		"@theqrl/web3-validator": "^0.4.0",
+		"@theqrl/web3-errors": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-utils": "workspace:^",
+		"@theqrl/web3-validator": "workspace:^",
 		"crc-32": "^1.2.2",
 		"sha3": "^2.1.4"
 	},

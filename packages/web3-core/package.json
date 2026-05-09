@@ -48,16 +48,16 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"@theqrl/web3-errors": "^0.4.0",
-		"@theqrl/web3-providers-http": "^0.4.0",
-		"@theqrl/web3-providers-ws": "^0.4.0",
-		"@theqrl/web3-qrl-iban": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-utils": "^0.4.0",
-		"@theqrl/web3-validator": "^0.4.0"
+		"@theqrl/web3-errors": "workspace:^",
+		"@theqrl/web3-providers-http": "workspace:^",
+		"@theqrl/web3-providers-ws": "workspace:^",
+		"@theqrl/web3-qrl-iban": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-utils": "workspace:^",
+		"@theqrl/web3-validator": "workspace:^"
 	},
 	"optionalDependencies": {
-		"@theqrl/web3-providers-ipc": "^0.4.0"
+		"@theqrl/web3-providers-ipc": "workspace:^"
 	},
 	"devDependencies": {
 		"@theqrl/eslint-config-base-web3": "^0.4.0",

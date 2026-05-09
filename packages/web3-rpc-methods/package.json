@@ -61,8 +61,8 @@
 		"typescript": "^5.2.0"
 	},
 	"dependencies": {
-		"@theqrl/web3-core": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-validator": "^0.4.0"
+		"@theqrl/web3-core": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-validator": "workspace:^"
 	}
 }

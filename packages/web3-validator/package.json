@@ -52,8 +52,8 @@
 	},
 	"dependencies": {
 		"@theqrl/qrl-cryptography": "^0.1.3",
-		"@theqrl/web3-errors": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
+		"@theqrl/web3-errors": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
 		"util": "^0.12.5",
 		"zod": "3.22.3"
 	},

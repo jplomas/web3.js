@@ -65,9 +65,9 @@
 		"typescript": "^5.2.0"
 	},
 	"dependencies": {
-		"@theqrl/web3-errors": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-utils": "^0.4.0",
+		"@theqrl/web3-errors": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-utils": "workspace:^",
 		"@types/ws": "8.5.3",
 		"isomorphic-ws": "^5.0.0",
 		"ws": "^8.17.1"
