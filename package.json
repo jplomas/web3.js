@@ -71,6 +71,7 @@
 		"release:inspect-packages": "node scripts/release/inspect-packages.js",
 		"release:pack-packages": "node scripts/release/pack-packages.js",
 		"release:packages": "node scripts/release/packages.js list",
+		"release:published-versions": "node scripts/release/published-versions.js",
 		"release:smoke-tarballs": "node scripts/release/smoke-tarballs.js",
 		"release:touch-packages": "node scripts/release/touch-packages.js",
 		"doctor": "node scripts/doctor.js",
