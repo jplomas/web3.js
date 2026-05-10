@@ -20,38 +20,38 @@ overrides:
   "undici@<6.24.0": ">=6.24.0 <7.0.0"
   "fast-uri@<3.1.2": ">=3.1.2"
   "@babel/plugin-transform-modules-systemjs@<7.29.4": ">=7.29.4"
-  "@docusaurus/core": 3.10.0
-  "@docusaurus/mdx-loader": 3.10.0
-  "@docusaurus/module-type-aliases": 3.10.0
-  "@docusaurus/plugin-content-blog": 3.10.0
-  "@docusaurus/plugin-content-docs": 3.10.0
-  "@docusaurus/plugin-content-pages": 3.10.0
-  "@docusaurus/plugin-css-cascade-layers": 3.10.0
-  "@docusaurus/plugin-debug": 3.10.0
-  "@docusaurus/plugin-google-analytics": 3.10.0
-  "@docusaurus/plugin-google-gtag": 3.10.0
-  "@docusaurus/plugin-google-tag-manager": 3.10.0
-  "@docusaurus/plugin-sitemap": 3.10.0
-  "@docusaurus/plugin-svgr": 3.10.0
-  "@docusaurus/preset-classic": 3.10.0
-  "@docusaurus/theme-classic": 3.10.0
-  "@docusaurus/theme-common": 3.10.0
-  "@docusaurus/theme-live-codeblock": 3.10.0
-  "@docusaurus/theme-search-algolia": 3.10.0
-  "@docusaurus/types": 3.10.0
-  "@docusaurus/utils": 3.10.0
-  "@docusaurus/utils-common": 3.10.0
-  "@docusaurus/utils-validation": 3.10.0
+  "@docusaurus/core": 3.10.1
+  "@docusaurus/mdx-loader": 3.10.1
+  "@docusaurus/module-type-aliases": 3.10.1
+  "@docusaurus/plugin-content-blog": 3.10.1
+  "@docusaurus/plugin-content-docs": 3.10.1
+  "@docusaurus/plugin-content-pages": 3.10.1
+  "@docusaurus/plugin-css-cascade-layers": 3.10.1
+  "@docusaurus/plugin-debug": 3.10.1
+  "@docusaurus/plugin-google-analytics": 3.10.1
+  "@docusaurus/plugin-google-gtag": 3.10.1
+  "@docusaurus/plugin-google-tag-manager": 3.10.1
+  "@docusaurus/plugin-sitemap": 3.10.1
+  "@docusaurus/plugin-svgr": 3.10.1
+  "@docusaurus/preset-classic": 3.10.1
+  "@docusaurus/theme-classic": 3.10.1
+  "@docusaurus/theme-common": 3.10.1
+  "@docusaurus/theme-live-codeblock": 3.10.1
+  "@docusaurus/theme-search-algolia": 3.10.1
+  "@docusaurus/types": 3.10.1
+  "@docusaurus/utils": 3.10.1
+  "@docusaurus/utils-common": 3.10.1
+  "@docusaurus/utils-validation": 3.10.1
   baseline-browser-mapping: 2.8.9
   browserslist: 4.26.3
   es-module-lexer: 2.0.0
-  express: 4.21.2
+  express: 5.2.1
   loader-runner: 4.3.1
   path-to-regexp: 0.1.13
   "schema-utils@4>ajv": 8.17.1
   serialize-javascript: 7.0.5
   socks: 2.8.7
-  webpack: 5.105.4
+  webpack: 5.106.2
   webpack-sources: 3.3.3
 strictDepBuilds: true
 allowBuilds:

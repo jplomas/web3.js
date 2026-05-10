@@ -51,23 +51,23 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"@theqrl/qrl-cryptography": "^0.1.3",
+		"@theqrl/qrl-cryptography": "0.1.3",
 		"@theqrl/web3-errors": "workspace:^",
 		"@theqrl/web3-types": "workspace:^",
-		"util": "^0.12.5",
+		"util": "0.12.5",
 		"zod": "3.22.3"
 	},
 	"devDependencies": {
 		"@theqrl/eslint-config-base-web3": "workspace:^",
-		"@types/jest": "^29.5.0",
-		"@typescript-eslint/eslint-plugin": "^8.59.0",
-		"@typescript-eslint/parser": "^8.59.0",
-		"eslint": "^10.2.1",
-		"eslint-config-prettier": "^10.1.8",
-		"jest": "^29.7.0",
-		"jest-extended": "^3.0.1",
-		"prettier": "^2.7.1",
-		"ts-jest": "^29.1.0",
-		"typescript": "^5.2.0"
+		"@types/jest": "29.5.0",
+		"@typescript-eslint/eslint-plugin": "8.59.0",
+		"@typescript-eslint/parser": "8.59.0",
+		"eslint": "10.2.1",
+		"eslint-config-prettier": "10.1.8",
+		"jest": "29.7.0",
+		"jest-extended": "7.0.0",
+		"prettier": "3.8.3",
+		"ts-jest": "29.1.0",
+		"typescript": "5.9.3"
 	}
 }

@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { readFileSync, writeFileSync } = require('fs');
+const { existsSync, readFileSync, writeFileSync } = require('fs');
 const { join } = require('path');
 
 const [version] = process.argv.slice(2);
@@ -32,3 +32,23 @@ const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 
 manifest.version = version;
 writeFileSync(manifestPath, `${JSON.stringify(manifest, undefined, '\t')}\n`);
+
+// Keep src/version.ts in sync with package.json. The release pipeline only
+// updates package.json by default; any runtime accessor for the package
+// version (e.g. Web3PkgInfo) lives in src/version.ts and would otherwise
+// drift on every release.
+const versionTsPath = join(process.cwd(), 'src', 'version.ts');
+if (existsSync(versionTsPath)) {
+	const original = readFileSync(versionTsPath, 'utf8');
+	const versionLiteralPattern = /(version\s*:\s*)(['"])[^'"]*\2/;
+	if (!versionLiteralPattern.test(original)) {
+		console.error(
+			`set-package-version: ${versionTsPath} exists but contains no \`version: '...'\` literal to update`,
+		);
+		process.exit(1);
+	}
+	const updated = original.replace(versionLiteralPattern, `$1$2${version}$2`);
+	if (updated !== original) {
+		writeFileSync(versionTsPath, updated);
+	}
+}
