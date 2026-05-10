@@ -123,6 +123,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
+          # Smoke test runs `npm install` against the published tarballs in a
+          # fresh temp dir; it never installs the monorepo's devDependencies,
+          # so the semantic-release Node 22+ engine constraint does not apply.
+          # Stay on Node 20 here to verify consumer-facing `engines.node: >=20`.
           node-version: 20.x
 
       - name: Download release candidate tarballs
