@@ -54,10 +54,10 @@
 		"@ethersproject/logger": "^5.7.0",
 		"@ethersproject/properties": "^5.7.0",
 		"@ethersproject/strings": "^5.7.0",
-		"@theqrl/web3-utils": "^0.4.0"
+		"@theqrl/web3-utils": "workspace:^"
 	},
 	"devDependencies": {
-		"@theqrl/eslint-config-base-web3": "^0.4.0",
+		"@theqrl/eslint-config-base-web3": "workspace:^",
 		"@types/jest": "^29.5.0",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
 		"@typescript-eslint/parser": "^8.59.0",

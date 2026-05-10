@@ -3,13 +3,23 @@ packages:
   - "tools/*"
   - "docs"
 
+linkWorkspacePackages: true
+nodeLinker: hoisted
+
 # Supply-chain hardening for dependency resolution and install scripts.
 # Values are in minutes; 10080 minutes is 7 days.
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+- '@theqrl/*'
+# CVE remediation — bypass quarantine for security-only patch releases
+- '@babel/plugin-transform-modules-systemjs'
+- 'fast-uri'
 blockExoticSubdeps: true
 overrides:
   "braces@<3.0.3": ">=3.0.3"
   "undici@<6.24.0": ">=6.24.0 <7.0.0"
+  "fast-uri@<3.1.2": ">=3.1.2"
+  "@babel/plugin-transform-modules-systemjs@<7.29.4": ">=7.29.4"
   "@docusaurus/core": 3.10.0
   "@docusaurus/mdx-loader": 3.10.0
   "@docusaurus/module-type-aliases": 3.10.0

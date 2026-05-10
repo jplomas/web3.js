@@ -93,13 +93,18 @@ if (pnpmVersion && !pnpmVersion.startsWith(expectedPnpmMajor)) {
 
 if (!exists('pnpm-workspace.yaml')) {
 	fail('Missing pnpm-workspace.yaml');
+} else {
+	const workspaceYaml = readText('pnpm-workspace.yaml');
+	for (const required of ['linkWorkspacePackages: true', 'nodeLinker: hoisted']) {
+		if (!workspaceYaml.includes(required)) fail(`pnpm-workspace.yaml must include ${required}`);
+	}
 }
 
 if (!exists('.npmrc')) {
 	fail('Missing .npmrc');
 } else {
 	const npmrc = readText('.npmrc');
-	for (const required of ['engine-strict=true', 'link-workspace-packages=true', 'node-linker=hoisted']) {
+	for (const required of ['engine-strict=true']) {
 		if (!npmrc.includes(required)) fail(`.npmrc must include ${required}`);
 	}
 }

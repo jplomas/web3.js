@@ -48,7 +48,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"devDependencies": {
-		"@theqrl/eslint-config-base-web3": "^0.4.0",
+		"@theqrl/eslint-config-base-web3": "workspace:^",
 		"@types/jest": "^29.5.0",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
 		"@typescript-eslint/parser": "^8.59.0",
@@ -61,9 +61,9 @@
 		"typescript": "^5.2.0"
 	},
 	"dependencies": {
-		"@theqrl/web3-core": "^0.4.0",
-		"@theqrl/web3-rpc-methods": "^0.4.0",
-		"@theqrl/web3-types": "^0.4.0",
-		"@theqrl/web3-utils": "^0.4.0"
+		"@theqrl/web3-core": "workspace:^",
+		"@theqrl/web3-rpc-methods": "workspace:^",
+		"@theqrl/web3-types": "workspace:^",
+		"@theqrl/web3-utils": "workspace:^"
 	}
 }
