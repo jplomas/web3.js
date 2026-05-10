@@ -6,7 +6,6 @@
 	},
 	"description": "Base eslint config for Web3 project.",
 	"author": "The QRL Contributors",
-	"private": true,
 	"license": "LGPL-3.0",
 	"keywords": [
 		"eslint",
