@@ -48,7 +48,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"@ethersproject/bignumber": "5.7.0",
+		"@ethersproject/bignumber": "5.8.0",
 		"@theqrl/abi": "workspace:^",
 		"@theqrl/wallet.js": "2.0.2",
 		"@theqrl/web3-errors": "workspace:^",
