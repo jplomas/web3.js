@@ -51,7 +51,7 @@
 		"test:e2e:firefox": "pnpm exec cypress run --headless --browser firefox"
 	},
 	"devDependencies": {
-		"@theqrl/eslint-config-base-web3": "^0.4.0",
+		"@theqrl/eslint-config-base-web3": "workspace:^",
 		"@types/jest": "^29.5.0",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
 		"@typescript-eslint/parser": "^8.59.0",

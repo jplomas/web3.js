@@ -60,7 +60,7 @@
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
-		"@theqrl/eslint-config-base-web3": "^0.4.0",
+		"@theqrl/eslint-config-base-web3": "workspace:^",
 		"@types/jest": "^29.5.0",
 		"@types/jest-when": "^3.5.2",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
