@@ -29,7 +29,7 @@ import type { AccessList } from '../../../src';
 const seed = hexToBytes(
 	'0x010000ec3077d539c7b333e596b9e6c0b5f5952d26469ab9a60d1fd54c329ef9959593850a2daf60369e434a7c55939f99e149',
 );
-const address = addressToBytes('Q00000000000000000000000000000000000000000000000000000000e4d1cd51c8b113a12d6355e1bd39cce8998dabb0');
+const address = addressToBytes('Q0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e4d1cd51c8b113a12d6355e1bd39cce8998dabb0');
 
 const common = new Common({
 	chain: Chain.Mainnet,
@@ -44,7 +44,7 @@ const txTypes = [
 	},
 ];
 
-const validAddress = hexToBytes('01'.repeat(20));
+const validAddress = hexToBytes('01'.repeat(64));
 const validSlot = hexToBytes('01'.repeat(32));
 const chainId = BigInt(1);
 
@@ -205,7 +205,7 @@ describe('[FeeMarketEIP1559Transaction] -> EIP-2930 Compatibility', () => {
 		for (const txType of txTypes) {
 			let accessList: any[] = [
 				[
-					hexToBytes('01'.repeat(21)), // Address of 21 bytes instead of 20
+					hexToBytes('01'.repeat(63)), // Address of 63 bytes instead of 64
 					[],
 				],
 			];

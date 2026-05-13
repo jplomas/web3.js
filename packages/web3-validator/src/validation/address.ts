@@ -17,11 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Checks the structural validity of a QRL address.
- * QRL 48-byte addresses do not embed a mixed-case checksum; input is
+ * QRL 64-byte addresses do not embed a mixed-case checksum; input is
  * case-insensitive and canonical output is lowercase.
  */
 export const checkAddressCheckSum = (data: string): boolean => {
-	return /^Q[0-9a-f]{96}$/i.test(data);
+	return /^Q[0-9a-f]{128}$/i.test(data);
 };
 
 /**
@@ -35,5 +35,5 @@ export const isAddressString = (value: string, checkChecksum = true) => {
 		return false;
 	}
 
-	return /^Q[0-9a-f]{96}$/i.test(value);
+	return /^Q[0-9a-f]{128}$/i.test(value);
 };

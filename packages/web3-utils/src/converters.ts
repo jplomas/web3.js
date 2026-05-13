@@ -36,6 +36,8 @@ import {
 
 const base = BigInt(10);
 const expo10 = (expo: number) => base ** BigInt(expo);
+const ADDRESS_BYTES = 64;
+const ADDRESS_HEX_CHARS = ADDRESS_BYTES * 2;
 
 // Ref: https://ethdocs.org/en/latest/ether.html
 /** @internal */
@@ -136,8 +138,8 @@ export const hexToBytes = (bytes: HexString): Uint8Array => {
  *
  * @example
  * ```ts
- * console.log(web3.utils.addressToBytes('Q000000000000000000000000000000000000000000000000000000007465737474657374746573747465737474657374'));
- * > Uint8Array(48) [ ... ]
+ * console.log(web3.utils.addressToBytes('Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000007465737474657374746573747465737474657374'));
+ * > Uint8Array(64) [ ... ]
  * ```
  */
 // eslint-disable-next-line no-use-before-define
@@ -151,12 +153,16 @@ export const addressToBytes = (value: Address): Uint8Array => bytesToUint8Array(
  * @example
  * ```ts
  * console.log(web3.utils.hexToAddress('0x74657374123123131231231313a1231231112312'));
- * > "Q0000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312"
+ * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312"
  * ```
  */
 export const hexToAddress = (value: HexString): Address => {
 	validator.validate(['hex'], [value]);
-	return value.toLowerCase().replace(/^0x/i, 'Q');
+	const hex = value.toLowerCase().replace(/^0x/i, '');
+	if (hex.length > ADDRESS_HEX_CHARS) {
+		throw new InvalidAddressError(value);
+	}
+	return `Q${hex.padStart(ADDRESS_HEX_CHARS, '0')}`;
 };
 
 /**
@@ -166,8 +172,8 @@ export const hexToAddress = (value: HexString): Address => {
  *
  * @example
  * ```ts
- * console.log(web3.utils.addressToHex('Q0000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312'));
- * > "0x0000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312"
+ * console.log(web3.utils.addressToHex('Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312'));
+ * > "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074657374123123131231231313a1231231112312"
  * ```
  */
 export const addressToHex = (value: Address): HexString => {
@@ -600,8 +606,8 @@ export const toPlanck = (number: Numbers, unit: QRLUnits): string => {
  * @returns	The canonical address
  * @example
  * ```ts
- * web3.utils.toChecksumAddress('Q00000000000000000000000000000000000000000000000000000000c1912fee45d61c87cc5ea59dae31190fffff232d');
- * > "Q00000000000000000000000000000000000000000000000000000000c1912fEE45d61C87Cc5EA59DaE31190FFFFf232d"
+ * web3.utils.toChecksumAddress('Q0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1912fee45d61c87cc5ea59dae31190fffff232d');
+ * > "Q0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1912fee45d61c87cc5ea59dae31190fffff232d"
  * ```
  */
 export const toChecksumAddress = (address: Address): string => {

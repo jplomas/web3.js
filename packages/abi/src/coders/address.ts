@@ -20,8 +20,9 @@ import { hexToAddress, addressToHex } from '@theqrl/web3-utils';
 
 import { Coder, Reader, Writer } from './abstract-coder.js';
 
-// Q + 96 hex chars; addressToHex returns "0x" + 96 hex chars.
-const ADDRESS_HEX_LENGTH = 2 + 48 * 2;
+// Q + 128 hex chars; addressToHex returns "0x" + 128 hex chars.
+const ADDRESS_BYTES = 64;
+const ADDRESS_HEX_LENGTH = 2 + ADDRESS_BYTES * 2;
 
 export class AddressCoder extends Coder {
 	constructor(localName: string) {
@@ -29,14 +30,14 @@ export class AddressCoder extends Coder {
 	}
 
 	defaultValue(): string {
-		return 'Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+		return `Q${'0'.repeat(ADDRESS_BYTES * 2)}`;
 	}
 
 	encode(writer: Writer, value: string): number {
-		// addressToHex validates that `value` is a well-formed 48-byte Q-prefixed
+		// addressToHex validates that `value` is a well-formed 64-byte Q-prefixed
 		// address and returns the same bytes as a 0x-prefixed hex string. We
 		// deliberately do NOT route through `@ethersproject/address.getAddress`:
-		// ethers' validator hard-codes the 20-byte ETH layout and rejects 48-byte
+		// ethers' validator hard-codes the 20-byte ETH layout and rejects 64-byte
 		// post-quantum addresses with "invalid address (version=address/5.7.0)".
 		let hex: string;
 		try {
@@ -46,16 +47,13 @@ export class AddressCoder extends Coder {
 			throw error; // unreachable; satisfies the type checker
 		}
 		if (hex.length !== ADDRESS_HEX_LENGTH) {
-			this._throwError(`invalid 48-byte address (got ${(hex.length - 2) / 2} bytes)`, value);
+			this._throwError(`invalid 64-byte address (got ${(hex.length - 2) / 2} bytes)`, value);
 		}
-		// writeValue left-pads the 48-byte value into a 64-byte VM word, matching
-		// how the chain stores addresses in storage and event topics.
+		// A 64-byte QRL address fills one full VM word.
 		return writer.writeValue(hex);
 	}
 
 	decode(reader: Reader): any {
-		// readValue returns a 64-byte word as a BigNumber; the address occupies
-		// the rightmost 48 bytes. hexZeroPad re-trims to the canonical width.
-		return hexToAddress(hexZeroPad(reader.readValue().toHexString(), 48));
+		return hexToAddress(hexZeroPad(reader.readValue().toHexString(), ADDRESS_BYTES));
 	}
 }

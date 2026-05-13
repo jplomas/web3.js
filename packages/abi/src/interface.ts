@@ -226,8 +226,8 @@ export class Interface {
 	}
 
 	static getAddress(address: string): string {
-		// Roundtrip Q -> 0x -> Q to validate the 48-byte format and normalise
-		// the input. The previous ethers v5 getAddress() rejects 48-byte
+		// Roundtrip Q -> 0x -> Q to validate the 64-byte format and normalise
+		// the input. The previous ethers v5 getAddress() rejects 64-byte
 		// post-quantum addresses, so we delegate to web3-utils helpers that
 		// understand them.
 		return hexToAddress(addressToHex(address));

@@ -31,7 +31,7 @@ const common = new Common({
 common._chainParams.chainId = 4;
 const TWO_POW256 = BigInt('0x10000000000000000000000000000000000000000000000000000000000000000');
 
-const validAddress = hexToBytes('01'.repeat(20));
+const validAddress = hexToBytes('01'.repeat(64));
 const validSlot = hexToBytes('01'.repeat(32));
 const chainId = BigInt(4);
 
@@ -199,7 +199,7 @@ describe('[FeeMarketEIP1559Transaction]', () => {
 			maxPriorityFeePerGas: '0x1284d',
 			maxFeePerGas: '0x1d97c',
 			gasLimit: '0x8ae0',
-			to: 'Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000aaaa',
+			to: 'Q0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000aaaa',
 			value: '0x2933bc9',
 			data: '0x',
 			accessList: [],
