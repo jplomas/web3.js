@@ -1,5 +1,10 @@
-// Generate bloom-filter fixtures for 48-byte addresses + 32-byte topics.
+// Generate bloom-filter fixtures for 64-byte addresses + 32-byte topics.
 // Replicates isInBloom() algorithm from packages/web3-validator/src/validation/bloom.ts
+//
+// TODO: A0..A3 below are stale 48-byte fingerprints from the pre-64-byte
+// migration. Before re-running this script, regenerate them as four canonical
+// 64-byte ML-DSA-87 derived addresses (e.g. via @theqrl/wallet.js
+// NewWallet().GetAddressStr()) and replace.
 //
 // Run: node /tmp/gen-bloom-fixtures.mjs
 
@@ -66,21 +71,21 @@ function setBloomBits(value) {
   return bloom;
 }
 
-// User-address bloom: input = padLeft(addressToHex(addr), 96)
-// addressToHex returns "0x" + 96-hex (48 bytes). padLeft of "0x..." 0x-stripped right pad to 96 chars then re-prefix.
-// Since addressToHex already returns 0x + 96 chars, padLeft 96 is a no-op but the result has 0x prefix.
-// In isInBloom, hexToUint8Array strips 0x and decodes to 48 bytes.
-function bloomForUserAddress(addr96Hex) {
-  const cleaned = addr96Hex.replace(/^Q/, '').toLowerCase();
-  const bytes = hexToBytes(cleaned); // 48 bytes
+// User-address bloom: input = padLeft(addressToHex(addr), 128)
+// addressToHex returns "0x" + 128-hex (64 bytes). padLeft of "0x..." 0x-stripped right pad to 128 chars then re-prefix.
+// Since addressToHex already returns 0x + 128 chars, padLeft 128 is a no-op but the result has 0x prefix.
+// In isInBloom, hexToUint8Array strips 0x and decodes to 64 bytes.
+function bloomForUserAddress(addrHex) {
+  const cleaned = addrHex.replace(/^Q/, '').toLowerCase();
+  const bytes = hexToBytes(cleaned); // 64 bytes
   return '0x' + bytesToHex(setBloomBits(bytes));
 }
 
-// Contract address bloom: input = addressToHex(addr) -> "0x" + 96-hex
-// hexToUint8Array strips 0x -> 48 bytes
-function bloomForContractAddress(addr96Hex) {
-  // Same as user-address — both feed 48-byte buffer to keccak256 in our migration.
-  return bloomForUserAddress(addr96Hex);
+// Contract address bloom: input = addressToHex(addr) -> "0x" + 128-hex
+// hexToUint8Array strips 0x -> 64 bytes
+function bloomForContractAddress(addrHex) {
+  // Same as user-address — both feed 64-byte buffer to keccak256 in our migration.
+  return bloomForUserAddress(addrHex);
 }
 
 // Topic bloom: input = topic hex (post-migration topic = 64 bytes per ADR-002)
@@ -112,7 +117,7 @@ const wrongBloom = bloomForUserAddress(A0);
 });
 console.log('// (malformed inputs)');
 console.log(`\t['${wrongBloom}', 'QH1'],`);
-console.log(`\t['${wrongBloom}', 'Q0000000000000000000000000000000000000000000000000000000098afe7a8d28bbc88dcf41f8e06d97c74958a47dc'],  // legacy 40-hex => regex fails`);
+console.log(`\t['${wrongBloom}', 'Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000098afe7a8d28bbc88dcf41f8e06d97c74958a47dc'],  // legacy 40-hex => regex fails`);
 
 console.log('\n// ===== validContractAddressInBloomData =====');
 [A0, A1, A2].forEach(a => {
