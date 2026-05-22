@@ -56,8 +56,14 @@ import {
 
 import { isHexStrict, isNullish, isString, validator } from '@theqrl/web3-validator';
 import { keyStoreSchema } from './schemas.js';
-import { CryptoPublicKeyBytes } from '@theqrl/mldsa87';
-import { newWalletFromExtendedSeed, Seed, newMLDSA87Descriptor, ExtendedSeed } from '@theqrl/wallet.js';
+import { CryptoPublicKeyBytes } from './qrl_crypto.js';
+import {
+	addressFromPublicKeyAndDescriptor,
+	newMLDSA87Descriptor,
+	newMLDSA87WalletFromExtendedSeed,
+	newQrlExtendedSeed,
+	qrlSeedFromBytes,
+} from './qrl_wallet.js';
 import { TransactionFactory } from './tx/transactionFactory.js';
 import type { SignTransactionResult, TypedTransaction, Web3Account, SignResult } from './types.js';
 
@@ -129,7 +135,7 @@ export const hashMessage = (message: string): string => {
  * ```
  */
 export const sign = (data: string, seed: Bytes): SignResult => {
-	const wallet = newWalletFromExtendedSeed(seed);
+	const wallet = newMLDSA87WalletFromExtendedSeed(seed);
 	const hash = hashMessage(data);
 	const signature = wallet.sign(hexToBytes(hash));
 
@@ -397,10 +403,13 @@ export const parseAndValidateSeed = (data: Bytes, ignoreLength?: boolean): Uint8
  * ```
  */
 export const seedToAccount = (seed: Bytes): Web3Account => {
-	const acc = newWalletFromExtendedSeed(seed);
+	const acc = newMLDSA87WalletFromExtendedSeed(seed);
+	const address = bytesToHex(
+		addressFromPublicKeyAndDescriptor(acc.getPK(), acc.getDescriptor()),
+	).replace('0x', 'Q');
 
 	return {
-		address: toChecksumAddress(acc.getAddressStr()),
+		address: toChecksumAddress(address),
 		seed: bytesToHex(acc.getExtendedSeed().toBytes()),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Transaction) => {
@@ -432,8 +441,8 @@ export const seedToAccount = (seed: Bytes): Web3Account => {
  */
 export const create = (): Web3Account => {
 	const descriptor = newMLDSA87Descriptor();
-	const seed = Seed.from(randomBytes(48));
-	const extendedSeed = ExtendedSeed.newExtendedSeed(descriptor, seed);
+	const seed = qrlSeedFromBytes(randomBytes(48));
+	const extendedSeed = newQrlExtendedSeed(descriptor, seed);
 	return seedToAccount(extendedSeed.toBytes());
 };
 
