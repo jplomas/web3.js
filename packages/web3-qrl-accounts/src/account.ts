@@ -330,7 +330,6 @@ export const encrypt = async (
 		seedUint8Array,
 		derivedKey,
 		initializationVector,
-		'aes-256-gcm',
 	);
 	const ciphertext = bytesToHex(cipher).slice(2);
 	const acc = seedToAccount(seedUint8Array);
