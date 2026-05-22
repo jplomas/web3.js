@@ -407,10 +407,10 @@ export const seedToAccount = (seed: Bytes): Web3Account => {
 	const address = bytesToHex(
 		addressFromPublicKeyAndDescriptor(acc.getPK(), acc.getDescriptor()),
 	).replace('0x', 'Q');
+	const seedHex = bytesToHex(acc.getExtendedSeed().toBytes());
 
-	return {
+	const account = {
 		address: toChecksumAddress(address),
-		seed: bytesToHex(acc.getExtendedSeed().toBytes()),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Transaction) => {
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
@@ -418,8 +418,24 @@ export const seedToAccount = (seed: Bytes): Web3Account => {
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), seed),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
-		 	encrypt(acc.getExtendedSeed().toBytes(), password, options),
-	};
+			encrypt(acc.getExtendedSeed().toBytes(), password, options),
+	} as unknown as Web3Account;
+
+	Object.defineProperty(account, 'seed', {
+		value: seedHex,
+		enumerable: false,
+		configurable: false,
+		writable: false,
+	});
+
+	Object.defineProperty(account, 'toJSON', {
+		value: () => ({ ...account, seed: '<redacted>' }),
+		enumerable: false,
+		configurable: false,
+		writable: false,
+	});
+
+	return account;
 };
 
 /**
