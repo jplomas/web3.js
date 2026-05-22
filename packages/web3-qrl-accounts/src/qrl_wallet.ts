@@ -59,7 +59,12 @@ const ExtendedSeed = ExternalExtendedSeed as unknown as {
 };
 
 const MLDSA87 = ExternalMLDSA87 as unknown as {
-	verify(signature: Uint8Array, message: Uint8Array, pk: Uint8Array): boolean;
+	verify(
+		signature: Uint8Array,
+		message: Uint8Array,
+		pk: Uint8Array,
+		descriptor: QrlDescriptor,
+	): boolean;
 };
 
 const Seed = ExternalSeed as unknown as {
@@ -107,4 +112,5 @@ export const verifyMLDSA87Signature = (
 	signature: Uint8Array,
 	message: Uint8Array,
 	publicKey: Uint8Array,
-): boolean => MLDSA87.verify(signature, message, publicKey);
+	descriptor: QrlDescriptor,
+): boolean => MLDSA87.verify(signature, message, publicKey, descriptor);
