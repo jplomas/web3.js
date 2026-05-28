@@ -300,17 +300,19 @@ export const invalidStringNumbers: ValidInputTypes[] = [
 	new Uint8Array([0x97, 0x98, 0x99]),
 	new Uint8Array(hexToBytes('abcd')),
 ];
-// Post-migration 64-byte address samples. QRL addresses do not embed a
-// mixed-case checksum, so any structurally valid Q + 128 hex string passes.
+// Post-migration 64-byte address samples. Lowercase and uppercase forms are
+// accepted for compatibility; mixed-case inputs must match the SHAKE256 checksum.
 export const validCheckAddressCheckSumData: any[] = [
 	'Qd5812f6cf4a0f645aa620cd57319a0ed649dd8f5519a9dde7770ae5b0e49e547985f35eb972a2a07041561aa39c65a3991478f9b1e6749e05277dcf58a9a8b72',
 	'Qbe95a82d87a6cb9c7ff4c64e0c15bb1dff20b1d77e6b571b28ad4736f2a2a3e5857e8c225d6d61399b15beef3b196936e490ed6e234374c4887cbbe86c13b1ba',
 	'Q31F654037D4D7BCE04E9522E4D346AB47A90686EF20A6C19916E68D3C77950F54BABB7725AD48A3201C0ACB74271E790730F9F39F9CE2E9BA1BE9E41A763CAF9',
+	'QabaBABabaBAbAbAbABaBABaBabaBabaBAbabaBABABAbAbabababAbaBaBABABabABaBaBABABaBabaBABaBabABAbABabaBAbABAbABAbaBabABababAbaBaBabaBAB',
 ];
 
 export const invalidCheckAddressCheckSumData: any[] = [
 	'1234',
 	'0xa1b2',
+	'QaBababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab',
 ];
 
 export const validAddressData: any[] = [
@@ -318,13 +320,15 @@ export const validAddressData: any[] = [
 	'Qd5812f6cf4a0f645aa620cd57319a0ed649dd8f5519a9dde7770ae5b0e49e547985f35eb972a2a07041561aa39c65a3991478f9b1e6749e05277dcf58a9a8b72',
 	'Qbe95a82d87a6cb9c7ff4c64e0c15bb1dff20b1d77e6b571b28ad4736f2a2a3e5857e8c225d6d61399b15beef3b196936e490ed6e234374c4887cbbe86c13b1ba',
 	'Q31f654037d4d7bce04e9522e4d346ab47a90686ef20a6c19916e68d3c77950f54babb7725ad48a3201c0acb74271e790730f9f39f9ce2e9ba1be9e41a763caf9',
-	// Mixed-case input is valid; canonical output happens elsewhere.
+	// Uppercase compatibility form and SHAKE256 checksummed mixed-case input.
 	'QD5812F6CF4A0F645AA620CD57319A0ED649DD8F5519A9DDE7770AE5B0E49E547985F35EB972A2A07041561AA39C65A3991478F9B1E6749E05277DCF58A9A8B72',
+	'QabaBABabaBAbAbAbABaBABaBabaBabaBAbabaBABABAbAbabababAbaBaBABABabABaBaBABABaBabaBABaBabABAbABabaBAbABAbABAbaBabABababAbaBaBabaBAB',
 ];
 
 export const invalidAddressData: any[] = [
 	...invalidHexStrictData,
 	'Q1',
+	'QaBababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab',
 	'-Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001',
 ];
 
@@ -562,7 +566,8 @@ export const validFilterObjectData: Filter[] = [
 		toBlock: '0xc0ff3',
 	},
 	{
-		address: 'Qd5812f6cf4a0f645aa620cd57319a0ed649dd8f5519a9dde7770ae5b0e49e547985f35eb972a2a07041561aa39c65a3991478f9b1e6749e05277dcf58a9a8b72',
+		address:
+			'Qd5812f6cf4a0f645aa620cd57319a0ed649dd8f5519a9dde7770ae5b0e49e547985f35eb972a2a07041561aa39c65a3991478f9b1e6749e05277dcf58a9a8b72',
 	},
 	{
 		address: [

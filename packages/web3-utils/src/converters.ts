@@ -22,6 +22,7 @@ import {
 	isHex,
 	isHexStrict,
 	isInt,
+	toChecksumAddress as toQrlChecksumAddress,
 	utils as validatorUtils,
 	validator,
 } from '@theqrl/web3-validator';
@@ -143,7 +144,8 @@ export const hexToBytes = (bytes: HexString): Uint8Array => {
  * ```
  */
 // eslint-disable-next-line no-use-before-define
-export const addressToBytes = (value: Address): Uint8Array => bytesToUint8Array(addressToHex(value));
+export const addressToBytes = (value: Address): Uint8Array =>
+	bytesToUint8Array(addressToHex(value));
 
 /**
  * Convert a hex string to an address string
@@ -601,13 +603,13 @@ export const toPlanck = (number: Numbers, unit: QRLUnits): string => {
 };
 
 /**
- * Will convert an upper or lowercase QRL address to the canonical lowercase address.
+ * Will convert an upper or lowercase QRL address to its SHAKE256 mixed-case checksum address.
  * @param address - An address string
  * @returns	The canonical address
  * @example
  * ```ts
  * web3.utils.toChecksumAddress('Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1912fee45d61c87cc5ea59dae31190fffff232d');
- * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1912fee45d61c87cc5ea59dae31190fffff232d"
+ * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c1912feE45D61c87Cc5ea59dAE31190FfFfF232d"
  * ```
  */
 export const toChecksumAddress = (address: Address): string => {
@@ -615,5 +617,5 @@ export const toChecksumAddress = (address: Address): string => {
 		throw new InvalidAddressError(address);
 	}
 
-	return `Q${address.toLowerCase().replace(/^q/i, '')}`;
+	return toQrlChecksumAddress(address);
 };
