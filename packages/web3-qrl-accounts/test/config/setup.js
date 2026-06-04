@@ -23,6 +23,9 @@ require('jest-extended');
 
 process.env.NODE_ENV = 'test';
 
-const jestTimeout = 100000;
+// argon2id key derivation in the encrypt/decrypt tests is single-threaded and
+// can run an order of magnitude slower on CI runners than locally, so allow
+// generous headroom to avoid flaky timeouts.
+const jestTimeout = 300000;
 
 jest.setTimeout(jestTimeout);
