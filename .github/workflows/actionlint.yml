@@ -24,8 +24,21 @@ jobs:
         with:
           persist-credentials: false
 
+      # raven-actions/actionlint runs `npm install @actions/tool-cache` in the
+      # repo root to fetch the linter binary. npm cannot parse our pnpm
+      # `workspace:` dependencies and fails with EUNSUPPORTEDPROTOCOL, so move
+      # the manifest aside while the action runs. actionlint itself does not
+      # need it, and the normal repo layout is preserved so the reusable
+      # workflow reference in release.yml still resolves.
+      - name: Hide workspace manifest from the action's bundled npm install
+        run: mv package.json "$RUNNER_TEMP/package.json.bak"
+
       - name: Run actionlint
         uses: raven-actions/actionlint@205b530c5d9fa8f44ae9ed59f341a0db994aa6f8 # v2.1.2
+
+      - name: Restore workspace manifest
+        if: always()
+        run: mv "$RUNNER_TEMP/package.json.bak" package.json
 
   zizmor:
     name: zizmor (Actions security analysis)
@@ -40,7 +53,7 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
         with:
           persona: pedantic
           config: .github/zizmor.yml

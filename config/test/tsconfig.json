@@ -1,6 +1,7 @@
 {
 	"extends": "../tsconfig.cjs.json",
 	"compilerOptions": {
+		"rootDir": "..",
 		"declaration": false,
 		"declarationMap": false,
 		"noImplicitAny": false,
