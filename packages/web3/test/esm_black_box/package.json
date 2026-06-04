@@ -13,8 +13,8 @@
 		"@theqrl/web3": "5.0.0"
 	},
 	"devDependencies": {
-		"jest": "^29.7.0",
-		"ts-jest": "^29.1.0",
+		"jest": "30.4.2",
+		"ts-jest": "29.4.11",
 		"@theqrl/web3-qrl": "^0.1.0",
 		"@theqrl/web3-qrl-contract": "^0.1.0",
 		"@theqrl/web3-validator": "^0.1.0"

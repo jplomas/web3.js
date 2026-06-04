@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`rpc errors EIP1193ProviderRpcError test constructor with a known code (1000) 1`] = `
 {
