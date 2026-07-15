@@ -897,9 +897,6 @@ importers:
       crc-32:
         specifier: 1.2.2
         version: 1.2.2
-      sha3:
-        specifier: 2.1.4
-        version: 2.1.4
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: workspace:^
