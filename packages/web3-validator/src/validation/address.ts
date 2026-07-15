@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ import { shake256 } from '@theqrl/qrl-cryptography/keccak.js';
 import { bytesToHex, utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
 
 const QRL_ADDRESS_HEX_LENGTH = 128;
-// eslint-disable-next-line import/no-cycle
+const QRL_ADDRESS_REGEX = /^Q[0-9a-f]{128}$/i;
 const QRL_CHECKSUM_BITS = 512;
 
 /**
@@ -28,7 +28,7 @@ const QRL_CHECKSUM_BITS = 512;
  * not Keccak.
  */
 export const toChecksumAddress = (data: string): string => {
-import { uint8ArrayToHexString } from '../utils.js';
+	if (!QRL_ADDRESS_REGEX.test(data)) {
 		throw new Error('invalid qrl address');
 	}
 
@@ -50,46 +50,38 @@ import { uint8ArrayToHexString } from '../utils.js';
 };
 
 /**
- * Checks the checksum of a given address. Will also return false on non-checksum addresses.
+ * Checks the structural validity and optional SHAKE256 mixed-case checksum of
+ * a QRL address. All-lowercase and all-uppercase address bodies are accepted as
+ * non-checksummed compatibility forms. Mixed-case address bodies must match the
+ * checksum exactly.
  */
 export const checkAddressCheckSum = (data: string): boolean => {
-	if (!/^Q[0-9a-f]{40}$/i.test(data)) return false;
-	const address = data.slice(1);
-	const updatedData = utf8ToBytes(address.toLowerCase());
+	if (!QRL_ADDRESS_REGEX.test(data)) {
+		return false;
+	}
 
-	const addressHash = uint8ArrayToHexString(keccak256(updatedData)).slice(2);
+	const body = data.slice(1);
 	if (body === body.toLowerCase() || body === body.toUpperCase()) {
 		return true;
 	}
 
-	for (let i = 0; i < 40; i += 1) {
-		// the nth letter should be uppercase if the nth digit of casemap is 1
-		if (
-			(parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) ||
-			(parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])
-		) {
-			return false;
-		}
-	}
-	return true;
+	return data === toChecksumAddress(data);
 };
 
 /**
- * Checks if a given string is a valid QRL address. It will also check the checksum, if the address has upper and lowercase letters.
+ * Checks if a given string is a valid QRL address.
+ * If `checkChecksum` is false, only the Q + 128 hex structure is checked.
+ * Otherwise lowercase/uppercase compatibility forms are accepted and mixed-case
+ * inputs must match the SHAKE256 checksum.
  */
 export const isAddressString = (value: string, checkChecksum = true) => {
 	if (typeof value !== 'string') {
 		return false;
 	}
 
-	// check if it has the basic requirements of an address
-	if (!/^Q[0-9a-f]{40}$/i.test(value)) {
+	if (!QRL_ADDRESS_REGEX.test(value)) {
 		return false;
 	}
-	// If it's ALL lowercase or ALL upppercase
-	if (/^Q[0-9a-f]{40}$/.test(value) || /^Q[0-9A-F]{40}$/.test(value)) {
-		return true;
-		// Otherwise check each case
-	}
+
 	return checkChecksum ? checkAddressCheckSum(value) : true;
 };

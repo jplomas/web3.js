@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -16,13 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { HexString } from '@theqrl/web3-types';
-import {
-	toChecksumAddress,
-	leftPad,
-	toNumber,
-	hexToAddress,
-	addressToHex,
-} from '@theqrl/web3-utils';
 import { isAddressString } from '@theqrl/web3-validator';
 import { InvalidAddressError } from '@theqrl/web3-errors';
 import { IbanOptions } from './types.js';
