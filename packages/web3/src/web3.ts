@@ -158,7 +158,7 @@ export class Web3<
 			// QRNS module
 			qrns: self.use(QRNS, registryAddresses.main), // registry address defaults to main network
 
-			// Iban helpers
+			// Iban helpers (deprecated — see @theqrl/web3-qrl-iban; address<->IBAN throws)
 			Iban,
 
 			net: self.use(Net),

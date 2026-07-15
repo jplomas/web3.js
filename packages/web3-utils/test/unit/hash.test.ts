@@ -15,7 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from 'js-sha3';
+import { keccak256 as qrlKeccak256 } from '@theqrl/qrl-cryptography/keccak.js';
+import { bytesToHex, utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
 import {
 	sha3,
 	sha3Raw,
@@ -38,6 +39,12 @@ import {
 	keccak256ValidData,
 	hyperionSha3BigIntValidData,
 } from '../fixtures/hash';
+
+// Reference keccak256 for cross-checking the sha3 wrapper, mirroring the old
+// js-sha3 `keccak256(data)` API (string|bytes -> lowercase hex, no 0x). Uses
+// @theqrl/qrl-cryptography so js-sha3 is no longer a dependency to monitor.
+const keccak256 = (data: string | Uint8Array): string =>
+	bytesToHex(qrlKeccak256(typeof data === 'string' ? utf8ToBytes(data) : data));
 
 describe('hash', () => {
 	describe('sha3', () => {

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import pkg from 'crc-32';
+import CRC32 from 'crc-32';
 import { EventEmitter } from 'events';
 import type { Numbers } from '@theqrl/web3-types';
 import { bytesToHex, hexToBytes, uint8ArrayConcat } from '@theqrl/web3-utils';
@@ -39,7 +39,11 @@ import type {
 	HardforkConfig,
 } from './types.js';
 
-const { buf: crc32Uint8Array } = pkg;
+// crc-32 is a CommonJS module without statically-detectable named exports, so it
+// must be consumed via a default import to work under native ESM (a bare
+// `import { buf } from 'crc-32'` throws "Named export 'buf' not found" when the
+// ESM build is loaded by Node, as exercised by the release smoke test).
+const { buf: crc32Uint8Array } = CRC32;
 
 type HardforkSpecKeys = keyof typeof HARDFORK_SPECS;
 type HardforkSpecValues = typeof HARDFORK_SPECS[HardforkSpecKeys];

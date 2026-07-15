@@ -17,8 +17,19 @@ minimumReleaseAgeExclude:
 blockExoticSubdeps: true
 overrides:
   "braces@<3.0.3": ">=3.0.3"
-  "undici@<6.24.0": ">=6.24.0 <7.0.0"
+  "undici@<6.27.0": ">=6.27.0 <7.0.0"
+  "undici@>=7.0.0 <7.28.0": ">=7.28.0"
   "fast-uri@<3.1.2": ">=3.1.2"
+  # CVE remediation — shell-quote newline escaping (critical) + ws memory-exhaustion DoS (high)
+  "shell-quote@<1.8.4": ">=1.8.4"
+  "ws@>=7.0.0 <7.5.11": ">=7.5.11"
+  "ws@>=8.0.0 <8.21.0": ">=8.21.0"
+  # CVE remediation — high/critical in dev tooling (Trivy HIGH,CRITICAL gate)
+  "http-proxy-middleware@<2.0.10": ">=2.0.10"
+  "http-proxy-middleware@>=4.0.0 <4.1.1": ">=4.1.1"
+  "linkify-it@<5.0.1": ">=5.0.1"
+  "tmp@<0.2.6": ">=0.2.6"
+  "websocket-driver@<0.7.5": ">=0.7.5"
   "@babel/plugin-transform-modules-systemjs@<7.29.4": ">=7.29.4"
   "@docusaurus/core": 3.10.1
   "@docusaurus/mdx-loader": 3.10.1

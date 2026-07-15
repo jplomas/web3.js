@@ -16,19 +16,30 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { HexString } from '@theqrl/web3-types';
-import {
-	toChecksumAddress,
-	leftPad,
-	toNumber,
-	hexToAddress,
-	addressToHex,
-} from '@theqrl/web3-utils';
 import { isAddressString } from '@theqrl/web3-validator';
 import { InvalidAddressError } from '@theqrl/web3-errors';
 import { IbanOptions } from './types.js';
 
 /**
  * Converts QRL addresses to IBAN or BBAN addresses and vice versa.
+ *
+ * @deprecated The IBAN/ICAP address namespace is deprecated and retained only
+ * for API compatibility — it mirrors the deprecation of IBAN/ICAP in Ethereum
+ * web3.js. Direct QRL address <-> IBAN conversion is not feasible: a QRL address
+ * is a 64-byte (512-bit) SHAKE-256 hash of (descriptor || public key) with no
+ * compressible structure, and a standards-compliant IBAN caps at 34 base36 chars
+ * (~155 bits). The full address needs ~100 base36 chars and cannot round-trip,
+ * so {@link Iban.fromAddress}, {@link Iban.toAddress}, and {@link Iban.toIban}
+ * throw. The IBAN-string helpers ({@link Iban.isValid}, {@link Iban.fromBban},
+ * {@link Iban.createIndirect}, etc.) still function on IBAN strings.
+ *
+ * If this work is ever picked up, the intended approach is the standards-
+ * compliant *indirect* IBAN form: encode a QRNS name that resolves to the
+ * address (via `@theqrl/web3-qrl-qrns`) rather than the raw address — the same
+ * model Ethereum's ICAP used for addresses that did not fit a direct IBAN. This
+ * fits a normal 34-char IBAN but only works for addresses with a registered
+ * QRNS name. Directly encoding the raw 64-byte address would require a
+ * non-standard (~104-char) proprietary format and is intentionally out of scope.
  */
 export class Iban {
 	private readonly _iban: string;
@@ -56,15 +67,6 @@ export class Iban {
 			})
 			.join('');
 	};
-
-	/**
-	 * return the bigint of the given string with the specified base
-	 */
-	private static readonly _parseInt = (str: string, base: number): bigint =>
-		[...str].reduce(
-			(acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc,
-			BigInt(0),
-		);
 
 	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
@@ -265,7 +267,7 @@ export class Iban {
 	 *
 	 * @example
 	 * ```ts
-	 * web3.qrl.Iban.fromAddress("Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+	 * web3.qrl.Iban.fromAddress("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8");
 	 * > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 	 * ```
 	 */
@@ -274,10 +276,18 @@ export class Iban {
 			throw new InvalidAddressError(address);
 		}
 
-		const num = BigInt(toNumber(addressToHex(address)));
-		const base36 = num.toString(36);
-		const padded = leftPad(base36, 15);
-		return Iban.fromBban(padded.toUpperCase());
+		// Deprecated: direct address <-> IBAN is not feasible for 64-byte
+		// post-quantum addresses. The legacy QIB/ETH-style IBAN encodes a 20-byte
+		// address as a 30-char base36 BBAN inside an ISO-13616 IBAN (max 34 chars);
+		// a 64-byte address requires ~100 base36 chars and does not fit. See the
+		// @deprecated note on the Iban class for the indirect-QRNS approach if
+		// this is ever revived.
+		throw new Error(
+			'Iban.fromAddress is not supported for 64-byte post-quantum addresses. ' +
+				'The legacy IBAN scheme (max 34 chars, max 30 char BBAN ~= 20 byte address) ' +
+				'cannot losslessly encode a 64-byte ML-DSA-87 address. ' +
+				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
+		);
 	}
 
 	/**
@@ -292,7 +302,7 @@ export class Iban {
 	 * @example
 	 * ```ts
 	 * web3.qrl.Iban.toAddress("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
-	 * > "Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8"
+	 * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8"
 	 * ```
 	 */
 	public static toAddress = (iban: string): HexString => {
@@ -312,18 +322,20 @@ export class Iban {
 	 * ```ts
 	 * const iban = new web3.qrl.Iban("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
 	 * iban.toAddress();
-	 * > "Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8"
+	 * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8"
 	 * ```
 	 */
+	// eslint-disable-next-line class-methods-use-this
 	public toAddress = (): HexString => {
-		if (this.isDirect()) {
-			// check if Iban can be converted to an address
-			const base36 = this._iban.slice(4);
-			const parsedBigInt = Iban._parseInt(base36, 36); // convert the base36 string to a bigint
-			const paddedBigInt = leftPad(parsedBigInt, 40);
-			return toChecksumAddress(hexToAddress(paddedBigInt));
-		}
-		throw new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35');
+		// Deprecated and symmetric with Iban.fromAddress. Even a Direct IBAN's
+		// 30-char base36 BBAN encodes at most ~20 bytes, which cannot be inflated
+		// back into a 64-byte post-quantum address. See the @deprecated note on the
+		// Iban class for the indirect-QRNS approach if this is ever revived.
+		throw new Error(
+			'Iban.toAddress is not supported for 64-byte post-quantum addresses. ' +
+				'The legacy IBAN scheme cannot losslessly decode to a 64-byte ML-DSA-87 address. ' +
+				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
+		);
 	};
 
 	/**
@@ -334,7 +346,7 @@ export class Iban {
 	 *
 	 * @example
 	 * ```ts
-	 * web3.qrl.Iban.toIban("Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+	 * web3.qrl.Iban.toIban("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8");
 	 * > "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"
 	 * ```
 	 */
