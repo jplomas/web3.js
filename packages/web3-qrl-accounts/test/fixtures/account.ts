@@ -132,7 +132,7 @@ export const transactionsTestData: [FeeMarketEIP1559TxData][] = [
 ];
 
 export const invalidSeedtoAccountData: [any, Error][] = [
-	['', new Error('ExtendedSeed: expected 51 bytes, got 0')],
+	['', new Error('Unsupported extendedSeed input')],
 	[new Uint8Array([]), new Error('ExtendedSeed: expected 51 bytes, got 0')],
 ];
 
