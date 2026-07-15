@@ -75,7 +75,7 @@
 		"release:smoke-tarballs": "node scripts/release/smoke-tarballs.js",
 		"release:touch-packages": "node scripts/release/touch-packages.js",
 		"doctor": "node scripts/doctor.js",
-		"audit:supply-chain": "pnpm audit --prod --audit-level high"
+		"audit:supply-chain": "trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --ignorefile .trivyignore pnpm-lock.yaml"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "7.1.0",
@@ -109,7 +109,7 @@
 		"ts-jest": "29.4.11",
 		"ts-loader": "9.5.7",
 		"ts-node": "10.9.2",
-		"turbo": "2.8.16",
+		"turbo": "2.9.14",
 		"typedoc": "0.28.19",
 		"typedoc-plugin-extras": "4.0.1",
 		"typedoc-plugin-markdown": "4.11.0",
