@@ -279,6 +279,7 @@ export const encrypt = async (
 	password: string | Uint8Array,
 	options?: CipherOptions,
 ): Promise<KeyStore> => {
+	// eslint-disable-next-line no-use-before-define
 	const seedUint8Array = parseAndValidateSeed(seed);
 
 	// if given salt or iv is a string, convert it to a Uint8Array
@@ -338,6 +339,7 @@ export const encrypt = async (
 		initializationVector,
 	);
 	const ciphertext = bytesToHex(cipher).slice(2);
+	// eslint-disable-next-line no-use-before-define
 	const acc = seedToAccount(seedUint8Array);
 
 	return {

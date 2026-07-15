@@ -103,7 +103,7 @@ export class Writer {
 		defineReadOnly(this, 'wordSize', wordSize || 64);
 		this._data = [];
 		this._dataLength = 0;
-		this._padding = new Uint8Array(wordSize);
+		this._padding = new Uint8Array(this.wordSize);
 	}
 
 	get data(): string {

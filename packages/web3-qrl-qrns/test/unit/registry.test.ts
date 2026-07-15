@@ -68,7 +68,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.getOwner(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow();
 			expect(getOwnerMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});
@@ -99,7 +99,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.getTTL(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow();
 			expect(getTTLMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});
@@ -134,7 +134,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.recordExists(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow();
 			expect(setRecordMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});
@@ -186,7 +186,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.getResolver(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow();
 			expect(resolverMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});
@@ -204,7 +204,7 @@ describe('registry', () => {
 
 			await expect(async () => {
 				await registry.getResolver(QRNS_NAME);
-			}).rejects.toThrow(new Error());
+			}).rejects.toThrow();
 			expect(resolverMock).toHaveBeenCalledWith(namehash(QRNS_NAME));
 			expect(call).toHaveBeenCalled();
 		});

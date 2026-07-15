@@ -758,7 +758,7 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${String(eventName)} not found.`);
 		}
-		const eventOptions = (typeof options === 'object' && options !== null ? options : {}) as Filter;
+		const eventOptions = (options && typeof options === 'object' ? options : {}) as Filter;
 		const { fromBlock, toBlock, topics, address } = encodeEventABI(
 			this.options,
 			abi,

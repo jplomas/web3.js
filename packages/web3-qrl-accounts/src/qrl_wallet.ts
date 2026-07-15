@@ -24,7 +24,7 @@ import {
 	newMLDSA87Descriptor as createMLDSA87Descriptor,
 	newWalletFromExtendedSeed as createWalletFromExtendedSeed,
 } from '@theqrl/wallet.js';
-import { shake256 } from 'js-sha3';
+import { shake256 } from '@theqrl/qrl-cryptography/keccak.js';
 
 export type QrlDescriptor = {
 	type(): number;
@@ -89,7 +89,7 @@ export const addressFromPublicKeyAndDescriptor = (
 	const input = new Uint8Array(descriptorBytes.length + publicKey.length);
 	input.set(descriptorBytes);
 	input.set(publicKey, descriptorBytes.length);
-	return new Uint8Array(shake256.array(input, 512));
+	return new Uint8Array(shake256(input, { dkLen: 64 }));
 };
 
 export const newMLDSA87WalletFromExtendedSeed = (extendedSeed: ExtendedSeedInput): MLDSA87Wallet =>

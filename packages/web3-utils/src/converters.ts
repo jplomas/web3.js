@@ -143,8 +143,8 @@ export const hexToBytes = (bytes: HexString): Uint8Array => {
  * > Uint8Array(64) [ ... ]
  * ```
  */
-// eslint-disable-next-line no-use-before-define
 export const addressToBytes = (value: Address): Uint8Array =>
+	// eslint-disable-next-line no-use-before-define
 	bytesToUint8Array(addressToHex(value));
 
 /**

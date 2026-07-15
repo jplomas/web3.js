@@ -22,6 +22,24 @@ import { IbanOptions } from './types.js';
 
 /**
  * Converts QRL addresses to IBAN or BBAN addresses and vice versa.
+ *
+ * @deprecated The IBAN/ICAP address namespace is deprecated and retained only
+ * for API compatibility — it mirrors the deprecation of IBAN/ICAP in Ethereum
+ * web3.js. Direct QRL address <-> IBAN conversion is not feasible: a QRL address
+ * is a 64-byte (512-bit) SHAKE-256 hash of (descriptor || public key) with no
+ * compressible structure, and a standards-compliant IBAN caps at 34 base36 chars
+ * (~155 bits). The full address needs ~100 base36 chars and cannot round-trip,
+ * so {@link Iban.fromAddress}, {@link Iban.toAddress}, and {@link Iban.toIban}
+ * throw. The IBAN-string helpers ({@link Iban.isValid}, {@link Iban.fromBban},
+ * {@link Iban.createIndirect}, etc.) still function on IBAN strings.
+ *
+ * If this work is ever picked up, the intended approach is the standards-
+ * compliant *indirect* IBAN form: encode a QRNS name that resolves to the
+ * address (via `@theqrl/web3-qrl-qrns`) rather than the raw address — the same
+ * model Ethereum's ICAP used for addresses that did not fit a direct IBAN. This
+ * fits a normal 34-char IBAN but only works for addresses with a registered
+ * QRNS name. Directly encoding the raw 64-byte address would require a
+ * non-standard (~104-char) proprietary format and is intentionally out of scope.
  */
 export class Iban {
 	private readonly _iban: string;
@@ -258,19 +276,17 @@ export class Iban {
 			throw new InvalidAddressError(address);
 		}
 
-		// QIB scheme is not yet defined for 64-byte post-quantum addresses.
-		//
-		// The legacy QIB/ETH-style IBAN encodes a 20-byte address as a 30-char
-		// base36 BBAN inside an ISO-13616 IBAN (max total length 34 chars).
-		// A 64-byte address requires ~99 base36 chars and does not fit.
-		//
-		// Until QRL governance picks a post-quantum address-encoding scheme
-		// (and the spec is published), this method is disabled.
+		// Deprecated: direct address <-> IBAN is not feasible for 64-byte
+		// post-quantum addresses. The legacy QIB/ETH-style IBAN encodes a 20-byte
+		// address as a 30-char base36 BBAN inside an ISO-13616 IBAN (max 34 chars);
+		// a 64-byte address requires ~100 base36 chars and does not fit. See the
+		// @deprecated note on the Iban class for the indirect-QRNS approach if
+		// this is ever revived.
 		throw new Error(
 			'Iban.fromAddress is not supported for 64-byte post-quantum addresses. ' +
 				'The legacy IBAN scheme (max 34 chars, max 30 char BBAN ~= 20 byte address) ' +
 				'cannot losslessly encode a 64-byte ML-DSA-87 address. ' +
-				'Awaiting QRL governance decision on a post-quantum address-encoding scheme.',
+				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
 		);
 	}
 
@@ -309,15 +325,16 @@ export class Iban {
 	 * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8"
 	 * ```
 	 */
+	// eslint-disable-next-line class-methods-use-this
 	public toAddress = (): HexString => {
-		// Symmetric with Iban.fromAddress — see disabled-method comment there.
-		// Even if a Direct IBAN is given, the 30-char base36 BBAN can encode at
-		// most ~20 bytes of address data, which cannot be inflated back into
-		// a 64-byte post-quantum address.
+		// Deprecated and symmetric with Iban.fromAddress. Even a Direct IBAN's
+		// 30-char base36 BBAN encodes at most ~20 bytes, which cannot be inflated
+		// back into a 64-byte post-quantum address. See the @deprecated note on the
+		// Iban class for the indirect-QRNS approach if this is ever revived.
 		throw new Error(
 			'Iban.toAddress is not supported for 64-byte post-quantum addresses. ' +
 				'The legacy IBAN scheme cannot losslessly decode to a 64-byte ML-DSA-87 address. ' +
-				'Awaiting QRL governance decision on a post-quantum address-encoding scheme.',
+				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
 		);
 	};
 

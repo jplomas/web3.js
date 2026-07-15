@@ -15,7 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { shake256 } from 'js-sha3';
+import { shake256 } from '@theqrl/qrl-cryptography/keccak.js';
+import { bytesToHex, utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
 
 const QRL_ADDRESS_HEX_LENGTH = 128;
 const QRL_ADDRESS_REGEX = /^Q[0-9a-f]{128}$/i;
@@ -32,7 +33,9 @@ export const toChecksumAddress = (data: string): string => {
 	}
 
 	const lowerBody = data.slice(1).toLowerCase();
-	const hashHex = shake256(lowerBody, QRL_CHECKSUM_BITS);
+	// SHAKE256 over the ASCII hex body, QRL_CHECKSUM_BITS/8 bytes of output,
+	// rendered as hex so each address nibble maps to one hash nibble (EIP-55 style).
+	const hashHex = bytesToHex(shake256(utf8ToBytes(lowerBody), { dkLen: QRL_CHECKSUM_BITS / 8 }));
 
 	let checksummed = 'Q';
 	for (let i = 0; i < QRL_ADDRESS_HEX_LENGTH; i += 1) {

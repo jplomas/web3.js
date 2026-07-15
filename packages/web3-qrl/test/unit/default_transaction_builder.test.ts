@@ -41,7 +41,7 @@ jest.mock('@theqrl/web3-net', () => ({
 }));
 
 describe('defaultTransactionBuilder', () => {
-	const expectedFrom = 'Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e66597715136a50f44a01ecc6f15e6f611c1347';
+	const expectedFrom = 'Q6E66597715136A50F44A01EcC6f15e6F611c13477413826bb6F94466f6165d4745d35CE0Da0c81d7d1e6eA928187d34281D493258Cd3Ec9beAd728851C6E0E51';
 	const expectedNonce = '0x42';
 	const expectedGas = BigInt(21000);
 	const expectedGasLimit = expectedGas;

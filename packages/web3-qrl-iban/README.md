@@ -9,6 +9,15 @@ This is a sub-package of [@theqrl/web3.js](https://github.com/theqrl/web3.js).
 
 `@theqrl/web3-qrl-iban` This package converts QRL addresses to IBAN addresses a vice versa.
 
+> **⚠️ Deprecated.** The IBAN/ICAP namespace is deprecated and kept only for API
+> compatibility, mirroring the deprecation of IBAN/ICAP in Ethereum web3.js.
+> Direct address ↔ IBAN conversion is not feasible for 64-byte post-quantum QRL
+> addresses (a 512-bit SHAKE-256 hash cannot round-trip through a ≤34-char IBAN),
+> so `fromAddress` / `toAddress` / `toIban` throw. If this is ever revived, the
+> intended approach is the standards-compliant **indirect** IBAN form — encoding
+> a QRNS name that resolves to the address (via `@theqrl/web3-qrl-qrns`), not the
+> raw address. See the `@deprecated` note on the `Iban` class for details.
+
 ## Installation
 
 You can install the package either using [NPM](https://www.npmjs.com/package/@theqrl/web3-qrl-iban) or using [pnpm](https://pnpm.io/)

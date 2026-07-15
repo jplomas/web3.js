@@ -35,7 +35,7 @@ export const validSeedtoAccountData: [any, any][] = [
 			ignoreLength: false,
 		},
 		{
-			address: 'Qa467d314bbb1e36687ffc9b277d3e163787e59641390075162bdd080e28ddf6ca810e1ea17308d3bec9300f85df4f3de54c647b4f7f02e0c9821478ac20491a1',
+			address: 'QA467d314BBB1E36687FfC9B277d3E163787E59641390075162BDd080E28Ddf6Ca810e1eA17308d3bec9300f85dF4F3dE54C647b4f7F02e0c9821478ac20491A1',
 			seed: '0x010000034da61fe50c659a3285549dc395571e2bf6891c462c041e3c6b9061fc73eb3687d03f940e5e65d582019ef10ce1327f',
 			sign,
 			signTransaction,
@@ -48,7 +48,7 @@ export const validSeedtoAccountData: [any, any][] = [
 				'0x0100007fc43a2ccb557f900d4ca924c187b4438a7f8185b8edbfbabdd26b87f125594495268f55ceac9c9eb23efaab76b0d4c5',
 		},
 		{
-			address: 'Q50d1766d3113d213131a20d97ccc89190ef68ea3e34f6e797a402c2e18119f718f05898f2f47100b37375795f56b6f16b7a1f358f833c49dc4ddd64c3fddb052',
+			address: 'Q50d1766d3113D213131A20d97CcC89190Ef68ea3e34F6E797A402c2E18119f718f05898f2F47100b37375795f56b6F16b7a1F358f833c49DC4dDD64c3FDdb052',
 			seed: '0x0100007fc43a2ccb557f900d4ca924c187b4438a7f8185b8edbfbabdd26b87f125594495268f55ceac9c9eb23efaab76b0d4c5',
 			sign,
 			signTransaction,
@@ -62,7 +62,7 @@ export const validSeedtoAccountData: [any, any][] = [
 			ignoreLength: true,
 		},
 		{
-			address: 'Q68ed7f1481bb2cda83a0a0d55f1f54c3a6eaef4e45c93d7925b42537c61057b7a0f42e1627beafc0a2de9d1437183e49c47fa79274cc640d051adbae9d9ada12',
+			address: 'Q68eD7F1481bb2CDA83A0A0D55F1f54c3a6eaef4e45c93D7925b42537c61057B7A0F42E1627beafC0A2DE9d1437183e49c47fA79274cc640D051adBaE9d9aDa12',
 			seed: '0x010000c902ea9bbf1dd51aaa2ee9bed126aba921f6a6afac9cf09a21f3d915b057bace6787a894a71d1d103992aca0a6a4250c',
 			sign,
 			signTransaction,

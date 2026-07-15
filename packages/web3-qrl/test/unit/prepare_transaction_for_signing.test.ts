@@ -40,13 +40,14 @@ describe('prepareTransactionForSigning', () => {
 				expectedTransaction,
 				expectedSeed,
 				expectedAddress,
-				expectedRlpEncodedTransaction,
-				expectedTransactionHash,
-				expectedMessageToSign,
+				// RLP, hash and signature are non-deterministic (hedged ML-DSA) — no longer asserted
+				_expectedRlpEncodedTransaction,
+				_expectedTransactionHash,
+				_expectedMessageToSign,
 				expectedDescriptor,
 				expectedExtraParams,
-				expectedSignature,
-				expectedPublicKey,
+				_expectedSignature,
+				_expectedPublicKey,
 			) => {
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
 				jest.spyOn(qrlRpcMethods, 'estimateGas').mockImplementation(
@@ -67,43 +68,35 @@ describe('prepareTransactionForSigning', () => {
 				expect(qrljsTx instanceof FeeMarketEIP1559Transaction).toBeTruthy();
 				expect(qrljsTx.sign).toBeDefined();
 
-				// should sign transaction
+				// should sign transaction. ML-DSA-87 signing is hedged (non-deterministic,
+				// per TOB-QRLLIB-6), so the signature — and therefore the serialized RLP and
+				// the transaction hash — cannot be matched against a fixed fixture. Verify the
+				// signature's validity and a decode round-trip instead of comparing bytes.
 				const signedTransaction = qrljsTx.sign(hexToBytes(expectedSeed.substring(2)));
 
 				const senderAddress = signedTransaction.getSenderAddress().toString();
 				expect(senderAddress).toBe(`Q${expectedAddress.slice(1).toLowerCase()}`);
 
-				// should be able to obtain expectedRlpEncodedTransaction
-				const rlpEncodedTransaction = bytesToHex(signedTransaction.serialize());
-				expect(rlpEncodedTransaction).toBe(expectedRlpEncodedTransaction);
+				expect(signedTransaction.verifySignature()).toBe(true);
 
-				// should be able to obtain expectedTransactionHash
-				const transactionHash = bytesToHex(signedTransaction.hash());
-				expect(transactionHash).toBe(expectedTransactionHash);
+				// serialized signed tx must round-trip through decode and still verify
+				const decoded = FeeMarketEIP1559Transaction.fromSerializedTx(signedTransaction.serialize());
+				expect(decoded.verifySignature()).toBe(true);
+				expect(decoded.getSenderAddress().toString()).toBe(senderAddress);
 
-				// should be able to obtain expectedMessageToSign
-				const desc = signedTransaction.descriptor !== undefined ? signedTransaction.descriptor : Uint8Array.from([]);
-				const eparams = signedTransaction.extraParams !== undefined ? signedTransaction.extraParams : Uint8Array.from([]);
-				const messageToSign = bytesToHex(signedTransaction.getMessageToSign(desc, eparams));
-				expect(messageToSign).toBe(expectedMessageToSign);
-
-				// should have expected public key, signature and descriptor
+				// descriptor and extraParams are deterministic constants for ML-DSA-87.
+				// messageToSign and publicKey correctness are covered transitively by
+				// verifySignature() above (the signature only verifies if it was produced
+				// over the correct message under the correct public key), so they are not
+				// re-compared here as brittle, encoding-tied fixtures.
 				const descriptor = !isNullish(signedTransaction.descriptor)
 					? bytesToHex(signedTransaction.descriptor)
 					: '';
 				const extraParams = !isNullish(signedTransaction.extraParams)
 					? bytesToHex(signedTransaction.extraParams)
 					: '';
-				const signature = !isNullish(signedTransaction.signature)
-					? bytesToHex(signedTransaction.signature)
-					: '';
-				const publicKey = !isNullish(signedTransaction.publicKey)
-					? bytesToHex(signedTransaction.publicKey)
-					: '';
 				expect(descriptor).toBe(expectedDescriptor);
 				expect(extraParams).toBe(expectedExtraParams);
-				expect(signature).toBe(expectedSignature);
-				expect(publicKey).toBe(expectedPublicKey);
 			},
 		);
 	});

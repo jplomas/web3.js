@@ -8,6 +8,9 @@ overrides:
   braces@<3.0.3: '>=3.0.3'
   undici@<6.24.0: '>=6.24.0 <7.0.0'
   fast-uri@<3.1.2: '>=3.1.2'
+  shell-quote@<1.8.4: '>=1.8.4'
+  ws@>=7.0.0 <7.5.11: '>=7.5.11'
+  ws@>=8.0.0 <8.21.0: '>=8.21.0'
   '@babel/plugin-transform-modules-systemjs@<7.29.4': '>=7.29.4'
   '@docusaurus/core': 3.10.1
   '@docusaurus/mdx-loader': 3.10.1
@@ -659,10 +662,10 @@ importers:
         version: 8.18.1
       isomorphic-ws:
         specifier: 5.0.0
-        version: 5.0.0(ws@8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6))
+        version: 5.0.0(ws@8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6))
       ws:
-        specifier: 8.20.0
-        version: 8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+        specifier: 8.21.0
+        version: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
     devDependencies:
       '@theqrl/eslint-config-base-web3':
         specifier: workspace:^
@@ -868,8 +871,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       '@theqrl/qrl-cryptography':
-        specifier: 0.1.3
-        version: 0.1.3
+        specifier: 0.3.0
+        version: 0.3.0
       '@theqrl/wallet.js':
         specifier: 2.0.2
         version: 2.0.2
@@ -888,9 +891,6 @@ importers:
       crc-32:
         specifier: 1.2.2
         version: 1.2.2
-      js-sha3:
-        specifier: 0.9.3
-        version: 0.9.3
       sha3:
         specifier: 2.1.4
         version: 2.1.4
@@ -1200,8 +1200,8 @@ importers:
   packages/web3-utils:
     dependencies:
       '@theqrl/qrl-cryptography':
-        specifier: 0.1.3
-        version: 0.1.3
+        specifier: 0.3.0
+        version: 0.3.0
       '@theqrl/web3-errors':
         specifier: workspace:^
         version: link:../web3-errors
@@ -1239,9 +1239,6 @@ importers:
       jest-extended:
         specifier: 7.0.0
         version: 7.0.0(jest@29.7.0(@types/node@22.19.17)(ts-node@10.9.1(@types/node@22.19.17)(typescript@5.9.3)))(typescript@5.9.3)
-      js-sha3:
-        specifier: 0.9.3
-        version: 0.9.3
       prettier:
         specifier: 3.8.3
         version: 3.8.3
@@ -1255,17 +1252,14 @@ importers:
   packages/web3-validator:
     dependencies:
       '@theqrl/qrl-cryptography':
-        specifier: 0.1.3
-        version: 0.1.3
+        specifier: 0.3.0
+        version: 0.3.0
       '@theqrl/web3-errors':
         specifier: workspace:^
         version: link:../web3-errors
       '@theqrl/web3-types':
         specifier: workspace:^
         version: link:../web3-types
-      js-sha3:
-        specifier: 0.9.3
-        version: 0.9.3
       util:
         specifier: 0.12.5
         version: 0.12.5
@@ -3598,11 +3592,15 @@ packages:
     resolution: {integrity: sha512-xUcrFSZ1OeRSyzU5xCd/TuB+dE/z7U9MafNtKZYmPhRwcucNbhobsXHab8GO5w02dy732sdPidOT2Tkn+vjZuA==}
     engines: {node: '>=20.19.0'}
 
+  '@theqrl/mldsa87@2.1.3':
+    resolution: {integrity: sha512-sQxeMZTeJG84v8lK8gRztuHHC2hB6RG2yWQc7oHv19lExG6vB4qvn8nk8/0ffseYXMqfqU5dmZ4jdabk9P3TEg==}
+    engines: {node: '>=20.19.0'}
+
   '@theqrl/qrl-contracts@0.1.0':
     resolution: {integrity: sha512-xCKoOiEyy+uIe+20yCn+F5vFOHNb8c0610oypoyCXFsEG1iX+AcookUHaRNQndYOcgze8d+yAUJ9KnJ5NsHywQ==}
 
-  '@theqrl/qrl-cryptography@0.1.3':
-    resolution: {integrity: sha512-rtgii8JB6W0Gk7jen2WZU6Iubl+mHKFUobGG6zzipippVxhbeA0Vb6SJ/Hi5IEbGr44KlY4sBZMjWEBLaSEQpw==}
+  '@theqrl/qrl-cryptography@0.3.0':
+    resolution: {integrity: sha512-2d7QcK/ZQKOmphnj0lSRJLyeXO3o0degg0mjEMHH+5g4LXvrgoVV1i/bTqzS78DgGRB4Mn3kUPXg6QW3KO712w==}
     engines: {node: '>=20.19'}
 
   '@theqrl/wallet.js@2.0.2':
@@ -6726,7 +6724,7 @@ packages:
   isomorphic-ws@5.0.0:
     resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
     peerDependencies:
-      ws: '*'
+      ws: '>=7.5.11'
 
   issue-parser@7.0.2:
     resolution: {integrity: sha512-7atWPjhGEIX3JEtMrOYd8TKzboYlq+5sNbdl9POiLYOI14G5HZiQbZP0Xj5EZdrufQVXfJlpTV0hys0CuxwxZw==}
@@ -6956,9 +6954,6 @@ packages:
 
   js-sha3@0.8.0:
     resolution: {integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==}
-
-  js-sha3@0.9.3:
-    resolution: {integrity: sha512-BcJPCQeLg6WjEx3FE591wVAevlli8lxsxm9/FzV4HXkV49TmBH38Yvrpce6fjbADGMKFrBMGTqrVz3qPIZ88Gg==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -9082,8 +9077,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  shell-quote@1.8.3:
-    resolution: {integrity: sha512-ObmnIF4hXNg1BqhnHmgbDETF8dLPCggZWBjkQfhZpbszZnYur5DUljTcCHii5LC3J5E0yeO/1LIMyH+UvHQgyw==}
+  shell-quote@1.9.0:
+    resolution: {integrity: sha512-Iov+JwFv/2HcTpcwNMKd8+IWNb8tboQJNQTkAY/LLVK7gGH9jy+LGkVqPxfekHl+yMmiqXszdGWXgkfml7hjqA==}
     engines: {node: '>= 0.4'}
 
   side-channel-list@1.0.1:
@@ -10131,20 +10126,8 @@ packages:
     resolution: {integrity: sha512-7KxauUdBmSdWnmpaGFg+ppNjKF8uNLry8LyzjauQDOVONfFLNKrKvQOxZ/VuTIcS/gge/YNahf5RIIQWTSarlg==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
 
-  ws@7.5.10:
-    resolution: {integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==}
-    engines: {node: '>=8.3.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  ws@8.20.0:
-    resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
+  ws@8.21.0:
+    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -13623,12 +13606,16 @@ snapshots:
     dependencies:
       '@noble/hashes': 2.0.1
 
-  '@theqrl/qrl-contracts@0.1.0': {}
-
-  '@theqrl/qrl-cryptography@0.1.3':
+  '@theqrl/mldsa87@2.1.3':
     dependencies:
       '@noble/hashes': 2.2.0
-      '@theqrl/mldsa87': 2.0.4
+
+  '@theqrl/qrl-contracts@0.1.0': {}
+
+  '@theqrl/qrl-cryptography@0.3.0':
+    dependencies:
+      '@noble/hashes': 2.2.0
+      '@theqrl/mldsa87': 2.1.3
 
   '@theqrl/wallet.js@2.0.2':
     dependencies:
@@ -16496,7 +16483,7 @@ snapshots:
       tsort: 0.0.1
       undici: 6.25.0
       uuid: 8.3.2
-      ws: 7.5.10(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+      ws: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
     optionalDependencies:
       ts-node: 10.9.1(@types/node@22.19.17)(typescript@5.9.3)
       typescript: 5.9.3
@@ -17181,9 +17168,9 @@ snapshots:
 
   isobject@3.0.1: {}
 
-  isomorphic-ws@5.0.0(ws@8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)):
+  isomorphic-ws@5.0.0(ws@8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)):
     dependencies:
-      ws: 8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+      ws: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
 
   issue-parser@7.0.2:
     dependencies:
@@ -17628,8 +17615,6 @@ snapshots:
 
   js-sha3@0.8.0: {}
 
-  js-sha3@0.9.3: {}
-
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.2:
@@ -17708,7 +17693,7 @@ snapshots:
   launch-editor@2.13.2:
     dependencies:
       picocolors: 1.1.1
-      shell-quote: 1.8.3
+      shell-quote: 1.9.0
 
   leven@3.1.0: {}
 
@@ -20186,7 +20171,7 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  shell-quote@1.8.3: {}
+  shell-quote@1.9.0: {}
 
   side-channel-list@1.0.1:
     dependencies:
@@ -21127,7 +21112,7 @@ snapshots:
       opener: 1.5.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      ws: 7.5.10(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+      ws: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -21143,7 +21128,7 @@ snapshots:
       opener: 1.5.2
       picocolors: 1.1.1
       sirv: 3.0.2
-      ws: 8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+      ws: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -21206,7 +21191,7 @@ snapshots:
       sockjs: 0.3.24
       spdy: 4.0.2
       webpack-dev-middleware: 7.4.5(tslib@2.8.1)(webpack@5.106.2(webpack-cli@7.0.2))
-      ws: 8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
+      ws: 8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6)
     optionalDependencies:
       webpack: 5.106.2(webpack-cli@7.0.2)
       webpack-cli: 7.0.2(webpack-bundle-analyzer@5.3.0(bufferutil@4.0.6)(utf-8-validate@6.0.6))(webpack-dev-server@5.2.3)(webpack@5.106.2)
@@ -21352,12 +21337,7 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
 
-  ws@7.5.10(bufferutil@4.0.6)(utf-8-validate@6.0.6):
-    optionalDependencies:
-      bufferutil: 4.0.6
-      utf-8-validate: 6.0.6
-
-  ws@8.20.0(bufferutil@4.0.6)(utf-8-validate@6.0.6):
+  ws@8.21.0(bufferutil@4.0.6)(utf-8-validate@6.0.6):
     optionalDependencies:
       bufferutil: 4.0.6
       utf-8-validate: 6.0.6
