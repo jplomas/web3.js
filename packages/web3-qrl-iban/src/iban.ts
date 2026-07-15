@@ -76,15 +76,6 @@ export class Iban {
 	};
 
 	/**
-	 * return the bigint of the given string with the specified base
-	 */
-	private static readonly _parseInt = (str: string, base: number): bigint =>
-		[...str].reduce(
-			(acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc,
-			BigInt(0),
-		);
-
-	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
 	 */
 	private static readonly _mod9710 = (iban: string): number => {
@@ -283,7 +274,7 @@ export class Iban {
 	 *
 	 * @example
 	 * ```ts
-	 * web3.qrl.Iban.fromAddress("Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+	 * web3.qrl.Iban.fromAddress("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8");
 	 * > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 	 * ```
 	 */
@@ -303,7 +294,7 @@ export class Iban {
 				'The legacy IBAN scheme (max 34 chars, max 30 char BBAN ~= 20 byte address) ' +
 				'cannot losslessly encode a 64-byte ML-DSA-87 address. ' +
 				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
-		return Iban.fromBban(padded.toUpperCase());
+		);
 	}
 
 	/**
@@ -318,7 +309,7 @@ export class Iban {
 	 * @example
 	 * ```ts
 	 * web3.qrl.Iban.toAddress("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
-	 * > "Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8"
+	 * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8"
 	 * ```
 	 */
 	public static toAddress = (iban: string): HexString => {
@@ -338,7 +329,7 @@ export class Iban {
 	 * ```ts
 	 * const iban = new web3.qrl.Iban("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
 	 * iban.toAddress();
-	 * > "Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8"
+	 * > "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8"
 	 * ```
 	 */
 	// eslint-disable-next-line class-methods-use-this
@@ -351,7 +342,7 @@ export class Iban {
 			'Iban.toAddress is not supported for 64-byte post-quantum addresses. ' +
 				'The legacy IBAN scheme cannot losslessly decode to a 64-byte ML-DSA-87 address. ' +
 				'This namespace is deprecated; see the Iban class doc for the indirect-QRNS approach.',
-		throw new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35');
+		);
 	};
 
 	/**
@@ -362,7 +353,7 @@ export class Iban {
 	 *
 	 * @example
 	 * ```ts
-	 * web3.qrl.Iban.toIban("Q00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+	 * web3.qrl.Iban.toIban("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c5496aee77c1ba1f0854206a26dda82a81d6d8");
 	 * > "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"
 	 * ```
 	 */
