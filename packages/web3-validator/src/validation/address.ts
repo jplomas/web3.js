@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,10 +15,39 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from '@theqrl/qrl-cryptography/keccak.js';
-import { utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
+import { shake256 } from '@theqrl/qrl-cryptography/keccak.js';
+import { bytesToHex, utf8ToBytes } from '@theqrl/qrl-cryptography/utils.js';
+
+const QRL_ADDRESS_HEX_LENGTH = 128;
 // eslint-disable-next-line import/no-cycle
+const QRL_CHECKSUM_BITS = 512;
+
+/**
+ * Returns the EIP-55-style mixed-case representation of a QRL address.
+ * The checksum uses SHAKE256 over the lowercase ASCII hex address body,
+ * not Keccak.
+ */
+export const toChecksumAddress = (data: string): string => {
 import { uint8ArrayToHexString } from '../utils.js';
+		throw new Error('invalid qrl address');
+	}
+
+	const lowerBody = data.slice(1).toLowerCase();
+	// SHAKE256 over the ASCII hex body, QRL_CHECKSUM_BITS/8 bytes of output,
+	// rendered as hex so each address nibble maps to one hash nibble (EIP-55 style).
+	const hashHex = bytesToHex(shake256(utf8ToBytes(lowerBody), { dkLen: QRL_CHECKSUM_BITS / 8 }));
+
+	let checksummed = 'Q';
+	for (let i = 0; i < QRL_ADDRESS_HEX_LENGTH; i += 1) {
+		const char = lowerBody[i];
+		checksummed +=
+			char >= 'a' && char <= 'f' && Number.parseInt(hashHex[i], 16) >= 8
+				? char.toUpperCase()
+				: char;
+	}
+
+	return checksummed;
+};
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
@@ -29,6 +58,9 @@ export const checkAddressCheckSum = (data: string): boolean => {
 	const updatedData = utf8ToBytes(address.toLowerCase());
 
 	const addressHash = uint8ArrayToHexString(keccak256(updatedData)).slice(2);
+	if (body === body.toLowerCase() || body === body.toUpperCase()) {
+		return true;
+	}
 
 	for (let i = 0; i < 40; i += 1) {
 		// the nth letter should be uppercase if the nth digit of casemap is 1

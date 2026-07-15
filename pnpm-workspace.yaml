@@ -19,6 +19,10 @@ overrides:
   "braces@<3.0.3": ">=3.0.3"
   "undici@<6.24.0": ">=6.24.0 <7.0.0"
   "fast-uri@<3.1.2": ">=3.1.2"
+  # CVE remediation — shell-quote newline escaping (critical) + ws memory-exhaustion DoS (high)
+  "shell-quote@<1.8.4": ">=1.8.4"
+  "ws@>=7.0.0 <7.5.11": ">=7.5.11"
+  "ws@>=8.0.0 <8.21.0": ">=8.21.0"
   "@babel/plugin-transform-modules-systemjs@<7.29.4": ">=7.29.4"
   "@docusaurus/core": 3.10.1
   "@docusaurus/mdx-loader": 3.10.1

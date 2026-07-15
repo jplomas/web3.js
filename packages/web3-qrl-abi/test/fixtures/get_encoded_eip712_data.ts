@@ -90,7 +90,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		undefined,
-		'0x1901f2cee375fa42b42143804025fc449deafd50cc031ca257e0b194a650a912090fc52c0ee5d84264471806290a3f2c4cecfc5490626bf912d01f240d7a274b371e',
+		'0x1901c4292df31a4b083c63ac304014bbf0b5c92d4cbfa49236741a61983d8f50b39a9241a9b6d7ba63f111704b0a0c473ba4ec6a22f92910499b4fe3be572b8af4a3',
 	],
 	[
 		'should get encoded message without hashing, hash = false',
@@ -159,7 +159,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		false,
-		'0x1901f2cee375fa42b42143804025fc449deafd50cc031ca257e0b194a650a912090fc52c0ee5d84264471806290a3f2c4cecfc5490626bf912d01f240d7a274b371e',
+		'0x1901c4292df31a4b083c63ac304014bbf0b5c92d4cbfa49236741a61983d8f50b39a9241a9b6d7ba63f111704b0a0c473ba4ec6a22f92910499b4fe3be572b8af4a3',
 	],
 	[
 		'should get the hashed encoded message, hash = true',
@@ -228,7 +228,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		true,
-		'0xbe609aee343fb3c4b28e1df9e632fca64fcfaede20f02e86244efddf30957bd2',
+		'0x53597a24fb7435a8a123ec6805f1a756556caeca40f5d7227bd824b653672e67',
 	],
 	[
 		'should get encoded message with array types',
@@ -285,7 +285,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		false,
-		'0x1901928e4773f1f7243172cd0dd213906be49eb9d275e09c8bd0575921c51ba00058596a0bafab67b5b49cfe99456c50dd5b6294b1383e4f17c6e5c3c14afee96ac3',
+		'0x190170b207a94826d759c38a47ff9847ec4c58382f880d9a0197e56cac61ddf71d8ebfbfee60e0db19750c51575413f7f9bbcee61a6287f9c8767086e4d77a19e501',
 	],
 	[
 		'should get encoded message with array types',
@@ -342,7 +342,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		true,
-		'0x3e4d581a408c8c2fa8775017c26e0127df030593d83a8202e6c19b3380bde3da',
+		'0x6962563647bc198632c7531401c1f2989200fe3add3727ae4944b8ab0307d219',
 	],
 	[
 		'should get encoded message with fixed array',
@@ -399,7 +399,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		false,
-		'0x1901928e4773f1f7243172cd0dd213906be49eb9d275e09c8bd0575921c51ba00058b068b45d685c16bc9ef637106b4fd3a4fb9aa259f53218491a3d9eb65b1b574c',
+		'0x190170b207a94826d759c38a47ff9847ec4c58382f880d9a0197e56cac61ddf71d8ee87bbfaeeee3cb05c1ffe0ec4fd3c63fba3b250514e2df5896c5c2049068d578',
 	],
 	[
 		'should get encoded message with fixed array',
@@ -456,7 +456,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		true,
-		'0x133d00e67f2390ce846a631aeb6718a674a3923f5320b79b6d3e2f5bf146319e',
+		'0xe2bf720fbca129f558a740a5c805300e5995f52c39509ad8a17eb04f05f060ad',
 	],
 	[
 		'should get encoded message with bytes32',
@@ -499,7 +499,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		false,
-		'0x1901928e4773f1f7243172cd0dd213906be49eb9d275e09c8bd0575921c51ba000587c9d26380d51aac5dc2ff6f794d1c043ea4259bb42068f70f79d2e4849133ac3',
+		'0x190170b207a94826d759c38a47ff9847ec4c58382f880d9a0197e56cac61ddf71d8ebc5be4b6d5ef8cde54a896425544471fbba4990dee3749713466ec82f1a412dc',
 	],
 	[
 		'should get encoded message with bytes32',
@@ -542,7 +542,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		false,
-		'0x1901928e4773f1f7243172cd0dd213906be49eb9d275e09c8bd0575921c51ba00058353ed034fd1df0cd409a19133f4a89f5e99ddc735ad3fbb767d0bb72c97ef175',
+		'0x190170b207a94826d759c38a47ff9847ec4c58382f880d9a0197e56cac61ddf71d8e5823e155044288a8c7aeea2e0c77e8469c23cf6b13fd48c98da0d4bd6561221c',
 	],
 	[
 		'should get encoded message with bytes32',
@@ -585,7 +585,7 @@ export const testData: [string, Eip712TypedData, boolean | undefined, string][] 
 			},
 		},
 		true,
-		'0xa6cd048c02ef3cb70feee1bd9795decbbc8b431b976dfc86e3b09e55e0d2a3f3',
+		'0xcf24927faa9a50200af067d30ce0f021c494593b0197fd2095351a95ddfd717e',
 	],
 ];
 

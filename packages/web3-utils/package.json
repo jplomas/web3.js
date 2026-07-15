@@ -58,13 +58,12 @@
 		"eslint-config-prettier": "10.1.8",
 		"jest": "30.4.2",
 		"jest-extended": "7.0.0",
-		"js-sha3": "0.9.3",
 		"prettier": "3.8.3",
 		"ts-jest": "29.4.11",
 		"typescript": "6.0.3"
 	},
 	"dependencies": {
-		"@theqrl/qrl-cryptography": "0.1.3",
+		"@theqrl/qrl-cryptography": "0.3.0",
 		"@theqrl/web3-errors": "workspace:^",
 		"@theqrl/web3-types": "workspace:^",
 		"@theqrl/web3-validator": "workspace:^"
