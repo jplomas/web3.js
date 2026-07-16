@@ -1,9 +1,1 @@
-# Accepted advisories for the Trivy HIGH,CRITICAL supply-chain gate.
-# Format: one advisory ID per line. Keep each entry justified.
-
-# uuid 8.3.2 — GHSA-w5hq-g745-h8pq (CVSS 7.5). Dev-only, deeply nested via build
-# tooling (@cypress/webpack-preprocessor -> webpack -> ...). The only fix is a
-# major bump uuid 8 -> 11, which would force every transitive dev consumer onto
-# the new major; not shipped in any published @theqrl package. Revisit when a
-# consumer offers a non-major upgrade path.
-GHSA-w5hq-g745-h8pq
+# (none)

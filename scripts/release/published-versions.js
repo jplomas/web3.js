@@ -20,7 +20,7 @@ const cmpSemver = (a, b) => {
 };
 
 const fetchPublished = async name => {
-	const url = `${REGISTRY}/${encodeURIComponent(name).replace('%40', '@')}`;
+	const url = `${REGISTRY}/${encodeURIComponent(name).replace(/%40/g, '@')}`;
 	const res = await fetch(url, { headers: { accept: 'application/json' } });
 	if (res.status === 404) return { latest: null, versions: [] };
 	if (!res.ok) throw new Error(`${name}: HTTP ${res.status}`);
