@@ -18,7 +18,7 @@ blockExoticSubdeps: true
 overrides:
   "braces@<3.0.3": "3.0.3"
   "undici@<6.27.0": "6.27.0"
-  "undici@>=7.0.0 <7.28.0": "8.7.0"
+  "undici@>=7.0.0 <7.28.0": "7.28.0"
   "fast-uri@<3.1.2": "3.1.2"
   # CVE remediation — shell-quote newline escaping (critical) + ws memory-exhaustion DoS (high)
   "shell-quote@<1.8.4": "1.9.0"
