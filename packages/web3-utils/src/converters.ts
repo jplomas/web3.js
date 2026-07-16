@@ -535,7 +535,12 @@ export const fromPlanck = (number: Numbers, unit: QRLUnits): string => {
 	// get the fraction part of value by counting number of zeros backward
 	// 13456789 -> '456789'
 	// 001234 -> '001234'
-	const fraction = zeroPaddedValue.slice(-numberOfZerosInDenomination).replace(/\.?0+$/, '');
+	const rawFraction = zeroPaddedValue.slice(-numberOfZerosInDenomination);
+	let fractionEnd = rawFraction.length;
+	while (fractionEnd > 0 && rawFraction[fractionEnd - 1] === '0') {
+		fractionEnd -= 1;
+	}
+	const fraction = rawFraction.slice(0, fractionEnd);
 
 	if (integer === '') {
 		return `0.${fraction}`;

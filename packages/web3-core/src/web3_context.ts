@@ -373,9 +373,17 @@ export class Web3Context<
 	 */
 	public extend(extendObj: ExtensionObject) {
 		const context = this as unknown as Record<string, Record<string, unknown> | unknown>;
+
+		const forbiddenKeys = ['__proto__', 'constructor', 'prototype'];
+		if (extendObj.property && forbiddenKeys.includes(extendObj.property))
+			throw new Error(`Forbidden extend property name: ${extendObj.property}`);
+
 		if (extendObj.property && !context[extendObj.property]) context[extendObj.property] = {};
 
 		extendObj.methods?.forEach(element => {
+			if (forbiddenKeys.includes(element.name))
+				throw new Error(`Forbidden extend method name: ${element.name}`);
+
 			const method = async (...givenParams: unknown[]) =>
 				this.requestManager.send({
 					method: element.call,

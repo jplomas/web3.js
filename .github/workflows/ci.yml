@@ -142,8 +142,8 @@ jobs:
         run: pnpm run test:coverage:unit
 
       - name: Upload unit coverage to Codecov
-        if: env.CODECOV_TOKEN != ''
-        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        if: env.CODECOV_TOKEN != '' && github.event_name == 'push'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ env.CODECOV_TOKEN }}
           files: ./packages/*/.coverage/unit/*.json,./tools/*/.coverage/unit/*.json
@@ -151,6 +151,17 @@ jobs:
           flags: unit
           name: qrl-web3-unit
           fail_ci_if_error: true
+
+      - name: Upload unit coverage to Codecov (PR)
+        if: env.CODECOV_TOKEN != '' && github.event_name == 'pull_request'
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ env.CODECOV_TOKEN }}
+          files: ./packages/*/.coverage/unit/*.json,./tools/*/.coverage/unit/*.json
+          disable_search: true
+          flags: unit
+          name: qrl-web3-unit
+          fail_ci_if_error: false
 
       - name: Skip Codecov upload without token
         if: env.CODECOV_TOKEN == ''
