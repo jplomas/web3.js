@@ -57,14 +57,15 @@ jobs:
       - name: Check repository hygiene
         run: pnpm run hygiene
 
+      # Build before lint: type-aware ESLint rules need built cross-package types to resolve.
+      - name: Build packages
+        run: pnpm run build
+
       - name: Lint workspace
         run: pnpm run lint
 
       - name: Enforce lint warning budget
         run: pnpm run lint:budget
-
-      - name: Build packages
-        run: pnpm run build
 
       - name: Build browser bundle
         run: pnpm run build:web
