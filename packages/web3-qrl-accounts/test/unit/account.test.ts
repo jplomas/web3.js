@@ -15,8 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address } from '@theqrl/web3-types';
+import { Address, KeyStore } from '@theqrl/web3-types';
 import { Web3ValidatorError, isAddressString } from '@theqrl/web3-validator';
+import { bytesToHex, hexToBytes } from '@theqrl/web3-utils';
+import { TransactionSigningError } from '@theqrl/web3-errors';
 import {
 	create,
 	decrypt,
@@ -113,6 +115,31 @@ describe('accounts', () => {
 			expect(address).toBeDefined();
 			expect(address).toEqual(account.address);
 		});
+
+		it('recoverTransaction rejects a tampered signature', async () => {
+			const account = create();
+			const txObj = { ...transactionsTestData[0][0], from: account.address };
+			const signedResult = await signTransaction(
+				TransactionFactory.fromTxData(txObj as unknown as TxData),
+				account.seed,
+			);
+
+			// A validly-signed raw tx returns the signer address.
+			expect(recoverTransaction(signedResult.rawTransaction)).toEqual(account.address);
+
+			// Re-decode and tamper the ML-DSA-87 signature while keeping the same
+			// public key. `signature` is a readonly reference but the underlying
+			// bytes are mutable.
+			const tx = TransactionFactory.fromSerializedData(
+				hexToBytes(signedResult.rawTransaction),
+			);
+			(tx.signature as Uint8Array)[0] ^= 0xff;
+			const tamperedRaw = bytesToHex(tx.serialize());
+
+			// getSenderAddress() would still derive the same address from the
+			// (unauthenticated) public key, but signature verification must fail.
+			expect(() => recoverTransaction(tamperedRaw)).toThrow(TransactionSigningError);
+		});
 	});
 
 	describe('Hash Message', () => {
@@ -195,6 +222,37 @@ describe('accounts', () => {
 				const result = decrypt(input[0], input[1]);
 
 				await expect(result).rejects.toThrow(Web3ValidatorError);
+			});
+		});
+
+		describe('out-of-bounds Argon2id parameters', () => {
+			it('rejects a keystore whose kdfparams.m exceeds the allowed bound', async () => {
+				const keystore = {
+					version: 1,
+					address:
+						'Q5f279a4668d52e544a5fdf0c6212236c693e7b760377adc0754066a409c30effd2472bf229ea506ea693c01386b8a2b73c22d7e375e20e1ce8d104dade60ff2a',
+					crypto: {
+						ciphertext:
+							'c42ac873cf649cf61970f0ec1b382d25495a77ed4865f1366cfa10b2560514b0b618ea6e2c83c1473baf619897c9495b8e97e4c16e0cc5c92c00d2c3f3940d2e40a460',
+						cipherparams: { iv: 'f59185068e4cbe729dd0000c' },
+						cipher: 'aes-256-gcm',
+						kdf: 'argon2id',
+						kdfparams: {
+							// exceeds ARGON2ID_BOUNDS.m.max (1_048_576)
+							m: 2_097_152,
+							t: 8,
+							p: 1,
+							dklen: 32,
+							salt: '6140afd0defbcc3fe45d2166969adf5fb45479da880c6cc10d4510b5dfa9908b',
+						},
+					},
+					id: 'e59590d4-3ef3-4a8d-829e-790b83bbf4da7',
+				};
+
+				// Must be rejected by the bounds check before any key derivation.
+				await expect(
+					decrypt(keystore as unknown as KeyStore, '1234567890'),
+				).rejects.toThrow(/Argon2id m out of range/);
 			});
 		});
 	});

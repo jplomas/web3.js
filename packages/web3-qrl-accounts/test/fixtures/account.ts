@@ -144,7 +144,7 @@ export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeySt
 			'1234567890',
 			{
 				t: 8,
-				m: 4096,
+				m: 19456,
 				p: 1,
 				iv: hexToBytes('0xf59185068e4cbe729dd0000c'),
 				salt: hexToBytes(
@@ -156,12 +156,12 @@ export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeySt
 			version: 1,
 			address: 'Q5f279a4668d52e544a5fdf0c6212236c693e7b760377adc0754066a409c30effd2472bf229ea506ea693c01386b8a2b73c22d7e375e20e1ce8d104dade60ff2a',
 			crypto: {
-				ciphertext: 'c42ac873cf649cf61970f0ec1b382d25495a77ed4865f1366cfa10b2560514b0b618ea6e2c83c1473baf619897c9495b8e97e4c16e0cc5c92c00d2c3f3940d2e40a460',
+				ciphertext: 'e2bc64af24e98a5405e5481164d353598d5d953d8e55386f2d2f64e43ce091727f07c770679a01df15964ea22fff4da3b5e16bc129efe02c04436925e05a4c70c4a41b',
 				cipherparams: { iv: 'f59185068e4cbe729dd0000c' },
 				cipher: 'aes-256-gcm',
 				kdf: 'argon2id',
 				kdfparams: {
-					m: 4096,
+					m: 19456,
 					t: 8,
 					p: 1,
 					dklen: 32,
@@ -257,7 +257,7 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 			'1234567890',
 			{
 				t: 8,
-				m: 4096,
+				m: 19456,
 				p: 1,
 				iv: hexToBytes('0xf59185068e4cbe729dd0000c'),
 				salt: hexToBytes(
@@ -307,7 +307,7 @@ export const invalidDecryptData: [[any, string], InvalidKdfError | string][] = [
 					cipher: 'aes-256-gcm',
 					kdf: 'argon2id',
 					kdfparams: {
-						m: 4096,
+						m: 19456,
 						t: 8,
 						p: 1,
 						dklen: 32,

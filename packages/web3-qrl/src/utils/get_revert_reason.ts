@@ -40,6 +40,12 @@ export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi)
 		error instanceof ContractExecutionError &&
 		error.innerError instanceof Eip838ExecutionError
 	) {
+		// A malformed node response may set `data` to a non-string value. The optional
+		// chaining above guards nullishness but not type, so guard on `string` here to
+		// avoid a TypeError when calling `slice`/`substring` on a number/object.
+		const innerErrorData =
+			typeof error.innerError.data === 'string' ? error.innerError.data : undefined;
+
 		if (contractAbi !== undefined) {
 			const errorsAbi = contractAbi.filter(abi =>
 				isAbiErrorFragment(abi),
@@ -48,8 +54,8 @@ export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi)
 
 			return {
 				reason: error.innerError.message,
-				signature: error.innerError.data?.slice(0, 10),
-				data: error.innerError.data?.substring(10),
+				signature: innerErrorData?.slice(0, 10),
+				data: innerErrorData?.substring(10),
 				customErrorName: error.innerError.errorName,
 				customErrorDecodedSignature: error.innerError.errorSignature,
 				customErrorArguments: error.innerError.errorArgs,
@@ -58,8 +64,8 @@ export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi)
 
 		return {
 			reason: error.innerError.message,
-			signature: error.innerError.data?.slice(0, 10),
-			data: error.innerError.data?.substring(10),
+			signature: innerErrorData?.slice(0, 10),
+			data: innerErrorData?.substring(10),
 		} as RevertReason;
 	}
 

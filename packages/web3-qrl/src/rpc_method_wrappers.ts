@@ -423,33 +423,70 @@ export function sendTransaction<
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
 			setImmediate(() => {
-				(async () => {
-					let transactionFormatted = formatTransaction(
-						{
-							...transaction,
-							from: getTransactionFromOrToAttr('from', web3Context, transaction),
-							to: getTransactionFromOrToAttr('to', web3Context, transaction),
-						},
-						QRL_DATA_FORMAT,
-					);
+				// Terminal outcome contract: the PromiEvent settles exactly once and the
+				// `error` event is emitted at most once. Rejecting an already settled
+				// Promise is a no-op, but emitting an event is not, so every terminal
+				// branch goes through one of the guarded helpers below and returns
+				// immediately. The Promise rejection is authoritative; the `error` event
+				// is supplementary and only emitted when a listener is attached.
+				let settled = false;
 
-					if (
-						!options?.ignoreGasPricing &&
-						(isNullish(transaction.maxPriorityFeePerGas) ||
-							isNullish(transaction.maxFeePerGas))
-					) {
-						transactionFormatted = {
-							...transactionFormatted,
-							// TODO maxPriorityFeePerGas, maxFeePerGas
-							// should not be included if undefined, but currently are
-							...(await getTransactionGasPricing(
-								transactionFormatted,
-								web3Context,
-								QRL_DATA_FORMAT,
-							)),
-						};
+				const succeedOnce = (value: ResolveType) => {
+					if (settled) return;
+					settled = true;
+					resolve(value);
+				};
+
+				const failOnce = (
+					error: unknown,
+					errorEvent?: SendTransactionEvents<ReturnFormat>['error'],
+				) => {
+					if (settled) return;
+					settled = true;
+
+					if (!isNullish(errorEvent) && promiEvent.listenerCount('error') > 0) {
+						promiEvent.emit('error', errorEvent);
 					}
+
+					reject(error);
+				};
+
+				const execute = async () => {
+					const formatInputTransaction = () =>
+						formatTransaction(
+							{
+								...transaction,
+								from: getTransactionFromOrToAttr('from', web3Context, transaction),
+								to: getTransactionFromOrToAttr('to', web3Context, transaction),
+							},
+							QRL_DATA_FORMAT,
+						);
+
+					// Declared outside the `try` so the `catch` can still reference it for
+					// typed-error normalization, while formatting and gas pricing - both of
+					// which can throw - stay inside the catchable region.
+					let transactionFormatted: ReturnType<typeof formatInputTransaction> | undefined;
+
 					try {
+						transactionFormatted = formatInputTransaction();
+
+						if (
+							!options?.ignoreGasPricing &&
+							(isNullish(transaction.maxPriorityFeePerGas) ||
+								isNullish(transaction.maxFeePerGas))
+						) {
+							transactionFormatted = {
+								...transactionFormatted,
+								// TODO maxPriorityFeePerGas, maxFeePerGas
+								// should not be included if undefined, but currently are
+								...(await getTransactionGasPricing(
+									transactionFormatted,
+									web3Context,
+									QRL_DATA_FORMAT,
+								)),
+							};
+						}
+
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(
 								web3Context,
@@ -466,11 +503,7 @@ export function sendTransaction<
 									reason,
 								);
 
-								if (promiEvent.listenerCount('error') > 0) {
-									promiEvent.emit('error', error);
-								}
-
-								reject(error);
+								failOnce(error, error);
 								return;
 							}
 						}
@@ -542,7 +575,7 @@ export function sendTransaction<
 						}
 
 						if (options?.transactionResolver) {
-							resolve(
+							succeedOnce(
 								options?.transactionResolver(
 									transactionReceiptFormatted,
 								) as unknown as ResolveType,
@@ -556,13 +589,9 @@ export function sendTransaction<
 								options?.contractAbi,
 							);
 
-							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit('error', error);
-							}
-
-							reject(error);
+							failOnce(error, error);
 						} else {
-							resolve(transactionReceiptFormatted as unknown as ResolveType);
+							succeedOnce(transactionReceiptFormatted as unknown as ResolveType);
 						}
 
 						if (promiEvent.listenerCount('confirmation') > 0) {
@@ -591,19 +620,27 @@ export function sendTransaction<
 						}
 
 						if (
-							(_error instanceof InvalidResponseError ||
-								_error instanceof ContractExecutionError ||
-								_error instanceof TransactionRevertWithCustomError ||
-								_error instanceof TransactionRevertedWithoutReasonError ||
-								_error instanceof TransactionRevertInstructionError) &&
-							promiEvent.listenerCount('error') > 0
+							_error instanceof InvalidResponseError ||
+							_error instanceof ContractExecutionError ||
+							_error instanceof TransactionRevertWithCustomError ||
+							_error instanceof TransactionRevertedWithoutReasonError ||
+							_error instanceof TransactionRevertInstructionError
 						) {
-							promiEvent.emit('error', _error);
+							failOnce(_error, _error);
+							return;
 						}
 
-						reject(_error);
+						failOnce(_error);
 					}
-				})() as unknown;
+				};
+
+				// Last-resort guard: `execute` handles its own errors, but if the `catch`
+				// itself throws (e.g. the error normalization RPC call fails) the
+				// PromiEvent must still settle rather than hang with an unhandled
+				// rejection.
+				void execute().catch((error: unknown) => {
+					failOnce(error);
+				});
 			});
 		},
 	);
@@ -624,32 +661,79 @@ export function sendSignedTransaction<
 	returnFormat: ReturnFormat,
 	options: SendSignedTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendSignedTransactionEvents<ReturnFormat>> {
-	// TODO - Promise returned in function argument where a void return was expected
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new Web3PromiEvent<ResolveType, SendSignedTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
 			setImmediate(() => {
-				(async () => {
-					// Formatting signedTransaction to be send to RPC endpoint
-					const signedTransactionFormattedHex = format(
-						{ format: 'bytes' },
-						signedTransaction,
-						QRL_DATA_FORMAT,
-					);
-					const unSerializedTransaction = TransactionFactory.fromSerializedData(
-						bytesToUint8Array(hexToBytes(signedTransactionFormattedHex)),
-					);
-					const unSerializedTransactionWithFrom = {
-						...unSerializedTransaction.toJSON(),
-						// Some providers will default `from` to address(0) causing the error
-						// reported from `qrl_call` to not be the reason the user's tx failed
-						// e.g. `qrl_call` will return an Out of Gas error for a failed
-						// smart contract execution contract, because the sender, address(0),
-						// has no balance to pay for the gas of the transaction execution
-						from: unSerializedTransaction.getSenderAddress().toString(),
+				// Terminal outcome contract: the PromiEvent settles exactly once and the
+				// `error` event is emitted at most once. Rejecting an already settled
+				// Promise is a no-op, but emitting an event is not, so every terminal
+				// branch goes through one of the guarded helpers below and returns
+				// immediately. The Promise rejection is authoritative; the `error` event
+				// is supplementary and only emitted when a listener is attached.
+				let settled = false;
+
+				const succeedOnce = (value: ResolveType) => {
+					if (settled) return;
+					settled = true;
+					resolve(value);
+				};
+
+				const failOnce = (
+					error: unknown,
+					errorEvent?: SendSignedTransactionEvents<ReturnFormat>['error'],
+				) => {
+					if (settled) return;
+					settled = true;
+
+					if (!isNullish(errorEvent) && promiEvent.listenerCount('error') > 0) {
+						promiEvent.emit('error', errorEvent);
+					}
+
+					reject(error);
+				};
+
+				const execute = async () => {
+					const deserializeTransaction = () => {
+						// Formatting signedTransaction to be send to RPC endpoint
+						const signedTransactionFormattedHex = format(
+							{ format: 'bytes' },
+							signedTransaction,
+							QRL_DATA_FORMAT,
+						);
+						const unSerializedTransaction = TransactionFactory.fromSerializedData(
+							bytesToUint8Array(hexToBytes(signedTransactionFormattedHex)),
+						);
+
+						return {
+							signedTransactionFormattedHex,
+							unSerializedTransactionWithFrom: {
+								...unSerializedTransaction.toJSON(),
+								// Some providers will default `from` to address(0) causing
+								// the error reported from `qrl_call` to not be the reason
+								// the user's tx failed e.g. `qrl_call` will return an Out
+								// of Gas error for a failed smart contract execution
+								// contract, because the sender, address(0), has no balance
+								// to pay for the gas of the transaction execution
+								from: unSerializedTransaction.getSenderAddress().toString(),
+							},
+						};
 					};
 
+					type UnSerializedTransactionWithFrom = ReturnType<
+						typeof deserializeTransaction
+					>['unSerializedTransactionWithFrom'];
+
+					// Declared outside the `try` so the `catch` can still reference it for
+					// typed-error normalization, while the formatting and deserialization -
+					// both of which can throw - stay inside the catchable region.
+					let unSerializedTransactionWithFrom: UnSerializedTransactionWithFrom | undefined;
+
 					try {
+						const deserialized = deserializeTransaction();
+						const { signedTransactionFormattedHex } = deserialized;
+						unSerializedTransactionWithFrom =
+							deserialized.unSerializedTransactionWithFrom;
+
 						if (options.checkRevertBeforeSending !== false) {
 							const reason = await getRevertReason(
 								web3Context,
@@ -666,11 +750,7 @@ export function sendSignedTransaction<
 									reason,
 								);
 
-								if (promiEvent.listenerCount('error') > 0) {
-									promiEvent.emit('error', error);
-								}
-
-								reject(error);
+								failOnce(error, error);
 								return;
 							}
 						}
@@ -719,7 +799,7 @@ export function sendSignedTransaction<
 						}
 
 						if (options?.transactionResolver) {
-							resolve(
+							succeedOnce(
 								options?.transactionResolver(
 									transactionReceiptFormatted,
 								) as unknown as ResolveType,
@@ -733,13 +813,9 @@ export function sendSignedTransaction<
 								options?.contractAbi,
 							);
 
-							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit('error', error);
-							}
-
-							reject(error);
+							failOnce(error, error);
 						} else {
-							resolve(transactionReceiptFormatted as unknown as ResolveType);
+							succeedOnce(transactionReceiptFormatted as unknown as ResolveType);
 						}
 
 						if (promiEvent.listenerCount('confirmation') > 0) {
@@ -768,19 +844,27 @@ export function sendSignedTransaction<
 						}
 
 						if (
-							(_error instanceof InvalidResponseError ||
-								_error instanceof ContractExecutionError ||
-								_error instanceof TransactionRevertWithCustomError ||
-								_error instanceof TransactionRevertedWithoutReasonError ||
-								_error instanceof TransactionRevertInstructionError) &&
-							promiEvent.listenerCount('error') > 0
+							_error instanceof InvalidResponseError ||
+							_error instanceof ContractExecutionError ||
+							_error instanceof TransactionRevertWithCustomError ||
+							_error instanceof TransactionRevertedWithoutReasonError ||
+							_error instanceof TransactionRevertInstructionError
 						) {
-							promiEvent.emit('error', _error);
+							failOnce(_error, _error);
+							return;
 						}
 
-						reject(_error);
+						failOnce(_error);
 					}
-				})() as unknown;
+				};
+
+				// Last-resort guard: `execute` handles its own errors, but if the `catch`
+				// itself throws (e.g. the error normalization RPC call fails) the
+				// PromiEvent must still settle rather than hang with an unhandled
+				// rejection.
+				void execute().catch((error: unknown) => {
+					failOnce(error);
+				});
 			});
 		},
 	);
@@ -1058,14 +1142,12 @@ export async function signTypedData<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<QRLExecutionAPI>,
 	address: Address,
 	typedData: Eip712TypedData,
-	useLegacy: boolean,
 	returnFormat: ReturnFormat,
 ) {
 	const response = await qrlRpcMethods.signTypedData(
 		web3Context.requestManager,
 		address,
 		typedData,
-		useLegacy,
 	);
 
 	return format({ format: 'bytes' }, response, returnFormat);

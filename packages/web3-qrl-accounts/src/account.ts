@@ -56,6 +56,7 @@ import {
 
 import { isHexStrict, isNullish, isString, validator } from '@theqrl/web3-validator';
 import { keyStoreSchema } from './schemas.js';
+import { validateArgon2idParams } from './kdf_policy.js';
 import { CryptoPublicKeyBytes } from './qrl_crypto.js';
 import {
 	addressFromPublicKeyAndDescriptor,
@@ -122,7 +123,7 @@ export const hashMessage = (message: string): string => {
  * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19QRL Signed Message:\\n" + message.length + message
  *
  * @param data - The data to sign
- * @param seed - The 40 byte seed
+ * @param seed - The 51 byte extended seed (3-byte descriptor + 48-byte seed)
  * @returns The signature Object containing the message, messageHash, signature
  *
  * ```ts
@@ -150,7 +151,7 @@ export const sign = (data: string, seed: Bytes): SignResult => {
  * Signs a QRL transaction with the private key derived from the given seed.
  *
  * @param transaction - The transaction, must be a EIP 1559 transaction type
- * @param seed -  The seed to import. This is 40 bytes of random data.
+ * @param seed -  The extended seed to import. This is a 51-byte value (3-byte descriptor + 48-byte seed).
  * @returns A signTransactionResult object that contains message hash, signature, transaction hash and raw transaction.
  *
  * This function is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
@@ -227,6 +228,14 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 	if (isNullish(rawTransaction)) throw new UndefinedRawTransactionError();
 
 	const tx = TransactionFactory.fromSerializedData(hexToBytes(rawTransaction));
+
+	// Verify the ML-DSA-87 signature before deriving the sender. Without this,
+	// getSenderAddress() would return an address derived from an unauthenticated
+	// public key embedded in the raw transaction, letting a tampered/forged tx
+	// resolve to an arbitrary sender.
+	if (!tx.verifySignature()) {
+		throw new TransactionSigningError('Signature verification failed');
+	}
 
 	return toChecksumAddress(tx.getSenderAddress().toString());
 };
@@ -321,6 +330,9 @@ export const encrypt = async (
 			dklen: options?.dklen ?? 32,
 			salt: bytesToHex(salt).replace('0x', ''),
 		};
+		// Reject out-of-bounds Argon2id parameters (after defaults are applied)
+		// to avoid unreasonable memory/time costs.
+		validateArgon2idParams(kdfparams);
 		derivedKey = argon2idSync(
 			uint8ArrayPassword,
 			salt,
@@ -385,7 +397,7 @@ export const parseAndValidateSeed = (data: Bytes, ignoreLength?: boolean): Uint8
 /**
  * Get an Account object from the seed
  *
- * @param seed - String or Uint8Array of 40 bytes
+ * @param seed - String or Uint8Array of the 51-byte extended seed (3-byte descriptor + 48-byte seed)
  * @param ignoreLength - if true, will not error check length
  * @returns A Web3Account object
  *
@@ -524,6 +536,9 @@ export const decrypt = async (
 	let derivedKey;
 	if (json.crypto.kdf === 'argon2id') {
 		const kdfparams = json.crypto.kdfparams as Argon2idParams;
+		// Bound the untrusted KDF parameters from the keystore JSON before
+		// deriving the key, to prevent maliciously large memory/time costs.
+		validateArgon2idParams(kdfparams);
 		const uint8ArraySalt =
 			typeof kdfparams.salt === 'string' ? hexToBytes(kdfparams.salt) : kdfparams.salt;
 		derivedKey = argon2idSync(
