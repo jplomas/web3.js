@@ -106,6 +106,9 @@ one once every dependent has released a compatible fixed version.
 | Override | Resolves to | Reason |
 | --- | --- | --- |
 | `braces@<3.0.3` | `3.0.3` | Patched release for the `braces` redos advisory. |
+| `brace-expansion@<1.1.16` | `1.1.16` | CVE-2026-13149 ReDoS (high), brace-expansion 1 line. |
+| `brace-expansion@>=2.0.0 <2.1.2` | `2.1.2` | CVE-2026-13149 ReDoS (high), brace-expansion 2 line. |
+| `brace-expansion@>=5.0.0 <5.0.7` | `5.0.7` | CVE-2026-13149 ReDoS (high), brace-expansion 5 line. |
 | `undici@<6.27.0` | `6.27.0` | Patch floor for the Undici 6 line. |
 | `undici@>=7.0.0 <7.28.0` | `7.28.0` | Patch floor for the Undici 7 line; also the version required for Node 20 compatibility in CI. |
 | `fast-uri@<3.1.2` | `3.1.2` | Patched release; also quarantine-excluded so the fix can land inside the seven-day window. |
@@ -123,6 +126,7 @@ they execute on developer and CI machines, so they are remediated the same way.
 
 | Override | Resolves to | Reason |
 | --- | --- | --- |
+| `adm-zip@<0.6.0` | `0.6.0` | GHSA-xcpc-8h2w-3j85 path traversal (high); via hardhat. |
 | `http-proxy-middleware@<2.0.10` | `2.0.10` | Patch floor, 2.x line. |
 | `http-proxy-middleware@>=4.0.0 <4.1.1` | `4.2.0` | Patch floor, 4.x line. |
 | `linkify-it@<5.0.1` | `5.0.2` | Patch floor. |

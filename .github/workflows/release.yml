@@ -178,6 +178,11 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Use npm 11 for trusted publishing
+        # zizmor: ignore[adhoc-packages]
+        # npm trusted publishing (OIDC provenance) requires npm >= 11.5.1, which
+        # is newer than the npm bundled with the pinned Node in setup-node above.
+        # The version is pinned exactly (not @latest), so this is a deliberate,
+        # reviewed exception rather than an unpinned ad-hoc install.
         run: |
           npm install -g npm@11.5.1
           npm --version
