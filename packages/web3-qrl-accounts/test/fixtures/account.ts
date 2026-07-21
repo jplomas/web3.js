@@ -146,7 +146,7 @@ export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeySt
 				// supplied: encrypt always generates a fresh random one
 				// so the ciphertext is verified via a round-trip decrypt rather
 				// than an exact-value assertion.
-				t: 8,
+				t: 2,
 				m: 19456,
 				p: 1,
 				salt: hexToBytes(
@@ -167,7 +167,7 @@ export const validEncryptData: [[any, string | Uint8Array, CipherOptions], KeySt
 				kdf: 'argon2id',
 				kdfparams: {
 					m: 19456,
-					t: 8,
+					t: 2,
 					p: 1,
 					dklen: 32,
 					salt: '6140afd0defbcc3fe45d2166969adf5fb45479da880c6cc10d4510b5dfa9908b',
@@ -250,7 +250,7 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 			'0x0100005dfdcad4f721fe41d1bdf632de24ba60ba7cfab9c9a79287fa007b6a0dec8200b1fa35d2575bb15bd44d59b8d878828b',
 			'1234567890',
 			{
-				t: 8,
+				t: 2,
 				m: 19456,
 				p: 1,
 				iv: hexToBytes('0xf59185068e4cbe729dd0000c'),
@@ -302,7 +302,7 @@ export const invalidDecryptData: [[any, string], InvalidKdfError | string][] = [
 					kdf: 'argon2id',
 					kdfparams: {
 						m: 19456,
-						t: 8,
+						t: 2,
 						p: 1,
 						dklen: 32,
 						salt: '6140afd0defbcc3fe45d2166969adf5fb45479da880c6cc10d4510b5dfa9908b',

@@ -205,7 +205,7 @@ describe('accounts', () => {
 				// Also pass an `iv` via a loosely-typed options object to prove
 				// it is ignored, not honoured.
 				const options = {
-					t: 8,
+					t: 2,
 					m: 19456,
 					p: 1,
 					iv: hexToBytes('0xf59185068e4cbe729dd0000c'),
@@ -265,7 +265,14 @@ describe('accounts', () => {
 		// decrypted seed (finding C18b).
 		it('rejects a keystore whose address label does not match the decrypted key', async () => {
 			const seed = create().seed;
-			const keystore = await encrypt(seed, 'test-password');
+			// Use the cheapest valid Argon2id cost (the ARGON2ID_BOUNDS floor) so the
+			// test exercises the address-binding logic without paying the production
+			// default's 256 MiB / t=8 KDF cost, which times out on CI runners.
+			const keystore = await encrypt(seed, 'test-password', {
+				m: 19456,
+				t: 2,
+				p: 1,
+			} as unknown as Parameters<typeof encrypt>[2]);
 			const tampered = {
 				...keystore,
 				address: `Q${'0'.repeat(128)}`,
