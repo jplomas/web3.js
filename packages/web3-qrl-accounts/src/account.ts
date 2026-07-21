@@ -25,7 +25,7 @@ import {
 	InvalidPasswordError,
 	InvalidPublicKeyError,
 	InvalidSeedError,
-	IVLengthError,
+	KeyStoreMismatchError,
 	KeyStoreVersionError,
 	PublicKeyLengthError,
 	SeedLengthError,
@@ -241,13 +241,30 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 };
 
 /**
+ * Options accepted by {@link encrypt}.
+ *
+ * This intentionally omits `iv` from {@link CipherOptions}: AES-GCM fails
+ * catastrophically on nonce (IV) reuse, so `encrypt` always generates a fresh
+ * random 12-byte IV internally and never lets the caller supply one.
+ * Matches the go-qrl keystore behaviour.
+ */
+export type EncryptOptions = Omit<CipherOptions, 'iv'>;
+
+/**
  * encrypt a private key seed with a password, returns a V1 JSON Keystore
  *
  * Read more: https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
  *
+ * **Performance / threading:** this function is CPU-bound and **blocks the
+ * calling thread** for a significant time (~15s at the default
+ * `m=262144, t=8`) while it runs Argon2id synchronously. Despite being
+ * declared `async` it does not yield the event loop. Callers on a UI thread or
+ * a server event loop SHOULD run it in a worker thread (as the QRL wallet
+ * does).
+ *
  * @param privateKey - The private key to encrypt, 32 bytes.
  * @param password - The password used for encryption.
- * @param options - Options to configure to encrypt the keystore either with argon2id
+ * @param options - Options to configure to encrypt the keystore with argon2id. The GCM IV is always generated internally and cannot be supplied.
  * @returns Returns a V1 JSON Keystore
  *
  *
@@ -258,11 +275,12 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  *    '123',
  *    {
  *      m: 8192,
- *      iv: web3.utils.hexToBytes('0xbfb43120ae00e9de110f8325'),
  *      salt: web3.utils.hexToBytes('0x210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'),
  *    }
  * ).then((res) => console.log(util.inspect(res, { depth: null })));
  * >
+ * // Note: cipherparams.iv is a fresh random 12-byte value on every call, so
+ * // ciphertext is non-deterministic even for identical inputs.
  * {
  *   version: 1,
  *   id: '1b1dd3e2-ee6f-49c6-8a9b-a4722046582e',
@@ -286,12 +304,12 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 export const encrypt = async (
 	seed: Bytes,
 	password: string | Uint8Array,
-	options?: CipherOptions,
+	options?: EncryptOptions,
 ): Promise<KeyStore> => {
 	// eslint-disable-next-line no-use-before-define
 	const seedUint8Array = parseAndValidateSeed(seed);
 
-	// if given salt or iv is a string, convert it to a Uint8Array
+	// if given salt is a string, convert it to a Uint8Array
 	let salt;
 	if (options?.salt) {
 		salt = typeof options.salt === 'string' ? hexToBytes(options.salt) : options.salt;
@@ -306,15 +324,11 @@ export const encrypt = async (
 	const uint8ArrayPassword =
 		typeof password === 'string' ? hexToBytes(utf8ToHex(password)) : password;
 
-	let initializationVector;
-	if (options?.iv) {
-		initializationVector = typeof options.iv === 'string' ? hexToBytes(options.iv) : options.iv;
-		if (initializationVector.length !== 12) {
-			throw new IVLengthError();
-		}
-	} else {
-		initializationVector = randomBytes(12);
-	}
+	// AES-GCM catastrophically fails on (key, nonce) reuse: a repeated nonce
+	// leaks the authentication key. The caller must NOT control the GCM nonce,
+	// so we always draw a fresh random 12-byte IV internally (matching go-qrl)
+	// and ignore any caller-supplied value (finding C18a).
+	const initializationVector = randomBytes(12);
 
 	const kdf = options?.kdf ?? 'argon2id';
 
@@ -479,6 +493,13 @@ export const create = (): Web3Account => {
 /**
  * Decrypts a v1 keystore JSON, and creates the account.
  *
+ * **Performance / threading:** this function is CPU-bound and **blocks the
+ * calling thread** for a significant time (~15s at the default
+ * `m=262144, t=8`) while it runs Argon2id synchronously. Despite being
+ * declared `async` it does not yield the event loop. Callers on a UI thread or
+ * a server event loop SHOULD run it in a worker thread (as the QRL wallet
+ * does).
+ *
  * @param keystore - the encrypted Keystore object or string to decrypt
  * @param password - The password that was used for encryption
  * @param nonStrict - if true and given a json string, the keystore will be parsed as lowercase.
@@ -559,5 +580,16 @@ export const decrypt = async (
 		hexToBytes(json.crypto.cipherparams.iv),
 	);
 
-	return seedToAccount(seed);
+	const account = seedToAccount(seed);
+
+	// Parity with go-qrl (accounts/keystore/passphrase.go GetKey): confirm the address derived
+	// from the decrypted seed matches the address recorded in the keystore. This is a local sanity
+	// check on the (unauthenticated) `address` label — it does NOT bind metadata as GCM AAD, so it
+	// keeps keystores interoperable with go-qrl (see C18 explainer). Case-insensitive because the
+	// stored address is lower-cased while a derived address is checksum-cased.
+	if (account.address.toLowerCase() !== `q${json.address.slice(1).toLowerCase()}`) {
+		throw new KeyStoreMismatchError(json.address, account.address);
+	}
+
+	return account;
 };

@@ -88,7 +88,6 @@
 		"@theqrl/eslint-config-base-web3": "workspace:*",
 		"@theqrl/hypc": "0.0.2",
 		"@theqrl/qrl-contracts": "0.1.0",
-		"@types/minimatch": "6.0.0",
 		"@types/node": "25.9.1",
 		"assert": "2.1.0",
 		"buffer": "6.0.3",

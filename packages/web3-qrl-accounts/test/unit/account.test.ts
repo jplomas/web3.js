@@ -167,13 +167,24 @@ describe('accounts', () => {
 				});
 				expect(result.version).toBe(output.version);
 				expect(result.address).toBe(output.address);
-				expect(result.crypto.ciphertext).toBe(output.crypto.ciphertext);
-				expect(result.crypto.cipherparams).toEqual(output.crypto.cipherparams);
+				// encrypt always generates a fresh random 12-byte IV
+				// so ciphertext/iv are non-deterministic and
+				// can't be asserted against fixed values. Assert the IV is a
+				// well-formed random 12-byte value instead...
+				expect(result.crypto.cipherparams.iv).toMatch(/^[0-9a-f]{24}$/);
 				expect(result.crypto.cipher).toEqual(output.crypto.cipher);
 				expect(result.crypto.kdf).toBe(output.crypto.kdf);
 				expect(result.crypto.kdfparams).toEqual(output.crypto.kdfparams);
 				expect(typeof result.version).toBe('number');
 				expect(typeof result.id).toBe('string');
+				// ...and prove correctness by round-tripping through decrypt.
+				const recovered = await decrypt(result, input[1]);
+				const expectedSeed =
+					typeof input[0] === 'string' ? input[0] : bytesToHex(input[0]);
+				expect(recovered.seed).toBe(expectedSeed);
+				// recovered.address is checksum-cased; the stored keystore
+				// address is lower-cased, so compare case-insensitively.
+				expect(recovered.address.toLowerCase()).toBe(output.address.toLowerCase());
 			});
 		});
 
@@ -181,6 +192,47 @@ describe('accounts', () => {
 			it.each(invalidEncryptData)('%s', async (input, output) => {
 				const result = encrypt(input[0], input[1], input[2]);
 				await expect(result).rejects.toThrow(output);
+			});
+		});
+
+		describe('random IV (finding C18a)', () => {
+			it('generates a fresh random IV on every call and ignores any caller-supplied iv', async () => {
+				const seed =
+					'0x0100005dfdcad4f721fe41d1bdf632de24ba60ba7cfab9c9a79287fa007b6a0dec8200b1fa35d2575bb15bd44d59b8d878828b';
+				const password = '1234567890';
+				// Keep salt (and cost params) fixed so the ONLY difference
+				// between the two keystores is the internally-generated IV.
+				// Also pass an `iv` via a loosely-typed options object to prove
+				// it is ignored, not honoured.
+				const options = {
+					t: 8,
+					m: 19456,
+					p: 1,
+					iv: hexToBytes('0xf59185068e4cbe729dd0000c'),
+					salt: hexToBytes(
+						'6140afd0defbcc3fe45d2166969adf5fb45479da880c6cc10d4510b5dfa9908b',
+					),
+				} as unknown as Parameters<typeof encrypt>[2];
+
+				const first = await encrypt(seed, password, options);
+				const second = await encrypt(seed, password, options);
+
+				// Different random IVs => different ciphertext.
+				expect(first.crypto.cipherparams.iv).not.toBe(
+					second.crypto.cipherparams.iv,
+				);
+				expect(first.crypto.ciphertext).not.toBe(second.crypto.ciphertext);
+				// The caller-supplied iv must have been ignored.
+				expect(first.crypto.cipherparams.iv).not.toBe('f59185068e4cbe729dd0000c');
+				expect(second.crypto.cipherparams.iv).not.toBe(
+					'f59185068e4cbe729dd0000c',
+				);
+
+				// Both keystores still decrypt back to the same seed.
+				const recoveredFirst = await decrypt(first, password);
+				const recoveredSecond = await decrypt(second, password);
+				expect(recoveredFirst.seed).toBe(seed);
+				expect(recoveredSecond.seed).toBe(seed);
 			});
 		});
 	});
@@ -207,6 +259,23 @@ describe('accounts', () => {
 					JSON.stringify(seedToAccount(input[3])),
 				);
 			});
+		});
+
+		// Parity with go-qrl: the address label must match the address derived from the
+		// decrypted seed (finding C18b).
+		it('rejects a keystore whose address label does not match the decrypted key', async () => {
+			const seed = create().seed;
+			const keystore = await encrypt(seed, 'test-password');
+			const tampered = {
+				...keystore,
+				address: `Q${'0'.repeat(128)}`,
+			};
+
+			await expect(decrypt(tampered, 'test-password')).rejects.toThrow(
+				/Keystore address does not match/,
+			);
+			// the untampered keystore still decrypts fine
+			await expect(decrypt(keystore, 'test-password')).resolves.toBeDefined();
 		});
 
 		describe('invalid cases', () => {

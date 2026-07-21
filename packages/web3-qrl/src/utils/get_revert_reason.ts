@@ -31,8 +31,9 @@ import {
 	TransactionCall,
 } from '@theqrl/web3-types';
 
-// eslint-disable-next-line import/no-cycle
-import { call } from '../rpc_method_wrappers.js';
+// `call` is imported from the leaf reader module (not `rpc_method_wrappers.js`) so this file
+// does not import back into the send orchestrator — the last source-level import cycle is gone.
+import { call } from './rpc_method_wrappers_readers.js';
 import { RevertReason, RevertReasonWithCustomError } from '../types.js';
 
 export const parseTransactionError = (error: unknown, contractAbi?: ContractAbi) => {

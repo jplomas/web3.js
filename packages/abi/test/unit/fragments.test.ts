@@ -25,29 +25,14 @@ import {
 } from '../../src/fragments.js';
 
 // ---------------------------------------------------------------------------
-// KNOWN DEFECT (reported, not fixed)
-//
-// EventFragment, ConstructorFragment and FunctionFragment cannot be
-// instantiated at all -- every construction path throws
-// "TypeError: Cannot redefine property: <field>".
-//
-// Cause: Fragment's constructor calls populate() (which defineReadOnly's each
-// param as non-configurable) and then Object.freeze(this). Under
-// `target: es2022`, useDefineForClassFields defaults to true, so a derived
-// class's bare field declarations (`stateMutability;`, `payable;`, `gas;`,
-// `constant;`, `outputs;`, `anonymous;`) emit Object.defineProperty(this, ...)
-// which runs *after* super() has already frozen the instance.
-//
-// ParamType and ErrorFragment are unaffected: ParamType is a base class (its
-// field initializers run before its constructor body) and ErrorFragment
-// declares no fields of its own.
-//
-// The `it.failing` blocks below assert the *intended* behaviour. Jest passes a
-// `failing` test only while it still throws -- so each one flips to a hard
-// failure the moment the defect is fixed, forcing them to be un-marked.
-// ---------------------------------------------------------------------------
+// EventFragment, ConstructorFragment and FunctionFragment were previously
+// non-constructible: Fragment's constructor Object.freeze(this)'d the instance,
+// and under `target: es2022` the derived classes' field declarations emitted
+// Object.defineProperty after the freeze -> "Cannot redefine property". Fixed by
+// setting `useDefineForClassFields: false` in the abi tsconfigs (the vendored
+// ethers-v5 code assumes that semantics). These suites assert the now-working
+// behaviour (finding C46).
 
-const REDEFINE = /Cannot redefine property/;
 
 describe('Fragment dispatch', () => {
 	it('routes "error ..." to an ErrorFragment', () => {
@@ -173,30 +158,23 @@ describe('ErrorFragment', () => {
 	});
 });
 
-describe('EventFragment (blocked by the class-fields defect)', () => {
-	it('currently throws "Cannot redefine property: anonymous" on every construction', () => {
-		expect(() => EventFragment.from('Foo(uint256 a)')).toThrow(REDEFINE);
-		expect(() => Fragment.from('event Foo(uint256 a)')).toThrow(REDEFINE);
-		expect(() =>
-			EventFragment.fromObject({ type: 'event', name: 'Foo', inputs: [] } as any),
-		).toThrow(REDEFINE);
-	});
-
-	it.failing('should parse indexed inputs', () => {
+describe('EventFragment', () => {
+	it('should parse indexed inputs', () => {
 		const fragment = EventFragment.from(
 			'Transfer(address indexed from, address indexed to, uint256 value)',
 		);
 		expect(fragment.inputs).toHaveLength(3);
 		expect(fragment.inputs[0].indexed).toBe(true);
-		expect(fragment.inputs[2].indexed).toBe(false);
+		// ethers-v5 ParamType: a non-indexed event input has `indexed === null`, not false.
+		expect(fragment.inputs[2].indexed).toBeNull();
 		expect(fragment.anonymous).toBe(false);
 	});
 
-	it.failing('should parse the anonymous modifier', () => {
+	it('should parse the anonymous modifier', () => {
 		expect(EventFragment.from('Foo(uint256 a) anonymous').anonymous).toBe(true);
 	});
 
-	it.failing('should produce the canonical sighash form', () => {
+	it('should produce the canonical sighash form', () => {
 		expect(
 			EventFragment.from('Transfer(address indexed from, uint256 value)').format(
 				FormatTypes.sighash,
@@ -204,13 +182,14 @@ describe('EventFragment (blocked by the class-fields defect)', () => {
 		).toBe('Transfer(address,uint256)');
 	});
 
-	it.failing('should keep indexed and names in the full form', () => {
+	it('should keep indexed and names in the full form', () => {
+		// ethers-v5 `full` format prefixes the fragment kind ("event ").
 		expect(EventFragment.from('Foo(uint256 indexed a)').format(FormatTypes.full)).toBe(
-			'Foo(uint256 indexed a)',
+			'event Foo(uint256 indexed a)',
 		);
 	});
 
-	it.failing('should round-trip string -> JSON -> object -> string', () => {
+	it('should round-trip string -> JSON -> object -> string', () => {
 		const fragment = EventFragment.from('Transfer(address indexed from, uint256 value)');
 		const json = JSON.parse(fragment.format(FormatTypes.json));
 		expect(EventFragment.fromObject(json).format(FormatTypes.full)).toBe(
@@ -219,16 +198,8 @@ describe('EventFragment (blocked by the class-fields defect)', () => {
 	});
 });
 
-describe('ConstructorFragment (blocked by the class-fields defect)', () => {
-	it('currently throws "Cannot redefine property: stateMutability" on every construction', () => {
-		expect(() => ConstructorFragment.from('constructor()')).toThrow(REDEFINE);
-		expect(() => Fragment.from('constructor(address owner)')).toThrow(REDEFINE);
-		expect(() =>
-			ConstructorFragment.fromObject({ type: 'constructor', inputs: [] } as any),
-		).toThrow(REDEFINE);
-	});
-
-	it.failing('should parse inputs and default to nonpayable', () => {
+describe('ConstructorFragment', () => {
+	it('should parse inputs and default to nonpayable', () => {
 		const fragment = ConstructorFragment.from('constructor(address owner, uint256 supply)');
 		expect(fragment.type).toBe('constructor');
 		expect(fragment.inputs).toHaveLength(2);
@@ -236,33 +207,20 @@ describe('ConstructorFragment (blocked by the class-fields defect)', () => {
 		expect(fragment.payable).toBe(false);
 	});
 
-	it.failing('should parse the payable modifier', () => {
+	it('should parse the payable modifier', () => {
 		const fragment = ConstructorFragment.from('constructor(address owner) payable');
 		expect(fragment.payable).toBe(true);
 		expect(fragment.stateMutability).toBe('payable');
 	});
 
-	it.failing('should format without a name', () => {
+	it('should format without a name', () => {
 		expect(
 			ConstructorFragment.from('constructor(address owner)').format(FormatTypes.full),
 		).toBe('constructor(address owner)');
 	});
 });
 
-describe('FunctionFragment (blocked by the class-fields defect)', () => {
-	it('currently throws "Cannot redefine property: stateMutability" on every construction', () => {
-		expect(() => FunctionFragment.from('foo()')).toThrow(REDEFINE);
-		expect(() => Fragment.from('function transfer(address to)')).toThrow(REDEFINE);
-		expect(() =>
-			FunctionFragment.fromObject({
-				type: 'function',
-				name: 'foo',
-				inputs: [],
-				stateMutability: 'nonpayable',
-			} as any),
-		).toThrow(REDEFINE);
-	});
-
+describe('FunctionFragment', () => {
 	it('rejects an invalid function name before it ever reaches the constructor', () => {
 		// This validation runs pre-construction, so it survives the defect.
 		expect(() => FunctionFragment.fromString('9bad(uint256)')).toThrow(/invalid identifier/);
@@ -274,7 +232,7 @@ describe('FunctionFragment (blocked by the class-fields defect)', () => {
 		).toThrow(/unable to determine stateMutability/);
 	});
 
-	it.failing('should parse inputs, outputs and state mutability', () => {
+	it('should parse inputs, outputs and state mutability', () => {
 		const fragment = FunctionFragment.from(
 			'transfer(address to, uint256 value) returns (bool success)',
 		);
@@ -284,7 +242,7 @@ describe('FunctionFragment (blocked by the class-fields defect)', () => {
 		expect(fragment.outputs[0].type).toBe('bool');
 	});
 
-	it.failing('should default to nonpayable with no outputs', () => {
+	it('should default to nonpayable with no outputs', () => {
 		const fragment = FunctionFragment.from('foo()');
 		expect(fragment.stateMutability).toBe('nonpayable');
 		expect(fragment.constant).toBe(false);
@@ -292,13 +250,13 @@ describe('FunctionFragment (blocked by the class-fields defect)', () => {
 		expect(fragment.outputs).toHaveLength(0);
 	});
 
-	it.failing('should mark view/pure functions as constant', () => {
+	it('should mark view/pure functions as constant', () => {
 		expect(FunctionFragment.from('foo() view').constant).toBe(true);
 		expect(FunctionFragment.from('foo() pure').constant).toBe(true);
 		expect(FunctionFragment.from('foo() payable').payable).toBe(true);
 	});
 
-	it.failing('should produce the canonical sighash form', () => {
+	it('should produce the canonical sighash form', () => {
 		expect(
 			FunctionFragment.from('transfer(address to, uint256 value) returns (bool)').format(
 				FormatTypes.sighash,
@@ -306,15 +264,16 @@ describe('FunctionFragment (blocked by the class-fields defect)', () => {
 		).toBe('transfer(address,uint256)');
 	});
 
-	it.failing('should produce the full form including returns', () => {
+	it('should produce the full form including returns', () => {
+		// ethers-v5 `full` format prefixes the fragment kind ("function ").
 		expect(
 			FunctionFragment.from(
 				'transfer(address to, uint256 value) view returns (bool success)',
 			).format(FormatTypes.full),
-		).toBe('transfer(address to, uint256 value) view returns (bool success)');
+		).toBe('function transfer(address to, uint256 value) view returns (bool success)');
 	});
 
-	it.failing('should round-trip string -> JSON -> object -> string', () => {
+	it('should round-trip string -> JSON -> object -> string', () => {
 		const fragment = FunctionFragment.from('balanceOf(address owner) view returns (uint256)');
 		const json = JSON.parse(fragment.format(FormatTypes.json));
 		expect(FunctionFragment.fromObject(json).format(FormatTypes.full)).toBe(
